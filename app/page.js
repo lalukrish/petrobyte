@@ -1,8 +1,10 @@
 import Image from "next/image";
-import styles from "./page.module.css";
+import ResponsiveDrawer from "@/components/sidebar";
 
 export default function Home() {
-  return (
-   <>petroman</>
-  );
+  return ( 
+  <>
+   petroman
+   <ResponsiveDrawer/>
+ </> );
 }
