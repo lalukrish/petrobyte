@@ -3,6 +3,7 @@ import "./globals.css";
 import ResponsiveDrawer from "@/components/sidebar";
 import SidebarLayout from "@/components/sidebarLayout";
 import { Box } from "@mui/material";
+import PetrobyteContextProvider from "@/context/context";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,7 +19,10 @@ export default function RootLayout({ children }) {
         
         
         <SidebarLayout/>
-        <Box sx={{marginLeft:32}}>{children}
+        
+        <Box sx={{marginLeft:32}}>
+          <PetrobyteContextProvider>{children}
+            </PetrobyteContextProvider>
 </Box>
           {/* </SidebarLayout> */}
         </body>
