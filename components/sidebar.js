@@ -17,7 +17,7 @@ import MailIcon from '@mui/icons-material/Mail';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-
+import Link from "next/link"
 const drawerWidth = 240;
 
 
@@ -41,6 +41,13 @@ export default function ResponsiveDrawer() {
     }
   };
 
+  const routes = {
+    Dashboard: '/dashboard',
+    Accounts: '/accounts',
+    Employees: '/employe',
+    Reports: '/reports',
+  };
+
   const drawer = (
     <div>
       <Toolbar />
@@ -48,7 +55,7 @@ export default function ResponsiveDrawer() {
       <List>
         {['Dashboard', 'Accounts', 'Employees','Reports'].map((text, index) => (
           <ListItem key={text} disablePadding>
-            <ListItemButton>
+            <ListItemButton component={Link} to={routes[text]}>
               <ListItemIcon>
                 {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
               </ListItemIcon>

@@ -32,16 +32,17 @@ const Employees = () => {
   ]
   return (
     <>
-    <Box sx={{display:"flex", gap:2, justifyContent:"center"}}>
+     <Box sx={{display:"flex",justifyContent:"center",marginTop:"2px"}}>
+      <Liverate/>
+    </Box>
+    <Box sx={{display:"flex", gap:2, justifyContent:"center",mt:4}}>
     {
     array.map((item)=>(<BasicCard data={item}/>))
       
     }
     
     </Box>
-    <Box sx={{display:"flex",justifyContent:"center",marginTop:"20px"}}>
-      <Liverate></Liverate>
-    </Box>
+   
     
     </>
   )
