@@ -18,6 +18,9 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Link from "next/link"
+import ResponsiveAppBar from './appbar/livedate';
+import { Avatar } from '@mui/material';
+import Image from 'next/image';
 const drawerWidth = 240;
 
 
@@ -49,9 +52,15 @@ export default function ResponsiveDrawer() {
   };
 
   const drawer = (
-    <div>
-      <Toolbar />
-      <Divider />
+    <div >
+      <Toolbar>
+      <Image src="/Petrobytes.png" width={120}height={40} style={{backgroundColor:"black"}}/>
+
+
+      </Toolbar>
+      
+      {/* <Divider /> */}
+      
       <List>
         {['Dashboard', 'Accounts', 'Employees','Reports'].map((text, index) => (
           <ListItem key={text} disablePadding>
@@ -97,19 +106,22 @@ export default function ResponsiveDrawer() {
 
         }}
       >
-        <Toolbar>
-          <IconButton
-            // color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: 'none' } }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Responsive drawer
+        <Toolbar sx={{display:"flex",justifyContent:"space-between"}}>
+          
+          <Box sx={{color:"black",display:"flex",flexDirection:"column"}}>
+          <Typography sx={{fontStyle:"italic"}}>
+            30/05/2024
+            
           </Typography>
+          <Typography sx={{fontStyle:"italic"}}>Thursday</Typography>
+          </Box>
+          <Box sx={{alignItems:"end"}}>
+        <IconButton sx={{ p: 0}}>
+                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+              </IconButton>
+              </Box>
+              
+              
         </Toolbar>
       </AppBar>
     

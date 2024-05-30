@@ -27,7 +27,7 @@ export default function page() {
       }}
     >
     
-        <Button sx={{border:1,display:"flex",justifyContent:"flex-end"}} onClick={handleClickOpen}>
+        <Button sx={{border:1,display:"flex",justifyContent:"flex-end", }} onClick={handleClickOpen}>
             Add New
         </Button>
         {
