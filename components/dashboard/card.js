@@ -5,6 +5,7 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import EditIcon from '@mui/icons-material/Edit';
 
 const bull = (
   <Box
@@ -17,7 +18,7 @@ const bull = (
 
 export default function BasicCard({data}) {
   return (
-    <Card sx={{width:"200px",backgroundColor:"lightgreen" }}>
+    <Card sx={{width:"200px",backgroundColor:"white" ,boxShadow:10}}>
       <CardContent>
         <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
           {data.name}
@@ -36,7 +37,7 @@ export default function BasicCard({data}) {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small">View</Button>
+        <Button size="small"><EditIcon/></Button>
       </CardActions>
     </Card>
   );
