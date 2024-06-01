@@ -9,6 +9,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { Stack, TextField } from '@mui/material';
 import { PetrobyteContext } from '@/context/context';
+import axios from 'axios';
 
 export default function StaffNew({close}) {
 const { refreshEmployee, setRefreshEmployee } = React.useContext(PetrobyteContext);
@@ -31,7 +32,15 @@ const { refreshEmployee, setRefreshEmployee } = React.useContext(PetrobyteContex
     
   };
   const handleSave = () => {
-
+    let add = {
+      "emp_name": name,
+      "emp_email": email,
+      "emp_contact_no": phone,
+      "emp_address": address,
+      "emp_age": age
+    }
+    axios.post("https://petro.adaptable.app/employee",add).then((response)=>{alert(response.data.message)})
+    close()
     console.log(name,phone,age,address,email)
     setRefreshEmployee(!refreshEmployee)
     
