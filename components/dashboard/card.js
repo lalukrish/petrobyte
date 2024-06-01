@@ -6,19 +6,26 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import EditIcon from '@mui/icons-material/Edit';
+import DispencerDialog from './dispencerdialog';
 
-const bull = (
-  <Box
-    component="span"
-    sx={{ display: 'inline-block', mx: '2px', transform: 'scale(0.8)' }}
-  >
-    •
-  </Box>
-);
+
+
+
 
 export default function BasicCard({data}) {
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
   return (
-    <Card sx={{width:"200px",backgroundColor:"white" ,boxShadow:10}}>
+    <Card sx={{width:"200px",backgroundColor:"white" ,boxShadow:10}} >
+{open?<DispencerDialog data={data} close={handleClose}/>:null}
+
+
       <CardContent>
         <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
           {data.name}
@@ -30,14 +37,14 @@ export default function BasicCard({data}) {
           {data.Emp}
         </Typography>
         <Typography variant="body2">
-          Early Reading <br />
-          Late Reading
+          Early Metering:{data.EMtr} <br />
+          Late Metering:{data.LMtr}
          
           
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small"><EditIcon/></Button>
+        <Button size="small" onClick={handleClickOpen}><EditIcon/></Button>
       </CardActions>
     </Card>
   );
