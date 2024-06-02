@@ -59,11 +59,11 @@ const { refreshEmployee, setRefreshEmployee } = React.useContext(PetrobyteContex
         </DialogTitle>
         <DialogContent >
         <Stack spacing={2} sx={{width:"400px", padding:"5px"}}>
-        <TextField autoFocus id="outlined-basic" label="Name" variant="outlined" onChange={(event)=>{setName(event.target.value)}} />
-        <TextField  id="outlined-basic" label="Phone" variant="outlined" onChange={(event)=>{setPhone(event.target.value)}} />
-        <TextField id="outlined-basic" label="Age" variant="outlined" onChange={(event)=>{setAge(event.target.value)}} />
-        <TextField id="outlined-basic" label="Address" variant="outlined" onChange={(event)=>{setAddress(event.target.value)}}/>
-        <TextField id="outlined-basic" label="Email" variant="outlined" onChange={(event)=>{setEmail(event.target.value)}}/>
+        <TextField autoFocus id="outlined-basic" placeholder="Name" variant="outlined" onChange={(event)=>{setName(event.target.value)}} />
+        <TextField  id="outlined-basic" placeholder="Phone" variant="outlined" onChange={(event)=>{setPhone(event.target.value)}} />
+        <TextField id="outlined-basic" placeholder="Age" variant="outlined" onChange={(event)=>{setAge(event.target.value)}} />
+        <TextField id="outlined-basic" placeholder="Address" variant="outlined" onChange={(event)=>{setAddress(event.target.value)}}/>
+        <TextField id="outlined-basic" placeholder="Email" variant="outlined" onChange={(event)=>{setEmail(event.target.value)}}/>
         </Stack>
 
         </DialogContent>
