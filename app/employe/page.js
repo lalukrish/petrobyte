@@ -37,7 +37,7 @@ const { refreshEmployee, setRefreshEmployee } = React.useContext(PetrobyteContex
         padding: "10px",
       }}
     >
-      <Button
+      <Button variant="outlined" 
         sx={{ border: 1, display: "flex", justifyContent: "flex-end" }}
         onClick={handleClickOpen}
       >

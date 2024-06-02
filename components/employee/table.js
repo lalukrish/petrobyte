@@ -7,6 +7,8 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Button } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 
 
@@ -38,7 +40,7 @@ export default function DataTable({data}) {
               <TableCell align="center">{row.emp_contact_no}</TableCell>
               <TableCell align="center">{row.emp_address}</TableCell>
               <TableCell align="center">{row.emp_age}</TableCell>
-              <TableCell align="center"><Button>Edit</Button><Button>Delete</Button></TableCell>
+              <TableCell align="center"><Button><EditIcon/></Button><Button><DeleteIcon/></Button></TableCell>
             </TableRow>
           ))}
         </TableBody>

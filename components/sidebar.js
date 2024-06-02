@@ -79,7 +79,7 @@ export default function ResponsiveDrawer() {
           <ListItem key={item.link} disablePadding>
             <ListItemButton component={Link} to={item.link}>
               <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.name} />
+              <ListItemText primary={item.name} primaryTypographyProps={{ style: { fontWeight: "bold" } }} />
             </ListItemButton>
           </ListItem>
         ))}
@@ -119,8 +119,8 @@ export default function ResponsiveDrawer() {
           <Box
             sx={{ color: "black", display: "flex", flexDirection: "column" }}
           >
-            <Typography sx={{ fontStyle: "inherit" }}>{datePart}</Typography>
-            <Typography sx={{ fontStyle: "inherit" }}>{dayPart}</Typography>
+            <Typography sx={{ fontStyle: "inherit",fontWeight: "bold" }}>{datePart}</Typography>
+            <Typography sx={{ fontStyle: "inherit", fontWeight: "bold" }}>{dayPart}</Typography>
           </Box>
           <Box sx={{ alignItems: "end" }}>
             <IconButton
@@ -148,8 +148,8 @@ export default function ResponsiveDrawer() {
               open={Boolean(anchorEl)}
               onClose={handleClose}
             >
-              <MenuItem onClick={handleClose}>Profile</MenuItem>
-              <MenuItem onClick={handleClose}>Log out</MenuItem>
+              <MenuItem onClick={handleClose}><b>Profile</b></MenuItem>
+              <MenuItem onClick={handleClose}><b>Log out</b></MenuItem>
             </Menu>
           </Box>
         </Toolbar>
