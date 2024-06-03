@@ -102,10 +102,10 @@ export default function ExampleDialog({ fullScreen }) {
               variant="outlined"
             />
           </Box>
-          <TextField
+          <TextField 
               id=""
               
-              label="Amount"
+              label="Sale Amount"
               fullWidth
               variant="outlined"
             />
