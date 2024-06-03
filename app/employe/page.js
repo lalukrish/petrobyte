@@ -25,7 +25,8 @@ const { refreshEmployee, setRefreshEmployee } = React.useContext(PetrobyteContex
   };
   const handleClose = () => {
     setOpen(false);
-  }
+  };
+  
   return (
     <Box
       sx={{
