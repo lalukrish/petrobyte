@@ -19,6 +19,7 @@ import FuelNew from "@/components/accounts/dialogfuel";
 import ProductsNew from "@/components/accounts/dialogproduct";
 import ExpenseNew from "@/components/accounts/dialogexpense";
 import TestNew from "@/components/accounts/dialogtest";
+import TroubleshootIcon from '@mui/icons-material/Troubleshoot';
 
 export default function Page() {
   const [fuel, setFuel] = React.useState(false);
@@ -71,7 +72,7 @@ export default function Page() {
           <Tab icon={<LocalGasStationIcon />} iconPosition="start" label="Fuel Details" />
           <Tab icon={<ShoppingBasketIcon />} iconPosition="start" label="Product Details" />
           <Tab icon={<PointOfSaleIcon />} iconPosition="start" label="Expense Details" />
-          <Tab label="Test Details" />
+          <Tab icon={<TroubleshootIcon />} iconPosition="start" label="Test Details" />
         </Tabs>
       </Box>
 
@@ -118,26 +119,7 @@ export default function Page() {
           <Button variant="outlined" onClick={handleClickOpenfuel}>
             Add Fuel Details
           </Button>
-          {fuel && (
-            <TableContainer component={Paper}>
-              <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Column 1</TableCell>
-                    <TableCell>Column 2</TableCell>
-                    <TableCell>Column 3</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  <TableRow>
-                    <TableCell>Data 1</TableCell>
-                    <TableCell>Data 2</TableCell>
-                    <TableCell>Data 3</TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </TableContainer>
-          )}
+          
         </>
       )}
       {fuel ? <FuelNew close={handleClosefuel} /> : null}
