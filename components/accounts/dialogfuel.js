@@ -10,14 +10,14 @@ import {
   Stack,
   Grid,
   Box,
+  Typography,
 } from "@mui/material";
 import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 
-export default function ExampleDialog({ fullScreen }) {
-  const [open, setOpen] = useState(true);
-  const handleClose = () => setOpen(false);
+export default function FuelNew({ close }) {
+  const handleClose = () => close();
 
   const employees = ["John Doe", "Jane Smith", "Alice Johnson"];
   const dispencer = ["D1", "D2", "D3", "D4"];
@@ -32,7 +32,7 @@ export default function ExampleDialog({ fullScreen }) {
       //   sx={{ justifyContent: "center", alignItems: "center" }}
       maxWidth="md"
       fullWidth
-      fullScreen={fullScreen}
+      // fullScreen={fullScreen}
       open={open}
       onClose={handleClose}
       aria-labelledby="responsive-dialog-title"
@@ -50,7 +50,7 @@ export default function ExampleDialog({ fullScreen }) {
             )}
           />
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <Grid container spacing={2} sx={{ width: "100%", display: "flex" }}>
+            <Grid container spacing={2} sx={{  display: "flex" }}>
               <Grid item xl={6}>
                 <TimePicker
                   label="From"
@@ -76,7 +76,7 @@ export default function ExampleDialog({ fullScreen }) {
               <TextField {...params} label="Dispencer" fullWidth />
             )}
           />
-          <Autocomplete
+          {/* <Autocomplete
             disablePortal
             id="combo-box-demo"
             options={fuel}
@@ -84,8 +84,9 @@ export default function ExampleDialog({ fullScreen }) {
             renderInput={(params) => (
               <TextField {...params} label="Fuel" fullWidth />
             )}
-          />
-          <Box sx={{ display: "flex", gap: 2 }}>
+          /> */}
+          <Box sx={{ display: "flex",alignItems:"center", gap: 2 }}>
+            <Typography>Petrol</Typography>
             <TextField
               id="start-metering"
               
@@ -100,15 +101,50 @@ export default function ExampleDialog({ fullScreen }) {
               label="End Metering"
               fullWidth
               variant="outlined"
+              
             />
-          </Box>
-          <TextField 
+            <TextField 
               id=""
               
               label="Sale Amount"
               fullWidth
               variant="outlined"
             />
+          </Box>
+          <Box sx={{ display: "flex",alignItems:"center", gap: 2 }}>
+            <Typography>Diesel</Typography>
+            <TextField
+              id="start-metering"
+              
+              label="Start Metering"
+              
+              fullWidth
+              variant="outlined"
+            />
+            <TextField
+              id="end-metering"
+              
+              label="End Metering"
+              fullWidth
+              variant="outlined"
+              
+            />
+            <TextField 
+              id=""
+              
+              label="Sale Amount"
+              fullWidth
+              variant="outlined"
+            />
+          </Box>
+          <TextField 
+              id=""
+              
+              label="Total Sale Amount"
+              fullWidth
+              variant="outlined"
+            />
+          
         </Stack>
       </DialogContent>
       <DialogActions>

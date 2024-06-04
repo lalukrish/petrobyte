@@ -11,29 +11,44 @@ import Paper from "@mui/material/Paper";
 import { Box, Button } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import FuelNew from "@/components/accounts/dialogfuel.js";
+import FuelNew from "@/components/accounts/dialogfuel";
+import ProductsNew from "@/components/accounts/dialogproduct";
 
 export default function page() {
-  const [open, setOpen] = React.useState(false);
+ 
+  const [fuel, setFuel] = React.useState(false);
+  const [product, setProduct] = React.useState(false);
 
-  const handleClickOpen = () => {
-    setOpen(true);
+
+
+  const handleClickOpenfuel = () => {
+    setFuel(true);
   };
 
-  const handleClose = () => {
-      setOpen(false);
-    };
-  
+  const handleClosefuel = () => {
+    setFuel(false);
+  };
+  const handleClickOpenproduct = () => {
+    setProduct(true);
+  };
+
+  const handleCloseproduct = () => {
+    setProduct(false);
+  };
+
   return (
     <>
       <Box sx={{ display: "flex", gap: 2, paddingBottom: "20px" }}>
-        <Button variant="outlined" onClick={handleClickOpen}>
-          Add Fuel Details
+        <Button variant="outlined" onClick={handleClickOpenfuel}>
+           Fuel Details
         </Button>
-        {open ? <FuelNew close={handleClose} /> : null}
-        <Button variant="outlined">Add Product</Button>
-        <Button variant="outlined">Add Expense</Button>
-        <Button variant="outlined">Add Test</Button>
+        {fuel ? <FuelNew close={handleClosefuel} /> : null}
+        <Button variant="outlined" onClick={handleClickOpenproduct}>
+           Product Details
+        </Button>
+        {product ? <ProductsNew close={handleCloseproduct} /> : null}
+        <Button variant="outlined"> Expense Details</Button>
+        <Button variant="outlined">Test Details</Button>
       </Box>
 
       <TableContainer component={Paper}>
