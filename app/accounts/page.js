@@ -13,13 +13,14 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FuelNew from "@/components/accounts/dialogfuel";
 import ProductsNew from "@/components/accounts/dialogproduct";
+import ExpenseNew from "@/components/accounts/dialogexpense";
+import TestNew from "@/components/accounts/dialogtest";
 
 export default function page() {
- 
   const [fuel, setFuel] = React.useState(false);
   const [product, setProduct] = React.useState(false);
-
-
+  const [expense, setExpense] = React.useState(false);
+  const [test, setTest] = React.useState(false);
 
   const handleClickOpenfuel = () => {
     setFuel(true);
@@ -35,20 +36,40 @@ export default function page() {
   const handleCloseproduct = () => {
     setProduct(false);
   };
+  const handleClickOpenexpense = () => {
+    setExpense(true);
+  };
+
+  const handleCloseexpense = () => {
+    setExpense(false);
+  };
+  const handleClickOpentest = () => {
+    setTest(true);
+  };
+
+  const handleClosetest = () => {
+    setTest(false);
+  };
 
   return (
     <>
       <Box sx={{ display: "flex", gap: 2, paddingBottom: "20px" }}>
         <Button variant="outlined" onClick={handleClickOpenfuel}>
-           Fuel Details
+          Fuel Details
         </Button>
         {fuel ? <FuelNew close={handleClosefuel} /> : null}
         <Button variant="outlined" onClick={handleClickOpenproduct}>
-           Product Details
+          Product Details
         </Button>
         {product ? <ProductsNew close={handleCloseproduct} /> : null}
-        <Button variant="outlined"> Expense Details</Button>
-        <Button variant="outlined">Test Details</Button>
+        <Button variant="outlined" onClick={handleClickOpenexpense}>
+          Expense Details
+        </Button>
+        {expense ? <ExpenseNew close={handleCloseexpense} /> : null}
+        <Button variant="outlined" onClick={handleClickOpentest}>
+          Test Details
+        </Button>
+        {test ? <TestNew close={handleClosetest} /> : null}
       </Box>
 
       <TableContainer component={Paper}>
@@ -66,9 +87,9 @@ export default function page() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {/* {data.map((row) => ( */}
+            
             <TableRow
-              // key={row.emp_name}
+             
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
               <TableCell component="th" scope="row">
@@ -89,7 +110,7 @@ export default function page() {
                 </Button>
               </TableCell>
             </TableRow>
-            {/* ))} */}
+            
           </TableBody>
         </Table>
       </TableContainer>
