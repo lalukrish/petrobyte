@@ -116,7 +116,7 @@ export default function Page() {
       {selectedTab === 1 && (
          <>
           <Button variant="outlined" onClick={handleClickOpenfuel}>
-            Open Fuel Details
+            Add Fuel Details
           </Button>
           {fuel && (
             <TableContainer component={Paper}>
@@ -144,21 +144,21 @@ export default function Page() {
 
       {selectedTab === 2 && (
         <Button variant="outlined" onClick={handleClickOpenproduct}>
-          Open Product Details
+          Add Product Details
         </Button>
       )}
       {product ? <ProductsNew close={handleCloseproduct} /> : null}
 
       {selectedTab === 3 && (
         <Button variant="outlined" onClick={handleClickOpenexpense}>
-          Open Expense Details
+          Add Expense Details
         </Button>
       )}
       {expense ? <ExpenseNew close={handleCloseexpense} /> : null}
 
       {selectedTab === 4 && (
         <Button variant="outlined" onClick={handleClickOpentest}>
-          Open Test Details
+          Add Test Details
         </Button>
       )}
       {test ? <TestNew close={handleClosetest} /> : null}
