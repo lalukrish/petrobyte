@@ -119,29 +119,172 @@ export default function Page() {
           <Button variant="outlined" onClick={handleClickOpenfuel}>
             Add Fuel Details
           </Button>
+          <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                
+                <TableCell align="center">Name</TableCell>
+                <TableCell align="center">From</TableCell>
+                <TableCell align="center">To </TableCell>
+                <TableCell align="center">Dispencer</TableCell>
+                <TableCell align="center">Petrol</TableCell>
+                <TableCell align="center">Diesel</TableCell>
+
+
+                
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
+                <TableCell component="th" scope="row">
+                  
+                </TableCell>
+                <TableCell align="center">10001</TableCell>
+                <TableCell align="center">1200</TableCell>
+                <TableCell align="center">6000</TableCell>
+                
+                <TableCell align="center">
+                  <Button>
+                    <EditIcon />
+                  </Button>
+                  <Button>
+                    <DeleteIcon />
+                  </Button>
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </TableContainer>
+
           
         </>
       )}
       {fuel ? <FuelNew close={handleClosefuel} /> : null}
 
       {selectedTab === 2 && (
+        <>
         <Button variant="outlined" onClick={handleClickOpenproduct}>
           Add Product Details
         </Button>
+        <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell>Date</TableCell>
+              <TableCell align="center">Name</TableCell>
+              <TableCell align="center">Bank</TableCell>
+              <TableCell align="center">Hp Card</TableCell>
+              <TableCell align="center">Credit</TableCell>
+              
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
+              <TableCell component="th" scope="row">
+                18/07/2001
+              </TableCell>
+              <TableCell align="center">10001</TableCell>
+              <TableCell align="center">1200</TableCell>
+              <TableCell align="center">6000</TableCell>
+              
+              <TableCell align="center">
+                <Button>
+                  <EditIcon />
+                </Button>
+                <Button>
+                  <DeleteIcon />
+                </Button>
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </TableContainer>
+      </>
       )}
       {product ? <ProductsNew close={handleCloseproduct} /> : null}
 
       {selectedTab === 3 && (
+        <>
         <Button variant="outlined" onClick={handleClickOpenexpense}>
           Add Expense Details
         </Button>
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Date</TableCell>
+                <TableCell align="center">fuel</TableCell>
+                <TableCell align="center">Bank</TableCell>
+                <TableCell align="center">Hp Card</TableCell>
+                <TableCell align="center">Credit</TableCell>
+                
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
+                <TableCell component="th" scope="row">
+                  18/07/2001
+                </TableCell>
+                <TableCell align="center">10001</TableCell>
+                <TableCell align="center">1200</TableCell>
+                <TableCell align="center">6000</TableCell>
+                
+                <TableCell align="center">
+                  <Button>
+                    <EditIcon />
+                  </Button>
+                  <Button>
+                    <DeleteIcon />
+                  </Button>
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </TableContainer>
+        </>
       )}
       {expense ? <ExpenseNew close={handleCloseexpense} /> : null}
 
       {selectedTab === 4 && (
+        <>
         <Button variant="outlined" onClick={handleClickOpentest}>
           Add Test Details
         </Button>
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Date</TableCell>
+                <TableCell align="center">fuel</TableCell>
+                <TableCell align="center">Bank</TableCell>
+                <TableCell align="center">Hp Card</TableCell>
+                <TableCell align="center">Credit</TableCell>
+                
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
+                <TableCell component="th" scope="row">
+                  18/07/2001
+                </TableCell>
+                <TableCell align="center">10001</TableCell>
+                <TableCell align="center">1200</TableCell>
+                <TableCell align="center">6000</TableCell>
+                
+                <TableCell align="center">
+                  <Button>
+                    <EditIcon />
+                  </Button>
+                  <Button>
+                    <DeleteIcon />
+                  </Button>
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </TableContainer>
+        </>
       )}
       {test ? <TestNew close={handleClosetest} /> : null}
     </>
