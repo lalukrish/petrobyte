@@ -8,12 +8,9 @@ import {
   TextField,
   Autocomplete,
   Stack,
-  Grid,
-  Box,
 } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
-
-// import dayjs from "dayjs";
+import RemoveIcon from '@mui/icons-material/Remove';
 
 export default function ProductsNew({ close }) {
   const handleClose2 = () => close();
@@ -34,46 +31,65 @@ export default function ProductsNew({ close }) {
     "Adblue",
     "Generator",
   ];
-  const [rows, setRows] = useState([{ id: 1 }]);
+  
+  const [firstRow, setFirstRow] = useState({
+    products: '',
+    price: '',
+    qty: 1,
+    total: ''
+  });
+  const [rows, setRows] = useState([firstRow]);
 
   const handleAddClick = () => {
-    setRows([...rows, { id: rows.length + 1 }]);
+    setRows([...rows, { ...firstRow }]);
   };
-  //   const dispencer = ["D1", "D2", "D3", "D4"];
-  //   const fuel = ["Petrol", "Diesel"];
-  //   const start = [];
-  //   const end = [];
 
-  // const todayStartOfTheDay = dayjs().startOf("day"); // Example date
+  const handleRemoveClick = (index) => {
+    if (rows.length === 1) return;
+    setRows(rows.filter((_, i) => i !== index));
+  };
+
+  const handleChange = (index, field, value) => {
+    const updatedRows = [...rows];
+    updatedRows[index][field] = value;
+    setRows(updatedRows);
+  };
 
   return (
     <Dialog
-      sx={{}}
       maxWidth="md"
       fullWidth
-      open={open}
+      open={true}
       onClose={handleClose2}
       aria-labelledby="responsive-dialog-title"
     >
       <DialogTitle id="responsive-dialog-title">Products Details</DialogTitle>
       <DialogContent sx={{ height: 600 }}>
         {rows.map((row, index) => (
-          <Stack key={row.id} spacing={2} direction="row" sx={{ padding: "10px" }}>
+          <Stack key={index} spacing={2} direction="row" sx={{ padding: "10px" }}>
             <Autocomplete
               disablePortal
               id={`combo-box-demo-${index}`}
               options={products}
               sx={{ width: "100%" }}
+              value={row.products}
+              onChange={(event, value) => handleChange(index, 'products', value)}
               renderInput={(params) => (
                 <TextField {...params} label="Products" fullWidth />
               )}
             />
-            <TextField label="Price" variant="outlined" />
+            <TextField 
+              label="Price" 
+              variant="outlined" 
+              value={row.price}
+              onChange={(event) => handleChange(index, 'price', event.target.value)}
+            />
             <TextField
               id={`outlined-number-${index}`}
               label="Qty"
               type="number"
-              defaultValue={1}
+              value={row.qty}
+              onChange={(event) => handleChange(index, 'qty', event.target.value)}
               InputLabelProps={{
                 shrink: true,
               }}
@@ -81,12 +97,26 @@ export default function ProductsNew({ close }) {
                 min: 1,
               }}
             />
-            <TextField id={`total-${index}`} label="Total" fullWidth variant="outlined" />
-          
-        <Button onClick={handleAddClick}>
-          <AddIcon color="success" variant="outlined" /> 
-        </Button>
-        </Stack>
+            <TextField 
+              id={`total-${index}`} 
+              label="Total" 
+              fullWidth 
+              variant="outlined" 
+              value={row.total}
+              onChange={(event) => handleChange(index, 'total', event.target.value)}
+            />
+            
+            {rows.length > 1 && (
+              <Button onClick={() => handleRemoveClick(index)}>
+                <RemoveIcon color="error" />
+              </Button>
+            )}
+            {index === rows.length - 1 && (
+              <Button onClick={handleAddClick}>
+                <AddIcon color="success" />
+              </Button>
+            )}
+          </Stack>
         ))}
       </DialogContent>
       <DialogActions>
