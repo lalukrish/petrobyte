@@ -145,12 +145,12 @@ export default function Page() {
                 <TableCell align="center">6000</TableCell>
                 
                 <TableCell align="center">
-                  <Button>
+                  {/* <Button>
                     <EditIcon />
                   </Button>
                   <Button>
                     <DeleteIcon />
-                  </Button>
+                  </Button> */}
                 </TableCell>
               </TableRow>
             </TableBody>
