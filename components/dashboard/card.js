@@ -22,7 +22,7 @@ export default function BasicCard({data}) {
     setOpen(false);
   };
   return (
-    <Card sx={{width:"200px",backgroundColor:"white" ,boxShadow:10}} >
+    <Card sx={{width:"200px",backgroundColor:"white" ,boxShadow:10 ,gap:20}}  >
 {open?<DispencerDialog data={data} close={handleClose}/>:null}
 
 

@@ -7,7 +7,6 @@ import React from 'react'
 
 
 const Employees = () => {
-  
 
   let array=[
     {
@@ -49,9 +48,9 @@ const Employees = () => {
       <Liverate />
     </Box>
     <Box sx={{display:"flex", gap:2, justifyContent:"center",mt:4}}>
+    
     {
-    array.map((item)=>(<BasicCard data={item}/>))
-      
+    array.map((item)=>(<BasicCard data={item}/>))    
     }
     
     </Box>
