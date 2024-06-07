@@ -79,9 +79,9 @@ export default function Page() {
       {selectedTab === 0 && (
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
+            <TableHead sx={{fontStyle:"normal",backgroundColor:"beige"}}>
               <TableRow>
-                <TableCell>Date</TableCell>
+                <TableCell align="center">Date</TableCell>
                 <TableCell align="center">Cash in hand</TableCell>
                 <TableCell align="center">Bank</TableCell>
                 <TableCell align="center">Hp Card</TableCell>
@@ -92,7 +92,7 @@ export default function Page() {
             </TableHead>
             <TableBody>
               <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-                <TableCell component="th" scope="row">
+                <TableCell component="th" scope="row" align="center">
                   18/07/2001
                 </TableCell>
                 <TableCell align="center">10001</TableCell>
@@ -121,37 +121,66 @@ export default function Page() {
           </Button>
           <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
-              <TableRow>
+            <TableHead sx={{fontStyle:"normal",backgroundColor:"beige"}}>
+            <TableRow>
+            
+                <TableCell align="center" colSpan={5} >Staff</TableCell>
+                <TableCell align="center" colSpan={3}>Petrol</TableCell>
+
+                <TableCell align="center" colSpan={3}>Diesel</TableCell>
+                <TableCell align="center" colSpan={2}></TableCell>
                 
-                <TableCell align="center">Name</TableCell>
+                
+                
+            </TableRow>
+            <TableRow>
+            <TableCell  align="center">
+                Date
+              </TableCell>
+            <TableCell align="center">Name</TableCell>
                 <TableCell align="center">From</TableCell>
                 <TableCell align="center">To </TableCell>
                 <TableCell align="center">Dispencer</TableCell>
-                <TableCell align="center">Petrol</TableCell>
-                <TableCell align="center">Diesel</TableCell>
+                <TableCell align="center">SM</TableCell>
+                <TableCell align="center">EM</TableCell>
+                <TableCell align="center">Sale Amount</TableCell>
+                <TableCell align="center">SM</TableCell>
+                <TableCell align="center">EM</TableCell>
+                <TableCell align="center">Sale Amount</TableCell>
+                <TableCell align="center">Total Amount</TableCell>
+                <TableCell align="center">Actions</TableCell>
+              
+            </TableRow>
+                
+               
+
+
+
 
 
                 
-              </TableRow>
+              
             </TableHead>
             <TableBody>
               <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
+              <TableCell  align="center">
+                18/07/2001
+              </TableCell>
                 <TableCell component="th" scope="row">
+                  Aslam
                   
                 </TableCell>
-                <TableCell align="center">10001</TableCell>
-                <TableCell align="center">1200</TableCell>
-                <TableCell align="center">6000</TableCell>
-                
-                <TableCell align="center">
-                  {/* <Button>
-                    <EditIcon />
-                  </Button>
-                  <Button>
-                    <DeleteIcon />
-                  </Button> */}
-                </TableCell>
+                <TableCell align="center">9:00</TableCell>
+                <TableCell align="center">6:00</TableCell>
+                <TableCell align="center">D1</TableCell>
+                <TableCell align="center">213000</TableCell>
+                <TableCell align="center">523000</TableCell>
+                <TableCell align="center">500000</TableCell>
+                <TableCell align="center">114000</TableCell>
+                <TableCell align="center">330000</TableCell>
+                <TableCell align="center">600000</TableCell>
+                <TableCell align="center">1100000</TableCell>
+                <TableCell align="center"><EditIcon/></TableCell>
               </TableRow>
             </TableBody>
           </Table>
@@ -169,31 +198,30 @@ export default function Page() {
         </Button>
         <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead>
+          <TableHead sx={{fontStyle:"normal",backgroundColor:"beige"}}>
             <TableRow>
-              <TableCell>Date</TableCell>
-              <TableCell align="center">Name</TableCell>
-              <TableCell align="center">Bank</TableCell>
-              <TableCell align="center">Hp Card</TableCell>
-              <TableCell align="center">Credit</TableCell>
+              <TableCell align="center">Date</TableCell>
+              <TableCell align="center">Product</TableCell>
+              <TableCell align="center">Price</TableCell>
+              <TableCell align="center">Quantity</TableCell>
+              <TableCell align="center">Total</TableCell>
+              <TableCell align="center">Actions</TableCell>
+
               
             </TableRow>
           </TableHead>
           <TableBody>
             <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-              <TableCell component="th" scope="row">
+              <TableCell  align="center">
                 18/07/2001
               </TableCell>
-              <TableCell align="center">10001</TableCell>
-              <TableCell align="center">1200</TableCell>
-              <TableCell align="center">6000</TableCell>
-              
+              <TableCell align="center">Grease</TableCell>
+              <TableCell align="center">700</TableCell>
+              <TableCell align="center">1</TableCell>
+              <TableCell align="center">700</TableCell>
               <TableCell align="center">
                 <Button>
                   <EditIcon />
-                </Button>
-                <Button>
-                  <DeleteIcon />
                 </Button>
               </TableCell>
             </TableRow>
@@ -211,31 +239,30 @@ export default function Page() {
         </Button>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
+            <TableHead sx={{fontStyle:"normal",backgroundColor:"beige"}}>
               <TableRow>
-                <TableCell>Date</TableCell>
-                <TableCell align="center">fuel</TableCell>
-                <TableCell align="center">Bank</TableCell>
-                <TableCell align="center">Hp Card</TableCell>
-                <TableCell align="center">Credit</TableCell>
+                <TableCell align="center">Date</TableCell>
+                <TableCell align="center">Expense Type</TableCell>
+                <TableCell align="center">Amount</TableCell>
+                <TableCell align="center">Comments</TableCell>
+                <TableCell align="center">Actions</TableCell>
+
+                
                 
               </TableRow>
             </TableHead>
             <TableBody>
               <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-                <TableCell component="th" scope="row">
+                <TableCell component="th" scope="row" align="center">
                   18/07/2001
                 </TableCell>
-                <TableCell align="center">10001</TableCell>
-                <TableCell align="center">1200</TableCell>
-                <TableCell align="center">6000</TableCell>
+                <TableCell align="center">Bills</TableCell>
+                <TableCell align="center">4000</TableCell>
+                <TableCell align="center">Electricity</TableCell>
                 
                 <TableCell align="center">
                   <Button>
                     <EditIcon />
-                  </Button>
-                  <Button>
-                    <DeleteIcon />
                   </Button>
                 </TableCell>
               </TableRow>
@@ -253,32 +280,27 @@ export default function Page() {
         </Button>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
+            <TableHead sx={{fontStyle:"normal",backgroundColor:"beige"}}>
               <TableRow>
-                <TableCell>Date</TableCell>
-                <TableCell align="center">fuel</TableCell>
-                <TableCell align="center">Bank</TableCell>
-                <TableCell align="center">Hp Card</TableCell>
-                <TableCell align="center">Credit</TableCell>
+                <TableCell align="center">Date</TableCell>
+                <TableCell align="center">Petrol in Lts</TableCell>
+                <TableCell align="center">Diesel in Lts</TableCell>
+                <TableCell align="center">Actions</TableCell>
                 
               </TableRow>
             </TableHead>
             <TableBody>
               <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-                <TableCell component="th" scope="row">
+                <TableCell component="th" scope="row" align="center">
                   18/07/2001
                 </TableCell>
                 <TableCell align="center">10001</TableCell>
-                <TableCell align="center">1200</TableCell>
-                <TableCell align="center">6000</TableCell>
-                
+                <TableCell align="center">1200</TableCell>                
                 <TableCell align="center">
                   <Button>
                     <EditIcon />
                   </Button>
-                  <Button>
-                    <DeleteIcon />
-                  </Button>
+                  
                 </TableCell>
               </TableRow>
             </TableBody>
