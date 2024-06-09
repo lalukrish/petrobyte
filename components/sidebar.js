@@ -68,7 +68,7 @@ export default function ResponsiveDrawer() {
   ];
 
   const drawer = (
-    <div>
+    <div style={{background:"beige"}}>
       <Toolbar>
         <Image src="/Petro.png" width={140} height={60} />
       </Toolbar>
@@ -112,7 +112,7 @@ export default function ResponsiveDrawer() {
         sx={{
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           ml: { sm: `${drawerWidth}px` },
-          backgroundColor: "white",
+          backgroundColor: "beige",
         }}
       >
         <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -175,6 +175,7 @@ export default function ResponsiveDrawer() {
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
               width: drawerWidth,
+              
             },
           }}
         >
@@ -187,6 +188,7 @@ export default function ResponsiveDrawer() {
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
               width: drawerWidth,
+              background:"beige"
             },
           }}
           open
@@ -200,6 +202,7 @@ export default function ResponsiveDrawer() {
           flexGrow: 1,
           p: 3,
           width: { sm: `calc(100% - ${drawerWidth}px)` },
+          
         }}
       >
         <Toolbar />

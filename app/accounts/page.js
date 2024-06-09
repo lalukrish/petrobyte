@@ -81,13 +81,13 @@ export default function Page() {
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead sx={{fontStyle:"normal",backgroundColor:"beige"}}>
               <TableRow>
-                <TableCell align="center">Date</TableCell>
-                <TableCell align="center">Cash in hand</TableCell>
-                <TableCell align="center">Bank</TableCell>
-                <TableCell align="center">Hp Card</TableCell>
-                <TableCell align="center">Credit</TableCell>
-                <TableCell align="center">Net Amount</TableCell>
-                <TableCell align="center">Action</TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Date</TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Cash in hand</TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Bank</TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Hp Card</TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Credit</TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Net Amount</TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Action</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -116,39 +116,39 @@ export default function Page() {
 
       {selectedTab === 1 && (
          <>
-          <Button variant="outlined" onClick={handleClickOpenfuel}>
+          <Button variant="outlined" onClick={handleClickOpenfuel} style={{marginBottom:"20px"}}>
             Add Fuel Details
           </Button>
-          <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableContainer component={Paper} >
+          <Table sx={{ minWidth: 650 }} aria-label="simple table" >
             <TableHead sx={{fontStyle:"normal",backgroundColor:"beige"}}>
             <TableRow>
             
-                <TableCell align="center" colSpan={5} >Staff</TableCell>
-                <TableCell align="center" colSpan={3}>Petrol</TableCell>
+                <TableCell align="center" colSpan={5} sx={{ fontWeight: 'bold' }}>Staff</TableCell>
+                <TableCell align="center" colSpan={3} sx={{ fontWeight: 'bold' }}>Petrol</TableCell>
 
-                <TableCell align="center" colSpan={3}>Diesel</TableCell>
-                <TableCell align="center" colSpan={2}></TableCell>
+                <TableCell align="center" colSpan={3} sx={{ fontWeight: 'bold' }}>Diesel</TableCell>
+                <TableCell align="center" colSpan={2} sx={{ fontWeight: 'bold' }}></TableCell>
                 
                 
                 
             </TableRow>
             <TableRow>
-            <TableCell  align="center">
+            <TableCell  align="center" sx={{ fontWeight: 'bold' }}>
                 Date
               </TableCell>
-            <TableCell align="center">Name</TableCell>
-                <TableCell align="center">From</TableCell>
-                <TableCell align="center">To </TableCell>
-                <TableCell align="center">Dispencer</TableCell>
-                <TableCell align="center">SM</TableCell>
-                <TableCell align="center">EM</TableCell>
-                <TableCell align="center">Sale Amount</TableCell>
-                <TableCell align="center">SM</TableCell>
-                <TableCell align="center">EM</TableCell>
-                <TableCell align="center">Sale Amount</TableCell>
-                <TableCell align="center">Total Amount</TableCell>
-                <TableCell align="center">Actions</TableCell>
+            <TableCell align="center" sx={{ fontWeight: 'bold' }}>Name</TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>From</TableCell>
+                <TableCell align="center"sx={{ fontWeight: 'bold' }}>To </TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Dispencer</TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>SM</TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>EM</TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Sale Amount</TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>SM</TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>EM</TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Sale Amount</TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Total Amount</TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Actions</TableCell>
               
             </TableRow>
                 
@@ -193,19 +193,19 @@ export default function Page() {
 
       {selectedTab === 2 && (
         <>
-        <Button variant="outlined" onClick={handleClickOpenproduct}>
+        <Button variant="outlined" onClick={handleClickOpenproduct} style={{marginBottom:"20px"}}>
           Add Product Details
         </Button>
         <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead sx={{fontStyle:"normal",backgroundColor:"beige"}}>
             <TableRow>
-              <TableCell align="center">Date</TableCell>
-              <TableCell align="center">Product</TableCell>
-              <TableCell align="center">Price</TableCell>
-              <TableCell align="center">Quantity</TableCell>
-              <TableCell align="center">Total</TableCell>
-              <TableCell align="center">Actions</TableCell>
+              <TableCell align="center" sx={{ fontWeight: 'bold' }}>Date</TableCell>
+              <TableCell align="center" sx={{ fontWeight: 'bold' }}>Product</TableCell>
+              <TableCell align="center" sx={{ fontWeight: 'bold' }}>Price</TableCell>
+              <TableCell align="center" sx={{ fontWeight: 'bold' }}>Quantity</TableCell>
+              <TableCell align="center" sx={{ fontWeight: 'bold' }}>Total</TableCell>
+              <TableCell align="center" sx={{ fontWeight: 'bold' }} >Actions</TableCell>
 
               
             </TableRow>
@@ -234,18 +234,18 @@ export default function Page() {
 
       {selectedTab === 3 && (
         <>
-        <Button variant="outlined" onClick={handleClickOpenexpense}>
+        <Button variant="outlined" onClick={handleClickOpenexpense} style={{marginBottom:"20px"}}>
           Add Expense Details
         </Button>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead sx={{fontStyle:"normal",backgroundColor:"beige"}}>
               <TableRow>
-                <TableCell align="center">Date</TableCell>
-                <TableCell align="center">Expense Type</TableCell>
-                <TableCell align="center">Amount</TableCell>
-                <TableCell align="center">Comments</TableCell>
-                <TableCell align="center">Actions</TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Date</TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Expense Type</TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Amount</TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Comments</TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Actions</TableCell>
 
                 
                 
@@ -275,17 +275,17 @@ export default function Page() {
 
       {selectedTab === 4 && (
         <>
-        <Button variant="outlined" onClick={handleClickOpentest}>
+        <Button variant="outlined" onClick={handleClickOpentest} style={{marginBottom:"20px"}}>
           Add Test Details
         </Button>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead sx={{fontStyle:"normal",backgroundColor:"beige"}}>
               <TableRow>
-                <TableCell align="center">Date</TableCell>
-                <TableCell align="center">Petrol in Lts</TableCell>
-                <TableCell align="center">Diesel in Lts</TableCell>
-                <TableCell align="center">Actions</TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Date</TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Petrol in Lts</TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Diesel in Lts</TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Actions</TableCell>
                 
               </TableRow>
             </TableHead>

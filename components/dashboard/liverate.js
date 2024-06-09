@@ -17,9 +17,10 @@ function Liverate() {
 
     
     <>
-   <Grid sx={{display:"flex",flexDirection:"row"}}>  
+   <Grid sx={{display:"flex",flexDirection:"row",gap:2,alignItems:"center"}}>  
 
-<Card sx={{width:"300px",height:"150px",backgroundColor:"white",boxShadow:10 }}>
+<Card sx={{width:"270px",height:"150px",backgroundColor:"white",boxShadow:10,background: 'linear-gradient(to bottom, #d7ccc8, #3e2723)',
+    color: 'black' }}>
 {open?<DashboardNew close={handleClose}/>:null}
 <CardContent>
 <Typography variant="h5" component="div">
@@ -42,7 +43,8 @@ function Liverate() {
 </Card>
 
 
-<Card sx={{width:"300px",height:"150px",backgroundColor:"white",boxShadow:10 }}>
+<Card sx={{width:"270px",height:"150px",backgroundColor:"white",boxShadow:10 ,background: 'linear-gradient(to bottom, #d7ccc8, #3e2723)',
+    color: 'black'}}>
 {open?<DashboardNew close={handleClose}/>:null}
 <CardContent>
 <Typography variant="h5" component="div">
@@ -65,7 +67,8 @@ function Liverate() {
 </Card>
 
 
-<Card sx={{width:"300px",height:"150px",backgroundColor:"white",boxShadow:10 }}>
+<Card sx={{width:"270px",height:"150px",backgroundColor:"white",boxShadow:10,background: 'linear-gradient(to bottom, #d7ccc8, #3e2723)',
+    color: 'black' }}>
 {open?<DashboardNew close={handleClose}/>:null}
 <CardContent>
 <Typography variant="h5" component="div">
@@ -87,7 +90,8 @@ function Liverate() {
 </Card>
 
 
-<Card sx={{width:"300px",height:"150px",backgroundColor:"white",boxShadow:10 }}>
+<Card sx={{width:"270px",height:"150px",backgroundColor:"white",boxShadow:10,background: 'linear-gradient(to bottom, #d7ccc8, #3e2723)',
+    color: 'black' }}>
 {open?<DashboardNew close={handleClose}/>:null}
 <CardContent>
 <Typography variant="h5" component="div">

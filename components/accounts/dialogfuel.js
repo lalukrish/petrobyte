@@ -37,7 +37,7 @@ export default function FuelNew({ close }) {
       onClose={handleClose}
       aria-labelledby="responsive-dialog-title"
     >
-      <DialogTitle id="responsive-dialog-title">Add Fuel Details</DialogTitle>
+      <DialogTitle id="responsive-dialog-title" >Add Fuel Details</DialogTitle>
       <DialogContent>
         <Stack spacing={2} sx={{ width: "100%", padding: "5px" }}>
           <Autocomplete

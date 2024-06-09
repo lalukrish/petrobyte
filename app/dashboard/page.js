@@ -10,7 +10,7 @@ const Employees = () => {
 
   let array=[
     {
-      name:"Dispencer1",
+      name:"D1",
       fuel:"Petrol",
       Emp:"Staff1",
       EMtr:"00",
@@ -18,7 +18,7 @@ const Employees = () => {
       
     },
     {
-      name:"Dispencer2",
+      name:"D2",
       fuel:"Petrol",
       Emp:"Staff2",
       EMtr:"00",
@@ -26,7 +26,7 @@ const Employees = () => {
 
     },
     {
-      name:"Dispencer3",
+      name:"D3",
       fuel:"Diesel",
       Emp:"Staff3",
       EMtr:"00",
@@ -34,7 +34,7 @@ const Employees = () => {
 
     },
     {
-      name:"Dispencer4",
+      name:"D4",
       fuel:"Diesel",
       Emp:"Staff4",
       EMtr:"00",
