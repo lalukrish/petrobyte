@@ -25,20 +25,20 @@ export default function BasicCard({data}) {
     setOpen(false);
   };
   return (
-    <Card sx={{width:"200px",backgroundColor:"white" ,boxShadow:10 ,gap:20,background: 'linear-gradient(to bottom, #b2dfdb, #004d40)',
+    <Card sx={{width:"200px",backgroundColor:"white" ,boxShadow:10 ,gap:10,background: "#bbdefb",
       color: 'black'}}  >
 {open?<DispencerDialog data={data} close={handleClose}/>:null}
 
 
       <CardContent>
-        <Typography sx={{ fontSize: 16,fontWeight:"bold" }} color="text.secondary" gutterBottom>
-        <LocalGasStationIcon sx={{marginTop:"10px"}}/>{data.name}
+        <Typography sx={{ fontSize: 16,fontWeight:"bold" }} color="#0d47a1" gutterBottom>
+        <LocalGasStationIcon sx={{marginTop:"10px",color: "#0d47a1"}}/>{data.name}
         </Typography>
         <Typography variant="h5" component="div">
           {data.fuel}
         </Typography>
         <>
-        <Typography sx={{ mb: 1.5 }} color="text.secondary">
+        <Typography sx={{ mb: 1.5 }} color="#0d47a1">
           <Person4Icon sx={{paddingTop:"5px"}}/>{data.Emp}
         </Typography></>
         <Typography variant="body2">
@@ -49,7 +49,7 @@ export default function BasicCard({data}) {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small" onClick={handleClickOpen}><EditIcon/></Button>
+        <Button size="small" onClick={handleClickOpen}><EditIcon sx={{ color: "#1e88e5" }}/></Button>
       </CardActions>
     </Card>
   );

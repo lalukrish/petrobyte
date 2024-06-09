@@ -43,7 +43,8 @@ const Employees = () => {
     }
   ]
   return (
-    <>
+    
+    <div>
      <Box sx={{display:"flex",justifyContent:"center",marginTop:"2px"}}>
       <Liverate />
     </Box>
@@ -56,7 +57,7 @@ const Employees = () => {
     </Box>
    
     
-    </>
+    </div>
   )
 }
 

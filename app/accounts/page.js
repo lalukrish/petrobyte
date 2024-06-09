@@ -26,6 +26,8 @@ export default function Page() {
   const [product, setProduct] = React.useState(false);
   const [expense, setExpense] = React.useState(false);
   const [test, setTest] = React.useState(false);
+
+  
   const [selectedTab, setSelectedTab] = React.useState(0);
 
   const handleTabChange = (event, newValue) => {
@@ -63,23 +65,26 @@ export default function Page() {
   const handleClosetest = () => {
     setTest(false);
   };
+  const getIconColor = (tabIndex) => {
+    return selectedTab === tabIndex ? '#0d47a1' : 'inherit';
+  };
 
   return (
     <>
       <Box sx={{ display: "flex", gap: 2, paddingBottom: "20px" }}>
         <Tabs value={selectedTab} onChange={handleTabChange} aria-label="details tabs">
-          <Tab icon={<AccountBalanceWalletIcon />} iconPosition="start" label="Account" />
-          <Tab icon={<LocalGasStationIcon />} iconPosition="start" label="Fuel Details" />
-          <Tab icon={<ShoppingBasketIcon />} iconPosition="start" label="Product Details" />
-          <Tab icon={<PointOfSaleIcon />} iconPosition="start" label="Expense Details" />
-          <Tab icon={<TroubleshootIcon />} iconPosition="start" label="Test Details" />
+          <Tab icon={<AccountBalanceWalletIcon sx={{ color: getIconColor(0) }} />} iconPosition="start" label="Account" />
+          <Tab icon={<LocalGasStationIcon sx={{ color: getIconColor(1) }} />} iconPosition="start" label="Fuel Details" />
+          <Tab icon={<ShoppingBasketIcon sx={{ color: getIconColor(2) }}/>} iconPosition="start" label="Product Details" />
+          <Tab icon={<PointOfSaleIcon sx={{ color: getIconColor(3) }}/>} iconPosition="start" label="Expense Details" />
+          <Tab icon={<TroubleshootIcon sx={{ color: getIconColor(4) }}/>} iconPosition="start" label="Test Details" />
         </Tabs>
       </Box>
 
       {selectedTab === 0 && (
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead sx={{fontStyle:"normal",backgroundColor:"beige"}}>
+            <TableHead sx={{fontStyle:"normal",backgroundColor:"skyblue"}}>
               <TableRow>
                 <TableCell align="center" sx={{ fontWeight: 'bold' }}>Date</TableCell>
                 <TableCell align="center" sx={{ fontWeight: 'bold' }}>Cash in hand</TableCell>
@@ -121,7 +126,7 @@ export default function Page() {
           </Button>
           <TableContainer component={Paper} >
           <Table sx={{ minWidth: 650 }} aria-label="simple table" >
-            <TableHead sx={{fontStyle:"normal",backgroundColor:"beige"}}>
+            <TableHead sx={{fontStyle:"normal",backgroundColor:"skyblue"}}>
             <TableRow>
             
                 <TableCell align="center" colSpan={5} sx={{ fontWeight: 'bold' }}>Staff</TableCell>
@@ -151,15 +156,6 @@ export default function Page() {
                 <TableCell align="center" sx={{ fontWeight: 'bold' }}>Actions</TableCell>
               
             </TableRow>
-                
-               
-
-
-
-
-
-                
-              
             </TableHead>
             <TableBody>
               <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
@@ -198,7 +194,7 @@ export default function Page() {
         </Button>
         <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead sx={{fontStyle:"normal",backgroundColor:"beige"}}>
+          <TableHead sx={{fontStyle:"normal",backgroundColor:"skyblue"}}>
             <TableRow>
               <TableCell align="center" sx={{ fontWeight: 'bold' }}>Date</TableCell>
               <TableCell align="center" sx={{ fontWeight: 'bold' }}>Product</TableCell>
@@ -239,7 +235,7 @@ export default function Page() {
         </Button>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead sx={{fontStyle:"normal",backgroundColor:"beige"}}>
+            <TableHead sx={{fontStyle:"normal",backgroundColor:"skyblue"}}>
               <TableRow>
                 <TableCell align="center" sx={{ fontWeight: 'bold' }}>Date</TableCell>
                 <TableCell align="center" sx={{ fontWeight: 'bold' }}>Expense Type</TableCell>
@@ -280,7 +276,7 @@ export default function Page() {
         </Button>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead sx={{fontStyle:"normal",backgroundColor:"beige"}}>
+            <TableHead sx={{fontStyle:"normal",backgroundColor:"skyblue"}}>
               <TableRow>
                 <TableCell align="center" sx={{ fontWeight: 'bold' }}>Date</TableCell>
                 <TableCell align="center" sx={{ fontWeight: 'bold' }}>Petrol in Lts</TableCell>
