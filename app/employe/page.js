@@ -39,12 +39,12 @@ const { refreshEmployee, setRefreshEmployee } = React.useContext(PetrobyteContex
       }}
     >
       <Button variant="outlined" 
-        sx={{ border: 1, display: "flex", justifyContent: "flex-end" }}
+        sx={{ border: 1, display: "flex", justifyContent: "flex-end",marginBottom:"20px" }}
         onClick={handleClickOpen}
       >
         Add New
       </Button>
-      {open ? <StaffNew close={handleClose} /> : null}
+      {open ? <StaffNew  close={handleClose} /> : null}
 
       <BasicTable data={employee}/>
     </Box>

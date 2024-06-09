@@ -61,14 +61,14 @@ export default function ResponsiveDrawer() {
   };
 
   const routes = [
-    { name: "Dashboard", link: "/dashboard", icon: <SpaceDashboardIcon /> },
-    { name: "Accounts", link: "/accounts", icon: <AccountBalanceWalletIcon /> },
-    { name: "Employee", link: "/employe", icon: <GroupsIcon /> },
-    { name: "Reports", link: "/reports", icon: <ArticleIcon /> },
+    { name: "Dashboard", link: "/dashboard", icon: <SpaceDashboardIcon  sx={{ color: "#0d47a1" }}/> },
+    { name: "Accounts", link: "/accounts", icon: <AccountBalanceWalletIcon sx={{ color: "#0d47a1" }} /> },
+    { name: "Employee", link: "/employe", icon: <GroupsIcon sx={{ color: "#0d47a1" }}/> },
+    { name: "Reports", link: "/reports", icon: <ArticleIcon sx={{ color: "#0d47a1" }}/> },
   ];
 
   const drawer = (
-    <div style={{background:"beige"}}>
+    <div style={{background:"#e3f2fd"}}>
       <Toolbar>
         <Image src="/Petro.png" width={140} height={60} />
       </Toolbar>
@@ -79,7 +79,7 @@ export default function ResponsiveDrawer() {
           <ListItem key={item.link} disablePadding>
             <ListItemButton component={Link} to={item.link}>
               <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.name} primaryTypographyProps={{ style: { fontWeight: "bold" } }} />
+              <ListItemText primary={item.name} primaryTypographyProps={{ style: { fontWeight: "" } }} />
             </ListItemButton>
           </ListItem>
         ))}
@@ -112,15 +112,15 @@ export default function ResponsiveDrawer() {
         sx={{
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           ml: { sm: `${drawerWidth}px` },
-          backgroundColor: "beige",
+          backgroundColor: "#e3f2fd",
         }}
       >
         <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
           <Box
             sx={{ color: "black", display: "flex", flexDirection: "column" }}
           >
-            <Typography sx={{ fontStyle: "inherit",fontWeight: "bold" }}>{datePart}</Typography>
-            <Typography sx={{ fontStyle: "inherit", fontWeight: "bold" }}>{dayPart}</Typography>
+            <Typography sx={{ fontStyle: "inherit",fontWeight: "" }}>{datePart}</Typography>
+            <Typography sx={{ fontStyle: "inherit", fontWeight: "" }}>{dayPart}</Typography>
           </Box>
           <Box sx={{ alignItems: "end" }}>
             <IconButton
@@ -188,7 +188,7 @@ export default function ResponsiveDrawer() {
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
               width: drawerWidth,
-              background:"beige"
+              background:"#e3f2fd"
             },
           }}
           open
