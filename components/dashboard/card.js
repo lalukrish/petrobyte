@@ -1,6 +1,8 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
+import Grid from '@mui/material/Card';
+
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
@@ -25,32 +27,46 @@ export default function BasicCard({data}) {
     setOpen(false);
   };
   return (
-    <Card sx={{width:"200px",backgroundColor:"white" ,boxShadow:10 ,gap:20,background: 'linear-gradient(to bottom, #b2dfdb, #004d40)',
-      color: 'black'}}  >
-{open?<DispencerDialog data={data} close={handleClose}/>:null}
+    // <Grid>
+    <>
+        <Box>
 
+    <Card sx={{
+      width: "250px",
+      backgroundColor: "white",
+      boxShadow: 10,
+      color: 'black',
+      borderRadius: 2,
+      padding: 2,
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      mt:4,
+
+    }}>
+      {open ? <DispencerDialog data={data} close={handleClose} /> : null}
 
       <CardContent>
-        <Typography sx={{ fontSize: 16,fontWeight:"bold" }} color="text.secondary" gutterBottom>
-        <LocalGasStationIcon sx={{marginTop:"10px"}}/>{data.name}
+        <Typography sx={{ fontSize: 16, fontWeight: "bold", display: 'flex', alignItems: 'center', mb: 2 }} color="text.secondary">
+          <LocalGasStationIcon sx={{ marginRight: "8px" }} /> {data.name}
         </Typography>
-        <Typography variant="h5" component="div">
+        <Typography variant="h5" component="div" sx={{ mb: 2, fontWeight: 'bold' }}>
           {data.fuel}
         </Typography>
-        <>
-        <Typography sx={{ mb: 1.5 }} color="text.secondary">
-          <Person4Icon sx={{paddingTop:"5px"}}/>{data.Emp}
-        </Typography></>
-        <Typography variant="body2">
-          Early Metering:{data.EMtr} <br />
-          Late Metering:{data.LMtr}
-         
-          
+        <Typography sx={{ display: 'flex', alignItems: 'center', mb: 2 }} color="text.secondary">
+          <Person4Icon sx={{ marginRight: "8px" }} /> {data.Emp}
+        </Typography>
+        <Typography variant="body2" sx={{ lineHeight: 1.6,fontSize:'18px'}}>
+          <span>Early Metering:</span> {data.EMtr} <br />
+          <span>Late Metering:</span> {data.LMtr}
         </Typography>
       </CardContent>
-      <CardActions>
-        <Button size="small" onClick={handleClickOpen}><EditIcon/></Button>
+      <CardActions sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <Button size="small" onClick={handleClickOpen}><EditIcon /></Button>
       </CardActions>
     </Card>
+    {/* </Grid> */}
+    </Box>
+    </>
   );
 }
