@@ -2,7 +2,7 @@
 
 import BasicCard from '@/components/dashboard/card'
 import Liverate from '@/components/dashboard/liverate'
-import { Box, Typography } from '@mui/material'
+import { Box, Typography,Grid } from '@mui/material'
 import React from 'react'
 
 
@@ -43,21 +43,34 @@ const Employees = () => {
     }
   ]
   return (
-    
-    <div>
-     <Box sx={{display:"flex",justifyContent:"center",marginTop:"2px"}}>
-      <Liverate />
-    </Box>
-    <Box sx={{display:"flex", gap:2, justifyContent:"center",mt:4}}>
-    
-    {
-    array.map((item)=>(<BasicCard data={item}/>))    
-    }
-    
-    </Box>
+    <>
    
-    
-    </div>
+    <Box sx={{ flexGrow: 1}}>
+      <Box sx={{ marginTop: "1px", mb: 2 }}>
+        <Box sx={{ display: "flex", justifyContent: "start" }}>
+          <Typography variant="h6" sx={{ fontWeight: 'bold',fontSize:"40px" }}>Today Price</Typography>
+        </Box>
+        <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+          <Liverate />
+        </Box>
+      </Box>
+      
+      <Box>    
+        
+            <Box >
+      <Typography variant="h6" sx={{ fontWeight: 'bold',fontSize:"40px" }}>Dispencers</Typography>
+      </Box>
+      <Grid container spacing={6} >
+
+        {array.map((item, index) => (
+          <Grid item key={index} >
+            <BasicCard data={item} />
+          </Grid>
+        ))}
+      </Grid>
+    </Box>
+    </Box>
+    </>
   )
 }
 

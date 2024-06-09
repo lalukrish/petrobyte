@@ -21,6 +21,8 @@ import ExpenseNew from "@/components/accounts/dialogexpense";
 import TestNew from "@/components/accounts/dialogtest";
 import TroubleshootIcon from '@mui/icons-material/Troubleshoot';
 import axios from "axios";
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
 
 export default function Page() {
   const [fuel, setFuel] = React.useState(false);
@@ -115,10 +117,10 @@ export default function Page() {
                 <TableCell align="center">8000</TableCell>
                 <TableCell align="center">
                   <Button>
-                    <EditIcon />
+                    <EditIcon sx={{ color: "#0d47a1" }}/>
                   </Button>
                   <Button>
-                    <DeleteIcon />
+                    <DeleteIcon sx={{ color: "#e57373" }}/>
                   </Button>
                 </TableCell>
               </TableRow>
@@ -128,80 +130,115 @@ export default function Page() {
       )}
 
       {selectedTab === 1 && (
-         <>
-          <Button variant="outlined"  onClick={handleClickOpenfuel} style={{marginBottom:"20px"}} sx={{color:"#0d47a1",border: '1px solid #0d47a1' }}>
-            Add Fuel Details
-          </Button>
-          <TableContainer component={Paper} >
-          <Table sx={{ minWidth: 650 }} aria-label="simple table" >
-            <TableHead sx={{fontStyle:"normal",background:"#e3f2fd"}}>
+        <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead sx={{fontStyle:"normal",background:"#e3f2fd"}}>
             <TableRow>
+              <TableCell align="center" sx={{ fontWeight: 'bold' }}>Date</TableCell>
+              <TableCell align="center" sx={{ fontWeight: 'bold' }}>Dispencer</TableCell>
+              <TableCell align="center" sx={{ fontWeight: 'bold' }}>Petrol Sale Amount</TableCell>
+              <TableCell align="center" sx={{ fontWeight: 'bold' }}>Diesel Sale amount</TableCell>
+              <TableCell align="center" sx={{ fontWeight: 'bold' }}>Net Amount</TableCell>
+              <TableCell align="center" sx={{ fontWeight: 'bold' }}>Action</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
+              <TableCell component="th" scope="row" align="center">
+                18/07/2001
+              </TableCell>
+              <TableCell align="center">D1</TableCell>
+              <TableCell align="center">120000</TableCell>
+              <TableCell align="center">80000</TableCell>
+              <TableCell align="center">200000</TableCell>
+              <TableCell align="center">
+                <Button>
+                  <EditIcon sx={{ color: "#0d47a1" }}/>
+                </Button>
+                <Button>
+                  <VisibilityIcon sx={{ color: "#0d47a1" }}/>
+                </Button>
+                <Button>
+                  <CheckBoxIcon sx={{ color: "#0d47a1" }}/>
+                </Button>
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </TableContainer>
+        //  <>
+        //  <Box sx={{ display: "flex", justifyContent: "flex-end", paddingRight: "20px"}}>
+        //   <Button variant="outlined"  onClick={handleClickOpenfuel} style={{marginBottom:"20px"}} sx={{color:"#0d47a1",border: '1px solid #0d47a1' }}>
+        //     Add Fuel Details
+        //   </Button>
+        //   </Box>
+        //   <TableContainer component={Paper} >
+        //   <Table sx={{ minWidth: 650 }} aria-label="simple table" >
+        //     <TableHead sx={{fontStyle:"normal",background:"#e3f2fd"}}>
+        //     <TableRow>
             
-                <TableCell align="center" colSpan={5} sx={{ fontWeight: 'bold' }}>Staff</TableCell>
-                <TableCell align="center" colSpan={3} sx={{ fontWeight: 'bold' }}>Petrol</TableCell>
+        //         <TableCell align="center" colSpan={5} sx={{ fontWeight: 'bold' }}>Staff</TableCell>
+        //         <TableCell align="center" colSpan={4} sx={{ fontWeight: 'bold' }}>Fuel Details</TableCell>
+        //         <TableCell align="center" colSpan={1} sx={{ fontWeight: 'bold' }}></TableCell>
 
-                <TableCell align="center" colSpan={3} sx={{ fontWeight: 'bold' }}>Diesel</TableCell>
-                <TableCell align="center" colSpan={2} sx={{ fontWeight: 'bold' }}></TableCell>
                 
                 
                 
-            </TableRow>
-            <TableRow>
-            <TableCell  align="center" sx={{ fontWeight: 'bold' }}>
-                Date
-              </TableCell>
-            <TableCell align="center" sx={{ fontWeight: 'bold' }}>Name</TableCell>
-                <TableCell align="center" sx={{ fontWeight: 'bold' }}>From</TableCell>
-                <TableCell align="center"sx={{ fontWeight: 'bold' }}>To </TableCell>
-                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Dispencer</TableCell>
-                <TableCell align="center" sx={{ fontWeight: 'bold' }}>SM</TableCell>
-                <TableCell align="center" sx={{ fontWeight: 'bold' }}>EM</TableCell>
-                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Sale Amount</TableCell>
-                <TableCell align="center" sx={{ fontWeight: 'bold' }}>SM</TableCell>
-                <TableCell align="center" sx={{ fontWeight: 'bold' }}>EM</TableCell>
-                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Sale Amount</TableCell>
-                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Total Amount</TableCell>
-                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Actions</TableCell>
+        //     </TableRow>
+        //     <TableRow>
+        //     <TableCell  align="center" sx={{ fontWeight: 'bold' }}>
+        //         Date
+        //       </TableCell>
+        //     <TableCell align="center" sx={{ fontWeight: 'bold' }}>Name</TableCell>
+        //         <TableCell align="center" sx={{ fontWeight: 'bold' }}>From</TableCell>
+        //         <TableCell align="center"sx={{ fontWeight: 'bold' }}>To </TableCell>
+        //         <TableCell align="center" sx={{ fontWeight: 'bold' }}>Dispencer</TableCell>
+        //         <TableCell align="center" sx={{ fontWeight: 'bold' }}>Fuel</TableCell>
+        //         <TableCell align="center" sx={{ fontWeight: 'bold' }}>SM</TableCell>
+        //         <TableCell align="center" sx={{ fontWeight: 'bold' }}>EM</TableCell>
+        //         <TableCell align="center" sx={{ fontWeight: 'bold' }}>Sale Amount</TableCell>
+        //         <TableCell align="center" sx={{ fontWeight: 'bold' }}>Actions</TableCell>
               
-            </TableRow>
-            </TableHead>
-            <TableBody>
-              {fuelAccounts.map((fuelAccount)=>(
-              <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-              <TableCell  align="center">
-                {fuelAccount.date}
-              </TableCell>
-                <TableCell component="th" scope="row">
-                {fuelAccount.emp_id.emp_name}
+        //     </TableRow>
+        //     </TableHead>
+        //     <TableBody>
+        //       {fuelAccounts.map((fuelAccount)=>(
+        //       <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
+        //       <TableCell  align="center">
+        //         {fuelAccount.date}
+        //       </TableCell>
+        //         <TableCell component="th" scope="row">
+        //         {fuelAccount.emp_id.emp_name}
                   
-                </TableCell>
-                <TableCell align="center">{fuelAccount.emp_from_time}</TableCell>
-                <TableCell align="center">{fuelAccount.emp_to_time}</TableCell>
-                <TableCell align="center">{fuelAccount.dispencer}</TableCell>
-                <TableCell align="center">{fuelAccount.fueltype}</TableCell>
-                <TableCell align="center">{fuelAccount.fuel_start_reading}</TableCell>
-                <TableCell align="center">{fuelAccount.fuel_end_reading}</TableCell>
-                <TableCell align="center">{fuelAccount.emp_from_time}</TableCell>
-                <TableCell align="center">{fuelAccount.emp_from_time}</TableCell>
-                <TableCell align="center">{fuelAccount.emp_from_time}</TableCell>
-                <TableCell align="center">{fuelAccount.emp_from_time}</TableCell>
-                <TableCell align="center"><EditIcon/></TableCell>
-              </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        //         </TableCell>
+        //         <TableCell align="center">{fuelAccount.emp_from_time}</TableCell>
+        //         <TableCell align="center">{fuelAccount.emp_to_time}</TableCell>
+        //         <TableCell align="center">{fuelAccount.dispencer}</TableCell>
+        //         <TableCell align="center">{fuelAccount.fueltype}</TableCell>
+        //         <TableCell align="center">{fuelAccount.fuel_start_reading}</TableCell>
+        //         <TableCell align="center">{fuelAccount.fuel_end_reading}</TableCell>
+        //         <TableCell align="center">{fuelAccount.amount}</TableCell>
+                
+                
+        //         <TableCell align="center"><EditIcon sx={{ color: "#0d47a1" }}/></TableCell>
+        //       </TableRow>
+        //       ))}
+        //     </TableBody>
+        //   </Table>
+        // </TableContainer>
 
           
-        </>
+        // </>
       )}
       {fuel ? <FuelNew close={handleClosefuel} /> : null}
 
       {selectedTab === 2 && (
         <>
+        <Box sx={{ display: "flex", justifyContent: "flex-end", paddingRight: "20px"}}>
         <Button variant="outlined" onClick={handleClickOpenproduct} style={{marginBottom:"20px",color:"#0d47a1",border: '1px solid #0d47a1'}}>
           Add Product Details
         </Button>
+        </Box>
         <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead sx={{fontStyle:"normal",background:"#e3f2fd"}}>
@@ -227,7 +264,7 @@ export default function Page() {
               <TableCell align="center">700</TableCell>
               <TableCell align="center">
                 <Button>
-                  <EditIcon />
+                  <EditIcon sx={{ color: "#0d47a1" }}/>
                 </Button>
               </TableCell>
             </TableRow>
@@ -240,9 +277,11 @@ export default function Page() {
 
       {selectedTab === 3 && (
         <>
-        <Button variant="outlined" onClick={handleClickOpenexpense} style={{marginBottom:"20px"}}>
+        <Box sx={{ display: "flex", justifyContent: "flex-end", paddingRight: "20px"}}>
+        <Button variant="outlined" onClick={handleClickOpenexpense} style={{marginBottom:"20px",color:"#0d47a1",border: '1px solid #0d47a1'}}>
           Add Expense Details
         </Button>
+        </Box>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead sx={{fontStyle:"normal",background:"#e3f2fd"}}>
@@ -268,7 +307,7 @@ export default function Page() {
                 
                 <TableCell align="center">
                   <Button>
-                    <EditIcon />
+                    <EditIcon sx={{ color: "#0d47a1" }}/>
                   </Button>
                 </TableCell>
               </TableRow>
@@ -281,9 +320,12 @@ export default function Page() {
 
       {selectedTab === 4 && (
         <>
-        <Button variant="outlined" onClick={handleClickOpentest} style={{marginBottom:"20px"}}>
+        <Box sx={{ display: "flex", justifyContent: "flex-end", paddingRight: "20px"}}>
+        
+        <Button variant="outlined" onClick={handleClickOpentest} style={{marginBottom:"20px",color:"#0d47a1",border: '1px solid #0d47a1'}}>
           Add Test Details
         </Button>
+        </Box>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead sx={{fontStyle:"normal",background:"#e3f2fd"}}>
@@ -304,7 +346,7 @@ export default function Page() {
                 <TableCell align="center">1200</TableCell>                
                 <TableCell align="center">
                   <Button>
-                    <EditIcon />
+                    <EditIcon sx={{ color: "#0d47a1" }}/>
                   </Button>
                   
                 </TableCell>
