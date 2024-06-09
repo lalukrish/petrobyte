@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -20,6 +20,7 @@ import ProductsNew from "@/components/accounts/dialogproduct";
 import ExpenseNew from "@/components/accounts/dialogexpense";
 import TestNew from "@/components/accounts/dialogtest";
 import TroubleshootIcon from '@mui/icons-material/Troubleshoot';
+import axios from "axios";
 
 export default function Page() {
   const [fuel, setFuel] = React.useState(false);
@@ -29,6 +30,13 @@ export default function Page() {
 
   
   const [selectedTab, setSelectedTab] = React.useState(0);
+  const [fuelAccounts,setfuelAccounts] = React.useState([])
+  useEffect(() => {
+    axios.get("https://petro.adaptable.app/fuelAccounts").then((response)=>setfuelAccounts(response.data.message))
+  
+    
+  }, [])
+  
 
   const handleTabChange = (event, newValue) => {
     setSelectedTab(newValue);
@@ -84,7 +92,7 @@ export default function Page() {
       {selectedTab === 0 && (
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead sx={{fontStyle:"normal",backgroundColor:"skyblue"}}>
+            <TableHead sx={{fontStyle:"normal",background:"#e3f2fd"}}>
               <TableRow>
                 <TableCell align="center" sx={{ fontWeight: 'bold' }}>Date</TableCell>
                 <TableCell align="center" sx={{ fontWeight: 'bold' }}>Cash in hand</TableCell>
@@ -121,12 +129,12 @@ export default function Page() {
 
       {selectedTab === 1 && (
          <>
-          <Button variant="outlined" onClick={handleClickOpenfuel} style={{marginBottom:"20px"}}>
+          <Button variant="outlined"  onClick={handleClickOpenfuel} style={{marginBottom:"20px"}} sx={{color:"#0d47a1",border: '1px solid #0d47a1' }}>
             Add Fuel Details
           </Button>
           <TableContainer component={Paper} >
           <Table sx={{ minWidth: 650 }} aria-label="simple table" >
-            <TableHead sx={{fontStyle:"normal",backgroundColor:"skyblue"}}>
+            <TableHead sx={{fontStyle:"normal",background:"#e3f2fd"}}>
             <TableRow>
             
                 <TableCell align="center" colSpan={5} sx={{ fontWeight: 'bold' }}>Staff</TableCell>
@@ -158,26 +166,28 @@ export default function Page() {
             </TableRow>
             </TableHead>
             <TableBody>
+              {fuelAccounts.map((fuelAccount)=>(
               <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
               <TableCell  align="center">
-                18/07/2001
+                {fuelAccount.date}
               </TableCell>
                 <TableCell component="th" scope="row">
-                  Aslam
+                {fuelAccount.emp_id.emp_name}
                   
                 </TableCell>
-                <TableCell align="center">9:00</TableCell>
-                <TableCell align="center">6:00</TableCell>
-                <TableCell align="center">D1</TableCell>
-                <TableCell align="center">213000</TableCell>
-                <TableCell align="center">523000</TableCell>
-                <TableCell align="center">500000</TableCell>
-                <TableCell align="center">114000</TableCell>
-                <TableCell align="center">330000</TableCell>
-                <TableCell align="center">600000</TableCell>
-                <TableCell align="center">1100000</TableCell>
+                <TableCell align="center">{fuelAccount.emp_from_time}</TableCell>
+                <TableCell align="center">{fuelAccount.emp_to_time}</TableCell>
+                <TableCell align="center">{fuelAccount.dispencer}</TableCell>
+                <TableCell align="center">{fuelAccount.fueltype}</TableCell>
+                <TableCell align="center">{fuelAccount.fuel_start_reading}</TableCell>
+                <TableCell align="center">{fuelAccount.fuel_end_reading}</TableCell>
+                <TableCell align="center">{fuelAccount.emp_from_time}</TableCell>
+                <TableCell align="center">{fuelAccount.emp_from_time}</TableCell>
+                <TableCell align="center">{fuelAccount.emp_from_time}</TableCell>
+                <TableCell align="center">{fuelAccount.emp_from_time}</TableCell>
                 <TableCell align="center"><EditIcon/></TableCell>
               </TableRow>
+              ))}
             </TableBody>
           </Table>
         </TableContainer>
@@ -189,12 +199,12 @@ export default function Page() {
 
       {selectedTab === 2 && (
         <>
-        <Button variant="outlined" onClick={handleClickOpenproduct} style={{marginBottom:"20px"}}>
+        <Button variant="outlined" onClick={handleClickOpenproduct} style={{marginBottom:"20px",color:"#0d47a1",border: '1px solid #0d47a1'}}>
           Add Product Details
         </Button>
         <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead sx={{fontStyle:"normal",backgroundColor:"skyblue"}}>
+          <TableHead sx={{fontStyle:"normal",background:"#e3f2fd"}}>
             <TableRow>
               <TableCell align="center" sx={{ fontWeight: 'bold' }}>Date</TableCell>
               <TableCell align="center" sx={{ fontWeight: 'bold' }}>Product</TableCell>
@@ -235,7 +245,7 @@ export default function Page() {
         </Button>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead sx={{fontStyle:"normal",backgroundColor:"skyblue"}}>
+            <TableHead sx={{fontStyle:"normal",background:"#e3f2fd"}}>
               <TableRow>
                 <TableCell align="center" sx={{ fontWeight: 'bold' }}>Date</TableCell>
                 <TableCell align="center" sx={{ fontWeight: 'bold' }}>Expense Type</TableCell>
@@ -276,7 +286,7 @@ export default function Page() {
         </Button>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead sx={{fontStyle:"normal",backgroundColor:"skyblue"}}>
+            <TableHead sx={{fontStyle:"normal",background:"#e3f2fd"}}>
               <TableRow>
                 <TableCell align="center" sx={{ fontWeight: 'bold' }}>Date</TableCell>
                 <TableCell align="center" sx={{ fontWeight: 'bold' }}>Petrol in Lts</TableCell>
