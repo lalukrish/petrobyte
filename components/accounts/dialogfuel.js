@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+
 import {
   Dialog,
   DialogTitle,
@@ -16,9 +17,11 @@ import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import axios from "axios";
+import moment from "moment";
 
 export default function FuelNew({ close }) {
   const handleClose = () => close();
+  const date = moment().format("DD-MM-YYYY");
 
   const handleSave = () => {
     let add =  [

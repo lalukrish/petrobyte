@@ -113,9 +113,9 @@ export default function Page() {
             <TableHead sx={{fontStyle:"normal",background:"#e3f2fd"}}>
               <TableRow>
                 <TableCell align="center" sx={{ fontWeight: 'bold' }}>Date</TableCell>
-                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Cash in hand</TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Cash</TableCell>
                 <TableCell align="center" sx={{ fontWeight: 'bold' }}>Bank</TableCell>
-                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Hp Card</TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>HP Card</TableCell>
                 <TableCell align="center" sx={{ fontWeight: 'bold' }}>Credit</TableCell>
                 <TableCell align="center" sx={{ fontWeight: 'bold' }}>Net Amount</TableCell>
                 <TableCell align="center" sx={{ fontWeight: 'bold' }}>Action</TableCell>
@@ -261,6 +261,7 @@ export default function Page() {
                 <TableCell align="center" sx={{ fontWeight: 'bold' }}>Date</TableCell>
                 <TableCell align="center" sx={{ fontWeight: 'bold' }}>Expense Type</TableCell>
                 <TableCell align="center" sx={{ fontWeight: 'bold' }}>Amount</TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Staff (applicable to salary)</TableCell>
                 <TableCell align="center" sx={{ fontWeight: 'bold' }}>Comments</TableCell>
                 <TableCell align="center" sx={{ fontWeight: 'bold' }}>Actions</TableCell>
 
@@ -275,7 +276,9 @@ export default function Page() {
                 </TableCell>
                 <TableCell align="center">Bills</TableCell>
                 <TableCell align="center">4000</TableCell>
+                <TableCell align="center">N/A</TableCell>
                 <TableCell align="center">Electricity</TableCell>
+
                 
                 <TableCell align="center">
                   <Button>

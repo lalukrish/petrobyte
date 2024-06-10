@@ -134,16 +134,8 @@ export default function FuelUpdate({ clse,data }) {
               fullWidth
               variant="outlined"
             />
-            <TextField id="" label="Sale Amount" fullWidth variant="outlined" />
+            <TextField id="" label="Sale Amount" value={data.amount} fullWidth variant="outlined" />
           </Box>
-
-          <TextField
-          value={data.amount}
-            id=""
-            label="Total Sale Amount"
-            fullWidth
-            variant="outlined"
-          />
         </Stack>
       </DialogContent>
       <DialogActions>

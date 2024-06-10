@@ -81,7 +81,7 @@ export default function FullScreenDialog({ open, handleClose, content }) {
 
                 <TableCell
                   align="center"
-                  colSpan={4}
+                  colSpan={5}
                   sx={{ fontWeight: "bold" }}
                 >
                   Fuel Details
@@ -126,6 +126,9 @@ export default function FullScreenDialog({ open, handleClose, content }) {
                 <TableCell align="center" sx={{ fontWeight: "bold" }}>
                   EM
                 </TableCell>
+                <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                  Qty in Lts
+                </TableCell>
 
                 <TableCell align="center" sx={{ fontWeight: "bold" }}>
                   Sale Amount
@@ -163,6 +166,9 @@ export default function FullScreenDialog({ open, handleClose, content }) {
                     </TableCell>
                     <TableCell align="center">
                       {fuelAccount.fuel_end_reading}
+                    </TableCell>
+                    <TableCell align="center">
+                      qty
                     </TableCell>
                     <TableCell align="center">{fuelAccount.amount}</TableCell>
 

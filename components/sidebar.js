@@ -18,14 +18,16 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Link from "next/link";
-import { Avatar, Menu, MenuItem } from "@mui/material";
+import { Alert, AlertTitle, Avatar, Menu, MenuItem } from "@mui/material";
 import Image from "next/image";
 import moment from "moment";
 import { AccountCircle } from "@mui/icons-material";
 import SpaceDashboardIcon from "@mui/icons-material/SpaceDashboard";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
-import GroupsIcon from '@mui/icons-material/Groups';
-import ArticleIcon from '@mui/icons-material/Article';
+import GroupsIcon from "@mui/icons-material/Groups";
+import ArticleIcon from "@mui/icons-material/Article";
+import CreditCardIcon from "@mui/icons-material/CreditCard";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 
 const drawerWidth = 240;
 
@@ -61,14 +63,40 @@ export default function ResponsiveDrawer() {
   };
 
   const routes = [
-    { name: "Dashboard", link: "/dashboard", icon: <SpaceDashboardIcon  sx={{ color: "#0d47a1" }}/> },
-    { name: "Accounts", link: "/accounts", icon: <AccountBalanceWalletIcon sx={{ color: "#0d47a1" }} /> },
-    { name: "Employee", link: "/employe", icon: <GroupsIcon sx={{ color: "#0d47a1" }}/> },
-    { name: "Reports", link: "/reports", icon: <ArticleIcon sx={{ color: "#0d47a1" }}/> },
+    {
+      name: "Dashboard",
+      link: "/dashboard",
+      icon: <SpaceDashboardIcon sx={{ color: "#0d47a1" }} />,
+    },
+    {
+      name: "Accounts",
+      link: "/accounts",
+      icon: <AccountBalanceWalletIcon sx={{ color: "#0d47a1" }} />,
+    },
+    {
+      name: "Employee",
+      link: "/employe",
+      icon: <GroupsIcon sx={{ color: "#0d47a1" }} />,
+    },
+    {
+      name: "Credits",
+      link: "/credits",
+      icon: <CreditCardIcon sx={{ color: "#0d47a1" }} />,
+    },
+    {
+      name: "Products",
+      link: "/products",
+      icon: <ShoppingCartIcon sx={{ color: "#0d47a1" }} />,
+    },
+    {
+      name: "Reports",
+      link: "/reports",
+      icon: <ArticleIcon sx={{ color: "#0d47a1" }} />,
+    },
   ];
 
   const drawer = (
-    <div style={{background:"#e3f2fd"}}>
+    <div style={{ background: "#e3f2fd" }}>
       <Toolbar>
         <Image src="/Petro.png" width={140} height={60} />
       </Toolbar>
@@ -79,7 +107,10 @@ export default function ResponsiveDrawer() {
           <ListItem key={item.link} disablePadding>
             <ListItemButton component={Link} to={item.link}>
               <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.name} primaryTypographyProps={{ style: { fontWeight: "" } }} />
+              <ListItemText
+                primary={item.name}
+                primaryTypographyProps={{ style: { fontWeight: "" } }}
+              />
             </ListItemButton>
           </ListItem>
         ))}
@@ -119,8 +150,17 @@ export default function ResponsiveDrawer() {
           <Box
             sx={{ color: "black", display: "flex", flexDirection: "column" }}
           >
-            <Typography sx={{ fontStyle: "inherit",fontWeight: "" }}>{datePart}</Typography>
-            <Typography sx={{ fontStyle: "inherit", fontWeight: "" }}>{dayPart}</Typography>
+            <Typography sx={{ fontStyle: "inherit", fontWeight: "" }}>
+              {datePart}
+            </Typography>
+            <Typography sx={{ fontStyle: "inherit", fontWeight: "" }}>
+              {dayPart}
+            </Typography>
+          </Box>
+          <Box sx={{background:"white"}}>
+            <Alert variant="outlined" severity="warning" onClose={() => {}}>
+              Please make sure to update latest rate..!
+            </Alert>
           </Box>
           <Box sx={{ alignItems: "end" }}>
             <IconButton
@@ -148,8 +188,12 @@ export default function ResponsiveDrawer() {
               open={Boolean(anchorEl)}
               onClose={handleClose}
             >
-              <MenuItem onClick={handleClose}><b>Profile</b></MenuItem>
-              <MenuItem onClick={handleClose}><b>Log out</b></MenuItem>
+              <MenuItem onClick={handleClose}>
+                <b>Profile</b>
+              </MenuItem>
+              <MenuItem onClick={handleClose}>
+                <b>Log out</b>
+              </MenuItem>
             </Menu>
           </Box>
         </Toolbar>
@@ -175,7 +219,6 @@ export default function ResponsiveDrawer() {
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
               width: drawerWidth,
-              
             },
           }}
         >
@@ -188,7 +231,7 @@ export default function ResponsiveDrawer() {
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
               width: drawerWidth,
-              background:"#e3f2fd"
+              background: "#e3f2fd",
             },
           }}
           open
@@ -202,7 +245,6 @@ export default function ResponsiveDrawer() {
           flexGrow: 1,
           p: 3,
           width: { sm: `calc(100% - ${drawerWidth}px)` },
-          
         }}
       >
         <Toolbar />
