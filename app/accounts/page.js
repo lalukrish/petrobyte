@@ -23,12 +23,16 @@ import TroubleshootIcon from '@mui/icons-material/Troubleshoot';
 import axios from "axios";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import FullScreenDialog from "@/components/accounts/dialogfullscreen";
+
 
 export default function Page() {
   const [fuel, setFuel] = React.useState(false);
   const [product, setProduct] = React.useState(false);
   const [expense, setExpense] = React.useState(false);
   const [test, setTest] = React.useState(false);
+  const [dialogOpen, setDialogOpen] = React.useState(false);
+  const [dialogContent, setDialogContent] = React.useState(null);
 
   
   const [selectedTab, setSelectedTab] = React.useState(0);
@@ -38,6 +42,9 @@ export default function Page() {
   
     
   }, [])
+
+
+  
   
 
   const handleTabChange = (event, newValue) => {
@@ -77,6 +84,15 @@ export default function Page() {
   };
   const getIconColor = (tabIndex) => {
     return selectedTab === tabIndex ? '#0d47a1' : 'inherit';
+  };
+  const handleDialogOpen = (content) => {
+    setDialogContent(content);
+    setDialogOpen(true);
+  };
+
+  const handleDialogClose = () => {
+    setDialogOpen(false);
+    setDialogContent(null);
   };
 
   return (
@@ -130,6 +146,23 @@ export default function Page() {
       )}
 
       {selectedTab === 1 && (
+        <>
+        <Box
+        sx={{
+          display: "flex",
+          justifyContent: "flex-end",
+          paddingRight: "20px",
+        }}
+      >
+        <Button
+          variant="outlined"
+          onClick={handleClickOpenfuel}
+          style={{ marginBottom: "20px" }}
+          sx={{ color: "#0d47a1", border: "1px solid #0d47a1" }}
+        >
+          Add Fuel Details
+        </Button>
+      </Box>
         <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead sx={{fontStyle:"normal",background:"#e3f2fd"}}>
@@ -152,83 +185,22 @@ export default function Page() {
               <TableCell align="center">80000</TableCell>
               <TableCell align="center">200000</TableCell>
               <TableCell align="center">
-                <Button>
-                  <EditIcon sx={{ color: "#0d47a1" }}/>
-                </Button>
-                <Button>
+              
+                <Button onClick={() => handleDialogOpen("Fuel Sale Details for 18/07/2001")}>
                   <VisibilityIcon sx={{ color: "#0d47a1" }}/>
                 </Button>
                 <Button>
                   <CheckBoxIcon sx={{ color: "#0d47a1" }}/>
                 </Button>
+                <FullScreenDialog open={dialogOpen} handleClose={handleDialogClose} content={dialogContent} />
+
               </TableCell>
             </TableRow>
           </TableBody>
         </Table>
       </TableContainer>
-        //  <>
-        //  <Box sx={{ display: "flex", justifyContent: "flex-end", paddingRight: "20px"}}>
-        //   <Button variant="outlined"  onClick={handleClickOpenfuel} style={{marginBottom:"20px"}} sx={{color:"#0d47a1",border: '1px solid #0d47a1' }}>
-        //     Add Fuel Details
-        //   </Button>
-        //   </Box>
-        //   <TableContainer component={Paper} >
-        //   <Table sx={{ minWidth: 650 }} aria-label="simple table" >
-        //     <TableHead sx={{fontStyle:"normal",background:"#e3f2fd"}}>
-        //     <TableRow>
-            
-        //         <TableCell align="center" colSpan={5} sx={{ fontWeight: 'bold' }}>Staff</TableCell>
-        //         <TableCell align="center" colSpan={4} sx={{ fontWeight: 'bold' }}>Fuel Details</TableCell>
-        //         <TableCell align="center" colSpan={1} sx={{ fontWeight: 'bold' }}></TableCell>
-
-                
-                
-                
-        //     </TableRow>
-        //     <TableRow>
-        //     <TableCell  align="center" sx={{ fontWeight: 'bold' }}>
-        //         Date
-        //       </TableCell>
-        //     <TableCell align="center" sx={{ fontWeight: 'bold' }}>Name</TableCell>
-        //         <TableCell align="center" sx={{ fontWeight: 'bold' }}>From</TableCell>
-        //         <TableCell align="center"sx={{ fontWeight: 'bold' }}>To </TableCell>
-        //         <TableCell align="center" sx={{ fontWeight: 'bold' }}>Dispencer</TableCell>
-        //         <TableCell align="center" sx={{ fontWeight: 'bold' }}>Fuel</TableCell>
-        //         <TableCell align="center" sx={{ fontWeight: 'bold' }}>SM</TableCell>
-        //         <TableCell align="center" sx={{ fontWeight: 'bold' }}>EM</TableCell>
-        //         <TableCell align="center" sx={{ fontWeight: 'bold' }}>Sale Amount</TableCell>
-        //         <TableCell align="center" sx={{ fontWeight: 'bold' }}>Actions</TableCell>
-              
-        //     </TableRow>
-        //     </TableHead>
-        //     <TableBody>
-        //       {fuelAccounts.map((fuelAccount)=>(
-        //       <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-        //       <TableCell  align="center">
-        //         {fuelAccount.date}
-        //       </TableCell>
-        //         <TableCell component="th" scope="row">
-        //         {fuelAccount.emp_id.emp_name}
-                  
-        //         </TableCell>
-        //         <TableCell align="center">{fuelAccount.emp_from_time}</TableCell>
-        //         <TableCell align="center">{fuelAccount.emp_to_time}</TableCell>
-        //         <TableCell align="center">{fuelAccount.dispencer}</TableCell>
-        //         <TableCell align="center">{fuelAccount.fueltype}</TableCell>
-        //         <TableCell align="center">{fuelAccount.fuel_start_reading}</TableCell>
-        //         <TableCell align="center">{fuelAccount.fuel_end_reading}</TableCell>
-        //         <TableCell align="center">{fuelAccount.amount}</TableCell>
-                
-                
-        //         <TableCell align="center"><EditIcon sx={{ color: "#0d47a1" }}/></TableCell>
-        //       </TableRow>
-        //       ))}
-        //     </TableBody>
-        //   </Table>
-        // </TableContainer>
-
-          
-        // </>
+      </>
+      
       )}
       {fuel ? <FuelNew close={handleClosefuel} /> : null}
 
