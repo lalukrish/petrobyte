@@ -10,12 +10,14 @@ import { Button } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
+import DoneAllIcon from '@mui/icons-material/DoneAll';
+import PrintIcon from '@mui/icons-material/Print';
 
 export default function CreditTable({}) {
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead sx={{ backgroundColor: "skyblue" }}>
+        <TableHead sx={{ background:"#e3f2fd"}}>
           <TableRow>
             <TableCell>Name</TableCell>
             <TableCell align="center">Address</TableCell>
@@ -43,7 +45,10 @@ export default function CreditTable({}) {
                 <EditIcon />
               </Button>
               <Button>
-                <DeleteIcon />
+                <DoneAllIcon />
+              </Button>
+              <Button>
+                <PrintIcon />
               </Button>
             </TableCell>
           </TableRow>

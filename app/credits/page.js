@@ -3,6 +3,7 @@
 import { Box, Button } from "@mui/material";
 import React, { useEffect } from "react";
 import CreditTable from "@/components/credits/table";
+import CreditNew from "@/components/credits/dialogcredit";
 
 export default function page() {
 
@@ -26,17 +27,18 @@ export default function page() {
         backgroundRepeat: "no-repeat",
         width: "100%",
         color: "white",
-        textAlign: "center",
+        textAlign: "right",
         padding: "10px",
+        
       }}
     >
       <Button variant="outlined" 
-        sx={{ border: 1, display: "flex", justifyContent: "flex-end",marginBottom:"20px" }}
+        sx={{ marginBottom:"20px",color: "#0d47a1", border: "1px solid #0d47a1" }}
         onClick={handleClickOpen}
       >
         New Credit
       </Button>
-      {open ? <StaffNew  close={handleClose} /> : null}
+      {open ? <CreditNew  close={handleClose} /> : null}
 
       <CreditTable/>
     </Box>

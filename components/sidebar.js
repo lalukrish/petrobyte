@@ -28,6 +28,7 @@ import GroupsIcon from "@mui/icons-material/Groups";
 import ArticleIcon from "@mui/icons-material/Article";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import BlinkingAlert from "./alertfuelrate";
 
 const drawerWidth = 240;
 
@@ -157,10 +158,9 @@ export default function ResponsiveDrawer() {
               {dayPart}
             </Typography>
           </Box>
-          <Box sx={{background:"white"}}>
-            <Alert variant="outlined" severity="warning" onClose={() => {}}>
-              Please make sure to update latest rate..!
-            </Alert>
+          <Box>
+            <BlinkingAlert/>
+            
           </Box>
           <Box sx={{ alignItems: "end" }}>
             <IconButton

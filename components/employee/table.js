@@ -16,6 +16,10 @@ import { PetrobyteContext } from '@/context/context';
 
 
 export default function DataTable({data}) {
+
+  
+  
+  
 const { refreshEmployee, setRefreshEmployee } = React.useContext(PetrobyteContext);
 
 
@@ -26,7 +30,7 @@ const { refreshEmployee, setRefreshEmployee } = React.useContext(PetrobyteContex
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead sx={{backgroundColor:"skyblue"}}>
+        <TableHead sx={{background:"#e3f2fd"}}>
           <TableRow>
             <TableCell>Name</TableCell>
             <TableCell align="center">Email</TableCell>

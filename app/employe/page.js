@@ -12,8 +12,10 @@ const { refreshEmployee, setRefreshEmployee } = React.useContext(PetrobyteContex
 
   const [employee, setEmployee] = React.useState([]);
   const [open, setOpen] = React.useState(false);
+
+  
   useEffect(() => {
-    axios.get("https://petro.adaptable.app/employee").then((response)=>{setEmployee(response.data.message)})
+    axios.get("https://petro.adaptable.app/employee").then((response)=>{setEmployee(response.data.message.employee)})
     console.log(employee)
   }, [refreshEmployee])
   
@@ -34,12 +36,12 @@ const { refreshEmployee, setRefreshEmployee } = React.useContext(PetrobyteContex
         backgroundRepeat: "no-repeat",
         width: "100%",
         color: "white",
-        textAlign: "center",
+        textAlign: "right",
         padding: "10px",
       }}
     >
       <Button variant="outlined" 
-        sx={{ border: 1, display: "flex", justifyContent: "flex-end",marginBottom:"20px" }}
+        sx={{ border: 1,marginBottom:"20px",color: "#0d47a1", border: "1px solid #0d47a1" }}
         onClick={handleClickOpen}
       >
         Add New

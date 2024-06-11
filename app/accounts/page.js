@@ -298,16 +298,18 @@ export default function Page() {
         <Box sx={{ display: "flex", justifyContent: "flex-end", paddingRight: "20px"}}>
         
         <Button variant="outlined" onClick={handleClickOpentest} style={{marginBottom:"20px",color:"#0d47a1",border: '1px solid #0d47a1'}}>
-          Add Test Details
+          Add Dispencer
         </Button>
         </Box>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead sx={{fontStyle:"normal",background:"#e3f2fd"}}>
               <TableRow>
-                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Date</TableCell>
-                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Petrol in Lts</TableCell>
-                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Diesel in Lts</TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Dispencer</TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>F1</TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Test Value in Lts</TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>F2</TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Test Value in Lts</TableCell>
                 <TableCell align="center" sx={{ fontWeight: 'bold' }}>Actions</TableCell>
                 
               </TableRow>
@@ -315,10 +317,14 @@ export default function Page() {
             <TableBody>
               <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
                 <TableCell component="th" scope="row" align="center">
-                  18/07/2001
+                  D1
                 </TableCell>
-                <TableCell align="center">10001</TableCell>
-                <TableCell align="center">1200</TableCell>                
+                <TableCell align="center">Petrol</TableCell>
+                <TableCell align="center">3</TableCell>    
+                <TableCell align="center">Diesel</TableCell>
+                <TableCell align="center">2</TableCell>                
+
+
                 <TableCell align="center">
                   <Button>
                     <EditIcon sx={{ color: "#0d47a1" }}/>

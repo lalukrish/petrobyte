@@ -168,7 +168,7 @@ export default function FullScreenDialog({ open, handleClose, content }) {
                       {fuelAccount.fuel_end_reading}
                     </TableCell>
                     <TableCell align="center">
-                      qty
+                      {fuelAccount.fuel_qty}
                     </TableCell>
                     <TableCell align="center">{fuelAccount.amount}</TableCell>
 

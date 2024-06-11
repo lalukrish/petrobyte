@@ -22,7 +22,7 @@ export default function TestNew({ close }) {
   return (
     <Dialog
       sx={{}}
-      maxWidth="md"
+      maxWidth="sm"
       fullWidth
       open={open}
       onClose={handleClose4}
@@ -34,14 +34,35 @@ export default function TestNew({ close }) {
       <TextField 
               id=""
               
-              label="Petrol taken in Lts for Test "
+              label="Dispencer Name "
               fullWidth
               variant="outlined"
             />
             <TextField 
               id=""
               
-              label="Diesel taken in Lts for Test "
+              label="Fuel 1"
+              fullWidth
+              variant="outlined"
+            />
+            <TextField 
+              id=""
+              
+              label="Test value"
+              fullWidth
+              variant="outlined"
+            />
+            <TextField 
+              id=""
+              
+              label="Fuel 2 "
+              fullWidth
+              variant="outlined"
+            />
+            <TextField 
+              id=""
+              
+              label="Test value"
               fullWidth
               variant="outlined"
             />
