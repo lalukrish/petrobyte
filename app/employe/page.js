@@ -44,7 +44,7 @@ const { refreshEmployee, setRefreshEmployee } = React.useContext(PetrobyteContex
         sx={{ border: 1,marginBottom:"20px",color: "#0d47a1", border: "1px solid #0d47a1" }}
         onClick={handleClickOpen}
       >
-        Add New
+         New EMPLOYEE
       </Button>
       {open ? <StaffNew  close={handleClose} /> : null}
 

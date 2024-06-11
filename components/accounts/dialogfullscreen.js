@@ -68,7 +68,7 @@ export default function FullScreenDialog({ open, handleClose, content }) {
       </DialogTitle>
       <DialogContent>
         <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <Table sx={{ minWidth: 650 }} aria-label="simple table" >
             <TableHead sx={{ fontStyle: "normal", background: "#e3f2fd" }}>
               <TableRow>
                 <TableCell

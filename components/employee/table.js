@@ -32,12 +32,12 @@ const { refreshEmployee, setRefreshEmployee } = React.useContext(PetrobyteContex
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead sx={{background:"#e3f2fd"}}>
           <TableRow>
-            <TableCell>Name</TableCell>
-            <TableCell align="center">Email</TableCell>
-            <TableCell align="center">Contact</TableCell>
-            <TableCell align="center">Address</TableCell>
-            <TableCell align="center">Age</TableCell>
-            <TableCell align="center">Action</TableCell>
+            <TableCell sx={{ fontWeight: 'bold' }}>Name</TableCell>
+            <TableCell align="center" sx={{ fontWeight: 'bold' }}>Email</TableCell>
+            <TableCell align="center" sx={{ fontWeight: 'bold' }}>Contact</TableCell>
+            <TableCell align="center" sx={{ fontWeight: 'bold' }}>Address</TableCell>
+            <TableCell align="center" sx={{ fontWeight: 'bold' }}>Age</TableCell>
+            <TableCell align="center" sx={{ fontWeight: 'bold' }}>Action</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -53,7 +53,7 @@ const { refreshEmployee, setRefreshEmployee } = React.useContext(PetrobyteContex
               <TableCell align="center">{row.emp_contact_no}</TableCell>
               <TableCell align="center">{row.emp_address}</TableCell>
               <TableCell align="center">{row.emp_age}</TableCell>
-              <TableCell align="center"><Button><EditIcon/></Button><Button onClick={() =>handleDelete(row) }><DeleteIcon/></Button></TableCell>
+              <TableCell align="center"><Button><EditIcon sx={{ color: "#0d47a1" }}/></Button><Button onClick={() =>handleDelete(row) }sx={{ color: "#ef5350" }}><DeleteIcon/></Button></TableCell>
             </TableRow>
           ))}
         </TableBody>
