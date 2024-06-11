@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+
 import {
   Dialog,
   DialogTitle,
@@ -15,12 +16,64 @@ import {
 import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
+import axios from "axios";
+import moment from "moment";
 
 export default function FuelNew({ close }) {
   const handleClose = () => close();
+  const date = moment().format("DD-MM-YYYY");
+  const [fromtime, setfromtime] = React.useState("");
+  const [totime, settotime] = React.useState("");
+  const [dispencer, setdispencer] = React.useState("");
+  const [fuelpetrol, setfuelpetrol] = React.useState("Petrol");
+  const [startpetrol, setstartpetrol] = React.useState(""); 
+  const [endpetrol, setendpetrol] = React.useState(""); 
+  const [fuelqtypetrol, setfuelqtypetrol] = React.useState(""); 
+  const [totalpetrol, settotalpetrol] = React.useState("");
+  const [fueldiesel, setfueldiesel] = React.useState("Diesel");
+  const [startdiesel, setstartdiesel] = React.useState(""); 
+  const [enddiesel, setenddiesel] = React.useState(""); 
+  const [fuelqtydiesel, setfuelqtydiesel] = React.useState(""); 
+  const [totaldiesel, settotaldiesel] = React.useState(""); 
+
+
+  const handleSave = () => {
+    let add =  [
+      {
+          "date": date,
+          "emp_id": "66580f1603b55eb1929232ca",
+          "emp_from_time": fromtime,
+          "emp_to_time": totime,
+          "dispencer": dispencer,
+          "fueltype": fuelpetrol,
+          "fuel_start_reading": startpetrol,
+          "fuel_end_reading": endpetrol,
+          "fuel_qty":fuelqtypetrol,
+          "amount": totalpetrol
+      },
+      {
+          "date": date,
+          "emp_id": "66580f1603b55eb1929232ca",
+          "emp_from_time": fromtime,
+          "emp_to_time": totime,
+          "dispencer": dispencer,
+          "fueltype": fueldiesel,
+          "fuel_start_reading": startdiesel,
+          "fuel_end_reading": enddiesel,
+          "fuel_qty":fuelqtydiesel,
+          "amount": totaldiesel
+      }
+  
+    
+    ]
+    axios.post("https://petro.adaptable.app/fuelAccounts",add).then((response)=>{alert(response.data.message)})
+    // close()
+    // setRefreshEmployee(!refreshEmployee)
+  };
+  
 
   const employees = ["John Doe", "Jane Smith", "Alice Johnson"];
-  const dispencer = ["D1", "D2", "D3", "D4"];
+  // const dispencer = ["D1", "D2", "D3", "D4"];
   const fuel = ["Petrol", "Diesel"];
   const start = [];
   const end = [];
@@ -55,14 +108,14 @@ export default function FuelNew({ close }) {
                 <TimePicker
                   label="From"
                   defaultValue={todayStartOfTheDay}
-                  renderInput={(params) => <TextField {...params} fullWidth />}
+                  renderInput={(params) => <TextField onChange={(event)=>setfromtime(event.target.value)} {...params} fullWidth />}
                 />
               </Grid>
               <Grid item xl={6}>
                 <TimePicker
                   label="To"
                   defaultValue={todayStartOfTheDay}
-                  renderInput={(params) => <TextField {...params} fullWidth />}
+                  renderInput={(params) => <TextField onChange={(event)=>settotime(event.target.value)} {...params} fullWidth />}
                 />
               </Grid>
             </Grid>
@@ -73,7 +126,7 @@ export default function FuelNew({ close }) {
             options={dispencer}
             sx={{ width: "100%" }}
             renderInput={(params) => (
-              <TextField {...params} label="Dispencer" fullWidth />
+              <TextField {...params} onChange={(event)=>setdispencer(event.target.value)} label="Dispencer" fullWidth />
             )}
           />
           {/* <Autocomplete
@@ -87,7 +140,7 @@ export default function FuelNew({ close }) {
           /> */}
           <Box sx={{ display: "flex",alignItems:"center", gap: 2 }}>
             <Typography>Petrol</Typography>
-            <TextField
+            <TextField onChange={(event)=>setstartpetrol(event.target.value)}
               id="start-metering"
               
               label="Start Metering"
@@ -95,7 +148,7 @@ export default function FuelNew({ close }) {
               fullWidth
               variant="outlined"
             />
-            <TextField
+            <TextField onChange={(event)=>setendpetrol(event.target.value)}
               id="end-metering"
               
               label="End Metering"
@@ -105,6 +158,7 @@ export default function FuelNew({ close }) {
             />
             <TextField 
               id=""
+              disabled
               
               label="Sale Amount"
               fullWidth
@@ -113,7 +167,7 @@ export default function FuelNew({ close }) {
           </Box>
           <Box sx={{ display: "flex",alignItems:"center", gap: 2 }}>
             <Typography>Diesel</Typography>
-            <TextField
+            <TextField onChange={(event)=>setstartdiesel(event.target.value)}
               id="start-metering"
               
               label="Start Metering"
@@ -121,7 +175,7 @@ export default function FuelNew({ close }) {
               fullWidth
               variant="outlined"
             />
-            <TextField
+            <TextField onChange={(event)=>setenddiesel(event.target.value)}
               id="end-metering"
               
               label="End Metering"
@@ -131,6 +185,7 @@ export default function FuelNew({ close }) {
             />
             <TextField 
               id=""
+              disabled
               
               label="Sale Amount"
               fullWidth
@@ -139,6 +194,7 @@ export default function FuelNew({ close }) {
           </Box>
           <TextField 
               id=""
+              disabled
               
               label="Total Sale Amount"
               fullWidth
@@ -149,7 +205,7 @@ export default function FuelNew({ close }) {
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
-        <Button>Save</Button>
+        <Button onClick={handleSave}>Save</Button>
       </DialogActions>
     </Dialog>
   );

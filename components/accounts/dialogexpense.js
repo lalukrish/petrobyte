@@ -17,9 +17,15 @@ import { styled } from '@mui/system';
 // import dayjs from "dayjs";
 
 export default function ExpenseNew({ close }) {
+  const [expenseType, setExpenseType] = useState("");
   const handleClose3 = () => close();
 
   const type=["Salary","Maintainence","Bills","Others"]
+  const empname=["Aslam","Lallu","Adhi","Abhi"]
+  const handleExpenseTypeChange = (event, newValue) => {
+    setExpenseType(newValue);
+  };
+
 
   
 
@@ -47,7 +53,7 @@ export default function ExpenseNew({ close }) {
 
   return (
     <Dialog
-      sx={{}}
+      
       maxWidth="md"
       fullWidth
       open={open}
@@ -55,7 +61,7 @@ export default function ExpenseNew({ close }) {
       aria-labelledby="responsive-dialog-title"
     >
       <DialogTitle id="responsive-dialog-title">Expense Details</DialogTitle>
-      <DialogContent >
+      <DialogContent sx={{padding:"5px",margin:"5px"}}>
       <Stack spacing={2} sx={{ width: "100%", padding: "5px" }}>
           <Autocomplete
             disablePortal
@@ -65,7 +71,19 @@ export default function ExpenseNew({ close }) {
             renderInput={(params) => (
               <TextField {...params} label="Expense Type" fullWidth />
             )}
+            onChange={handleExpenseTypeChange}
           />
+          {expenseType === "Salary" && (
+            <Autocomplete
+              disablePortal
+              id="combo-box-demo"
+              options={empname}
+              sx={{ width: "100%" }}
+              renderInput={(params) => (
+                <TextField {...params} label="Employee" fullWidth />
+              )}
+            />
+          )}
           <TextField 
               id=""
               
