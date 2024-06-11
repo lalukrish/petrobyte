@@ -37,7 +37,7 @@ const { refreshEmployee, setRefreshEmployee } = React.useContext(PetrobyteContex
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.map((row) => (
+          {data?.map((row) => (
             <TableRow
               key={row.emp_name}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
