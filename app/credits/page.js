@@ -7,18 +7,7 @@ import CreditNew from "@/components/credits/dialogcredit";
 
 export default function page() {
 
-  const [open, setOpen] = React.useState(false);
   
-  
-
-
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
   
   return (
     <Box
@@ -32,13 +21,7 @@ export default function page() {
         
       }}
     >
-      <Button variant="outlined" 
-        sx={{ marginBottom:"20px",color: "#0d47a1", border: "1px solid #0d47a1" }}
-        onClick={handleClickOpen}
-      >
-        New Credit
-      </Button>
-      {open ? <CreditNew  close={handleClose} /> : null}
+      
 
       <CreditTable/>
     </Box>

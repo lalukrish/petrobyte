@@ -16,6 +16,8 @@ import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import axios from "axios";
+require('dotenv').config()
+
 
 export default function FuelUpdate({ clse,data }) {
     useEffect(() => {
@@ -41,7 +43,7 @@ export default function FuelUpdate({ clse,data }) {
     };
 
     axios
-      .put("https://petro.adaptable.app/fuelAccounts", add)
+      .put(`${process.env.NEXT_PUBLIC_API_URL}/fuelAccounts`, add)
       .then((response) => {
         alert(response.data.message);
       });

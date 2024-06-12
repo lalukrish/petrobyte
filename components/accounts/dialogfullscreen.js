@@ -21,6 +21,8 @@ import {
   TableRow,
 } from "@mui/material";
 import axios from "axios";
+require('dotenv').config()
+
 
 export default function FullScreenDialog({ open, handleClose, content }) {
   const [fuel, setFuel] = React.useState(false);
@@ -32,7 +34,7 @@ export default function FullScreenDialog({ open, handleClose, content }) {
   useEffect(() => {
     // alert(content);
     axios
-      .get(`https://petro.adaptable.app/fuelAccounts/bydate?date=${content}`)
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/fuelAccounts/bydate?date=${content}`)
       .then((response) => setfuelAccounts(response.data.message));
   }, []);
 

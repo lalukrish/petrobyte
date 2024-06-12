@@ -5,6 +5,8 @@ import BasicTable from "@/components/employee/table";
 import { PetrobyteContext } from "@/context/context";
 import { Box, Button } from "@mui/material";
 import axios from "axios";
+require('dotenv').config()
+
 import React, { useEffect } from "react";
 
 export default function page() {
