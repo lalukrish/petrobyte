@@ -10,13 +10,28 @@ import { useTheme } from '@mui/material/styles';
 import { Stack, TextField } from '@mui/material';
 import { PetrobyteContext } from '@/context/context';
 import axios from 'axios';
+require('dotenv').config()
 
-export default function ProductNew({close}) {
+export default function ProductNew({refresh,close}) {
   const [product, setProduct] = React.useState("");
   const [price, setPrice] = React.useState("");
-  const [qty, setQty] = React.useState("");
   
 
+  const saveProduct = ()=>{
+    let productData={
+      product_name:product,
+      product_price:price
+    }
+
+     axios.post(`${process.env.NEXT_PUBLIC_API_URL}/product`,productData).then((responce)=>{
+      alert(responce.data.message)
+     refresh()
+    close()
+
+    }).catch((err)=>{
+      alert(err)
+    })
+  }
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -27,7 +42,6 @@ export default function ProductNew({close}) {
 
   const handleClose = () => {
     close()
-    
   };
   
   return (
@@ -46,7 +60,6 @@ export default function ProductNew({close}) {
         <Stack spacing={2} sx={{width:"400px", padding:"5px"}}>
         <TextField autoFocus id="outlined-basic" label="Product" variant="outlined" onChange={(event)=>{setProduct(event.target.value)}} />
         <TextField  id="outlined-basic" label="Price" variant="outlined" onChange={(event)=>{setPrice(event.target.value)}} />
-        <TextField id="outlined-basic" label="Qty" variant="outlined" onChange={(event)=>{setQty(event.target.value)}} />
 
         </Stack>
 
@@ -55,7 +68,7 @@ export default function ProductNew({close}) {
           <Button  onClick={handleClose}>
             Cancel
           </Button>
-          <Button>
+          <Button onClick={saveProduct}>
             Save
           </Button>
         </DialogActions>

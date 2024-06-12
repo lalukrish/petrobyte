@@ -5,6 +5,8 @@ import BasicTable from "@/components/employee/table";
 import { PetrobyteContext } from "@/context/context";
 import { Box, Button } from "@mui/material";
 import axios from "axios";
+require('dotenv').config()
+
 import React, { useEffect } from "react";
 
 export default function page() {
@@ -15,7 +17,7 @@ const { refreshEmployee, setRefreshEmployee } = React.useContext(PetrobyteContex
 
   
   useEffect(() => {
-    axios.get("https://petro.adaptable.app/employee").then((response)=>{setEmployee(response.data.message.employee)})
+    axios.get(`${process.env.NEXT_PUBLIC_API_URL}/employee`).then((response)=>{setEmployee(response.data.message.employee)})
     console.log(employee)
   }, [refreshEmployee])
   

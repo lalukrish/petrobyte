@@ -11,6 +11,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
 import { PetrobyteContext } from '@/context/context';
+require('dotenv').config()
 
 
 
@@ -24,7 +25,7 @@ const { refreshEmployee, setRefreshEmployee } = React.useContext(PetrobyteContex
 
 
   const handleDelete = (row) => {
-    axios.delete(`https://petro.adaptable.app/employee?email=${row.mail}`).then((response)=>{alert(response.data.message)})
+    axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/employee?email=${row.mail}`).then((response)=>{alert(response.data.message)})
     setRefreshEmployee(!refreshEmployee)
   }
   return (

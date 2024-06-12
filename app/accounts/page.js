@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
+require('dotenv').config()
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -40,13 +41,13 @@ export default function Page() {
 
   useEffect(() => {
     axios
-      .get("https://petro.adaptable.app/fuelAccounts")
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/fuelAccounts`)
       .then((response) => setfuelAccounts(response.data.message));
   }, []);
 
   useEffect(() => {
     axios
-      .get("https://petro.adaptable.app/fuelAccounts/overview")
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/fuelAccounts/overview`)
       .then((response) => setAccountoverview(response.data));
   }, []);
 
