@@ -32,14 +32,22 @@ export default function Page() {
   const [expense, setExpense] = React.useState(false);
   const [test, setTest] = React.useState(false);
   const [dialogOpen, setDialogOpen] = React.useState(false);
-  const [dialogContent, setDialogContent] = React.useState(null);
+  const [dialogContent, setDialogContent] = React.useState("");
 
   const [selectedTab, setSelectedTab] = React.useState(0);
   const [fuelAccounts, setfuelAccounts] = React.useState([]);
+  const [accountoverview, setAccountoverview] = React.useState([]);
+
   useEffect(() => {
     axios
       .get("https://petro.adaptable.app/fuelAccounts")
       .then((response) => setfuelAccounts(response.data.message));
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get("https://petro.adaptable.app/fuelAccounts/overview")
+      .then((response) => setAccountoverview(response.data));
   }, []);
 
   const handleTabChange = (event, newValue) => {
@@ -80,14 +88,16 @@ export default function Page() {
   const getIconColor = (tabIndex) => {
     return selectedTab === tabIndex ? "#0d47a1" : "inherit";
   };
+
   const handleDialogOpen = (content) => {
+    
     setDialogContent(content);
     setDialogOpen(true);
   };
 
   const handleDialogClose = () => {
     setDialogOpen(false);
-    setDialogContent(null);
+    // setDialogContent(null);
   };
 
   return (
@@ -182,6 +192,13 @@ export default function Page() {
 
       {selectedTab === 1 && (
         <>
+          {dialogOpen ? (
+            <FullScreenDialog
+              content={dialogContent}
+              open={dialogOpen}
+              handleClose={handleDialogClose}
+            />
+          ) : null}
           <Box
             sx={{
               display: "flex",
@@ -223,39 +240,37 @@ export default function Page() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                <TableRow
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  <TableCell component="th" scope="row" align="center">
-                    18/07/2001
-                  </TableCell>
-                  <TableCell align="center">D1</TableCell>
-                  <TableCell align="center">120000</TableCell>
-                  <TableCell align="center">80000</TableCell>
-                  <TableCell align="center">200000</TableCell>
-                  <TableCell align="center">
-                    <Button
-                      onClick={() =>
-                        handleDialogOpen("Fuel Sale Details for 18/07/2001")
-                      }
-                    >
-                      <OpenInFullIcon sx={{ color: "#0d47a1" }} />
-                    </Button>
-                    <Button>
-                      <CheckBoxIcon sx={{ color: "#0d47a1" }} />
-                    </Button>
-                    <FullScreenDialog
-                      open={dialogOpen}
-                      handleClose={handleDialogClose}
-                      content={dialogContent}
-                    />
-                  </TableCell>
-                </TableRow>
+                {accountoverview.map((accnt) => (
+                  <TableRow
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  >
+                    <TableCell component="th" scope="row" align="center">
+                      {accnt.date}
+                    </TableCell>
+                    <TableCell align="center">{accnt.dispencer}</TableCell>
+                    <TableCell align="center">
+                      {accnt.petrolSaleAmount}
+                    </TableCell>
+                    <TableCell align="center">
+                      {accnt.deiselSaleAmount}
+                    </TableCell>
+                    <TableCell align="center">{accnt.netAmount}</TableCell>
+                    <TableCell align="center">
+                      <Button onClick={() => handleDialogOpen(accnt.date)}>
+                        <OpenInFullIcon sx={{ color: "#0d47a1" }} />
+                      </Button>
+                      <Button>
+                        <CheckBoxIcon sx={{ color: "#0d47a1" }} />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </TableContainer>
         </>
       )}
+
       {fuel ? <FuelNew close={handleClosefuel} /> : null}
 
       {selectedTab === 2 && (
@@ -446,12 +461,10 @@ export default function Page() {
                     Action
                   </TableCell>
                 </TableRow>
-             
-              
+
                 <TableRow
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
-                  
                   <TableCell
                     align="center"
                     sx={{ fontWeight: "bold", background: "#e3f2fd" }}
@@ -464,20 +477,24 @@ export default function Page() {
                   >
                     Diesel
                   </TableCell>
-                  
                 </TableRow>
-                </TableHead>
-                <TableBody>
-                <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-            <TableCell component="th" scope="row" align="center">
-              D1
-            </TableCell>
-            <TableCell align="center">2</TableCell>
-            <TableCell align="center">3</TableCell>
-            <TableCell align="center"> <Button>
-                <EditIcon sx={{ color: "#0d47a1" }} />
-              </Button></TableCell>
-            </TableRow>
+              </TableHead>
+              <TableBody>
+                <TableRow
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                  <TableCell component="th" scope="row" align="center">
+                    D1
+                  </TableCell>
+                  <TableCell align="center">2</TableCell>
+                  <TableCell align="center">3</TableCell>
+                  <TableCell align="center">
+                    {" "}
+                    <Button>
+                      <EditIcon sx={{ color: "#0d47a1" }} />
+                    </Button>
+                  </TableCell>
+                </TableRow>
               </TableBody>
             </Table>
           </TableContainer>

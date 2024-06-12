@@ -27,19 +27,18 @@ export default function FullScreenDialog({ open, handleClose, content }) {
   const [edit, setEdit] = React.useState(false);
   const [editdetails, setEditdetails] = React.useState(false);
 
-  const handleClickOpenfuel = () => {
-    setFuel(true);
-  };
-
-  const handleClosefuel = () => {
-    setFuel(false);
-  };
+  
   const [fuelAccounts, setfuelAccounts] = React.useState([]);
   useEffect(() => {
+    // alert(content);
     axios
-      .get("https://petro.adaptable.app/fuelAccounts")
+      .get(`https://petro.adaptable.app/fuelAccounts/bydate?date=${content}`)
       .then((response) => setfuelAccounts(response.data.message));
   }, []);
+
+  const handlefullClose = () => {
+    handleClose();
+  };
 
   const handledialogeditopen = (data) => {
     setEditdetails(data)
@@ -49,9 +48,10 @@ export default function FullScreenDialog({ open, handleClose, content }) {
     setEdit(false);
   };
 
+console.log("content",content)
   return (
 
-    <Dialog fullScreen open={open} onClose={handleClose}>
+    <Dialog fullScreen open={open} onClose={handlefullClose}>
                     {edit ? <FuelUpdate clse={handledialogeditclose} data={editdetails} /> : null}
 
       <DialogTitle sx={{ fontWeight: "bold", color: "#0d47a1" }}>
@@ -59,7 +59,7 @@ export default function FullScreenDialog({ open, handleClose, content }) {
         <IconButton
           edge="end"
           color="inherit"
-          onClick={handleClose}
+          onClick={handlefullClose}
           aria-label="close"
           sx={{ position: "absolute", right: 8, top: 8 }}
         >
@@ -140,37 +140,37 @@ export default function FullScreenDialog({ open, handleClose, content }) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {fuelAccounts.map((fuelAccount) => (
+              {fuelAccounts?.map((fuelAccount) => (
                 
 
                   <TableRow>
 
 
-                    <TableCell align="center">{fuelAccount.date}</TableCell>
+                    <TableCell align="center">{fuelAccount?.date}</TableCell>
 
                     <TableCell component="th" scope="row">
-                      {fuelAccount.emp_id.emp_name}
+                      {fuelAccount?.emp_id?.emp_name}
                     </TableCell>
                     <TableCell align="center">
-                      {fuelAccount.emp_from_time}
+                      {fuelAccount?.emp_from_time}
                     </TableCell>
                     <TableCell align="center">
-                      {fuelAccount.emp_to_time}
+                      {fuelAccount?.emp_to_time}
                     </TableCell>
                     <TableCell align="center">
-                      {fuelAccount.dispencer}
+                      {fuelAccount?.dispencer}
                     </TableCell>
-                    <TableCell align="center">{fuelAccount.fueltype}</TableCell>
+                    <TableCell align="center">{fuelAccount?.fueltype}</TableCell>
                     <TableCell align="center">
-                      {fuelAccount.fuel_start_reading}
-                    </TableCell>
-                    <TableCell align="center">
-                      {fuelAccount.fuel_end_reading}
+                      {fuelAccount?.fuel_start_reading}
                     </TableCell>
                     <TableCell align="center">
-                      {fuelAccount.fuel_qty}
+                      {fuelAccount?.fuel_end_reading}
                     </TableCell>
-                    <TableCell align="center">{fuelAccount.amount}</TableCell>
+                    <TableCell align="center">
+                      {fuelAccount?.fuel_qty}
+                    </TableCell>
+                    <TableCell align="center">{fuelAccount?.amount}</TableCell>
 
                     <TableCell align="center">
                       <EditIcon
