@@ -31,6 +31,14 @@ const { refreshEmployee, setRefreshEmployee } = React.useContext(PetrobyteContex
     close()
     
   };
+
+  const fetchAllEmployee = () => {
+    axios.get("https://petro.adaptable.app/employee").then((response) => {
+      console.log(response.data.message.employee)
+      // setData(response.data.message.employee)
+    })
+  }
+
   const handleSave = () => {
     let add = {
       "emp_name": name,
@@ -45,6 +53,10 @@ const { refreshEmployee, setRefreshEmployee } = React.useContext(PetrobyteContex
     setRefreshEmployee(!refreshEmployee)
     
   };
+
+  React.useEffect(() => {
+    fetchAllEmployee()
+  }, [refreshEmployee])
   return (
     
       

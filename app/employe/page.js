@@ -8,18 +8,11 @@ import axios from "axios";
 import React, { useEffect } from "react";
 
 export default function page() {
-const { refreshEmployee, setRefreshEmployee } = React.useContext(PetrobyteContext);
 
-  const [employee, setEmployee] = React.useState([]);
   const [open, setOpen] = React.useState(false);
 
   
-  useEffect(() => {
-    axios.get("https://petro.adaptable.app/employee").then((response)=>{setEmployee(response.data.message.employee)})
-    console.log(employee)
-  }, [refreshEmployee])
-  
-
+ 
 
 
   const handleClickOpen = () => {
@@ -48,7 +41,7 @@ const { refreshEmployee, setRefreshEmployee } = React.useContext(PetrobyteContex
       </Button>
       {open ? <StaffNew  close={handleClose} /> : null}
 
-      <BasicTable data={employee}/>
+      <BasicTable />
     </Box>
   );
 }
