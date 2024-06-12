@@ -36,11 +36,12 @@ export default function ProductsTable({}) {
   };
   const handleClose = () => {
     setOpen(false);
+    setEditProduct({})
   };
 
   const handleEditProduct=(data)=>{
     setEditProduct(data)
-    
+    setOpen(true);
   }
 
   const handleDeleteProduct=(id)=>{
@@ -63,7 +64,7 @@ export default function ProductsTable({}) {
       >
         Add Product
       </Button>
-      {open ? <ProductNew refresh={handleRefresh} close={handleClose} /> : null}
+      {open ? <ProductNew refresh={handleRefresh} edit={editProduct} close={handleClose} /> : null}
       
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">

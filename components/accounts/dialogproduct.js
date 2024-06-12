@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -11,37 +12,34 @@ import {
 } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
+import axios from 'axios';  // Assuming you are using axios to send requests to the backend
+import moment from "moment";
 
 export default function ProductsNew({ close }) {
+  const todayDate = moment().format("DD-MM-YYYY");
+
+  // const [products,setProducts]=React.useState([])
+  
   const handleClose2 = () => close();
 
-  const products = [
-    "Grease",
-    "Battery Water 15",
-    "Battery Water 16",
-    "Battery Water 20",
-    "Racer2",
-    "Racer4 900 ",
-    "Racer4 1Ltr ",
-    "Lalghoda",
-    "Cruise",
-    "Milcy",
-    "DEF",
-    "Koolgard",
-    "Adblue",
-    "Generator",
-  ];
+  const products=[]
+  useEffect(() => {
+    axios.get(`${process.env.NEXT_PUBLIC_API_URL}/product`).then((responce) => {
+      responce.data.message.map((item)=>{
+        products.push(item.product_name)
+      })
+    });
+  }, [])
   
-  const [firstRow, setFirstRow] = useState({
-    products: '',
-    price: '',
-    qty: 1,
-    total: ''
-  });
-  const [rows, setRows] = useState([firstRow]);
+
+  const [rows, setRows] = useState([{
+    product_id:"",
+    quantity: 1,
+    total_amount: ''
+  }]);
 
   const handleAddClick = () => {
-    setRows([...rows, { ...firstRow }]);
+    setRows([...rows, { date: todayDate, product_id: '', quantity: 1, total: '' }]);//actual value needed for backend, change below fields acording to this, date is fixed
   };
 
   const handleRemoveClick = (index) => {
@@ -53,6 +51,23 @@ export default function ProductsNew({ close }) {
     const updatedRows = [...rows];
     updatedRows[index][field] = value;
     setRows(updatedRows);
+  };
+
+  const handleSave = () => {
+    const validRows = rows.filter(row => row.products && row.price && row.quantity && row.total);
+    if (validRows.length === 0) {
+      alert("Please fill in at least one product completely.");
+      return;
+    }
+    axios.post(`${process.env.NEXT_PUBLIC_API_URL}/productAccounts`, validRows)
+      .then(response => {
+        alert(response.data.message);
+        close();
+      })
+      .catch(error => {
+        alert("There was an error saving the products.");
+        console.error(error);
+      });
   };
 
   return (
@@ -82,14 +97,14 @@ export default function ProductsNew({ close }) {
               label="Price" 
               variant="outlined" 
               value={row.price}
-              onChange={(event) => handleChange(index, 'price', event.target.value)}
+              // onChange={(event) => handleChange(index, 'price', event.target.value)}
             />
             <TextField
               id={`outlined-number-${index}`}
-              label="Qty"
+              label="quantity"
               type="number"
-              value={row.qty}
-              onChange={(event) => handleChange(index, 'qty', event.target.value)}
+              value={row.quantity}
+              onChange={(event) => handleChange(index, 'quantity', event.target.value)}
               InputLabelProps={{
                 shrink: true,
               }}
@@ -121,7 +136,7 @@ export default function ProductsNew({ close }) {
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose2}>Cancel</Button>
-        <Button>Save</Button>
+        <Button onClick={handleSave}>Save</Button>
       </DialogActions>
     </Dialog>
   );

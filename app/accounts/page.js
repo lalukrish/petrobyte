@@ -26,6 +26,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import FullScreenDialog from "@/components/accounts/dialogfullscreen";
 import OpenInFullIcon from "@mui/icons-material/OpenInFull";
+import DoneAllIcon from '@mui/icons-material/DoneAll';
 
 export default function Page() {
   const [fuel, setFuel] = React.useState(false);
@@ -38,6 +39,7 @@ export default function Page() {
   const [selectedTab, setSelectedTab] = React.useState(0);
   const [fuelAccounts, setfuelAccounts] = React.useState([]);
   const [accountoverview, setAccountoverview] = React.useState([]);
+  const [productaccounts, setProductAccounts] = React.useState([]);
 
   useEffect(() => {
     axios
@@ -50,6 +52,13 @@ export default function Page() {
       .get(`${process.env.NEXT_PUBLIC_API_URL}/fuelAccounts/overview`)
       .then((response) => setAccountoverview(response.data));
   }, []);
+
+  useEffect(() => {
+    axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/productAccounts`)
+      .then((response) => setProductAccounts(response.data.message));
+  }, [])
+  
 
   const handleTabChange = (event, newValue) => {
     setSelectedTab(newValue);
@@ -163,29 +172,29 @@ export default function Page() {
                 <TableCell align="center" sx={{ fontWeight: "bold" }}>
                   Action
                 </TableCell>
+                
               </TableRow>
             </TableHead>
             <TableBody>
+              {productaccounts.map((productAccount)=>(
+
               <TableRow
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell component="th" scope="row" align="center">
-                  18/07/2001
+                  {productAccount.date}
                 </TableCell>
                 <TableCell align="center">10001</TableCell>
                 <TableCell align="center">1200</TableCell>
                 <TableCell align="center">6000</TableCell>
-                <TableCell align="center">5500</TableCell>
-                <TableCell align="center">8000</TableCell>
-                <TableCell align="center">
-                  <Button>
-                    <EditIcon sx={{ color: "#0d47a1" }} />
-                  </Button>
-                  <Button>
-                    <DeleteIcon sx={{ color: "#e57373" }} />
-                  </Button>
-                </TableCell>
+                <TableCell align="center">{productAccount.quantity}</TableCell>
+                <TableCell align="center">{productAccount.total_amount}</TableCell>
+
+                <TableCell align="center"><DoneAllIcon/></TableCell>
+                
               </TableRow>
+              ))}
+
             </TableBody>
           </Table>
         </TableContainer>
@@ -320,20 +329,22 @@ export default function Page() {
                 </TableRow>
               </TableHead>
               <TableBody>
+              {productaccounts.map((productAccount)=>(
                 <TableRow
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
-                  <TableCell align="center">18/07/2001</TableCell>
+                  <TableCell align="center">{productAccount.date}</TableCell>
                   <TableCell align="center">Grease</TableCell>
                   <TableCell align="center">700</TableCell>
-                  <TableCell align="center">1</TableCell>
-                  <TableCell align="center">700</TableCell>
+                  <TableCell align="center">{productAccount.quantity}</TableCell>
+                  <TableCell align="center">{productAccount.total_amount}</TableCell>
                   <TableCell align="center">
                     <Button>
                       <EditIcon sx={{ color: "#0d47a1" }} />
                     </Button>
                   </TableCell>
                 </TableRow>
+              ))}
               </TableBody>
             </Table>
           </TableContainer>

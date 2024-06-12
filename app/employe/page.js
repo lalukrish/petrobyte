@@ -17,7 +17,7 @@ const { refreshEmployee, setRefreshEmployee } = React.useContext(PetrobyteContex
 
   
   useEffect(() => {
-    axios.get(`${process.env.NEXT_PUBLIC_API_URL}/employee`).then((response)=>{setEmployee(response.data.message.employee)})
+    axios.get(`${process.env.NEXT_PUBLIC_API_URL}/employee`).then((response)=>{setEmployee(response.data.message.employees)})
     console.log(employee)
   }, [refreshEmployee])
   

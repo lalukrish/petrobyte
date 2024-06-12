@@ -12,7 +12,7 @@ import { PetrobyteContext } from '@/context/context';
 import axios from 'axios';
 require('dotenv').config()
 
-export default function ProductNew({refresh,close}) {
+export default function ProductNew({refresh,edit,close}) {
   const [product, setProduct] = React.useState("");
   const [price, setPrice] = React.useState("");
   
@@ -24,6 +24,23 @@ export default function ProductNew({refresh,close}) {
     }
 
      axios.post(`${process.env.NEXT_PUBLIC_API_URL}/product`,productData).then((responce)=>{
+      alert(responce.data.message)
+     refresh()
+    close()
+
+    }).catch((err)=>{
+      alert(err)
+    })
+  }
+
+  const updateProduct= ()=>{
+    let productData={
+      _id:edit._id,
+      product_name:product?product:edit.product_name,
+      product_price:price?price:edit.product_price
+    }
+
+     axios.put(`${process.env.NEXT_PUBLIC_API_URL}/product`,productData).then((responce)=>{
       alert(responce.data.message)
      refresh()
     close()
@@ -58,8 +75,8 @@ export default function ProductNew({refresh,close}) {
         </DialogTitle>
         <DialogContent sx={{paddingTop:"5px"}}>
         <Stack spacing={2} sx={{width:"400px", padding:"5px"}}>
-        <TextField autoFocus id="outlined-basic" label="Product" variant="outlined" onChange={(event)=>{setProduct(event.target.value)}} />
-        <TextField  id="outlined-basic" label="Price" variant="outlined" onChange={(event)=>{setPrice(event.target.value)}} />
+        <TextField autoFocus id="outlined-basic" label="Product" variant="outlined" value={edit?.product_name} onChange={(event)=>{setProduct(event.target.value)}} />
+        <TextField  id="outlined-basic" label="Price" variant="outlined" value={edit?.product_price} onChange={(event)=>{setPrice(event.target.value)}} />
 
         </Stack>
 
@@ -68,7 +85,7 @@ export default function ProductNew({refresh,close}) {
           <Button  onClick={handleClose}>
             Cancel
           </Button>
-          <Button onClick={saveProduct}>
+          <Button onClick={edit?updateProduct:saveProduct}>
             Save
           </Button>
         </DialogActions>
