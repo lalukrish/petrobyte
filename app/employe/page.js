@@ -33,13 +33,13 @@ export default function page() {
         padding: "10px",
       }}
     >
-      <Button variant="outlined" 
+      {/* <Button variant="outlined" 
         sx={{ border: 1,marginBottom:"20px",color: "#0d47a1", border: "1px solid #0d47a1" }}
         onClick={handleClickOpen}
       >
          New EMPLOYEE
       </Button>
-      {open ? <StaffNew  close={handleClose} /> : null}
+      {open ? <StaffNew  close={handleClose} /> : null} */}
 
       <BasicTable />
     </Box>
