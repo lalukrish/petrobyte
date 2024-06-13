@@ -138,11 +138,7 @@ export default function Page() {
             iconPosition="start"
             label="Expense Details"
           />
-          <Tab
-            icon={<TroubleshootIcon sx={{ color: getIconColor(4) }} />}
-            iconPosition="start"
-            label="Test Details"
-          />
+          
         </Tabs>
       </Box>
 
@@ -176,24 +172,24 @@ export default function Page() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {productaccounts.map((productAccount)=>(
+              
 
               <TableRow
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell component="th" scope="row" align="center">
-                  {productAccount.date}
+                  18-07-2001
                 </TableCell>
                 <TableCell align="center">10001</TableCell>
                 <TableCell align="center">1200</TableCell>
                 <TableCell align="center">6000</TableCell>
-                <TableCell align="center">{productAccount.quantity}</TableCell>
-                <TableCell align="center">{productAccount.total_amount}</TableCell>
+                <TableCell align="center">7000</TableCell>
+                <TableCell align="center">23000</TableCell>
 
                 <TableCell align="center"><DoneAllIcon/></TableCell>
                 
               </TableRow>
-              ))}
+              
 
             </TableBody>
           </Table>
@@ -421,98 +417,9 @@ export default function Page() {
         </>
       )}
       {expense ? <ExpenseNew close={handleCloseexpense} /> : null}
-
-      {selectedTab === 4 && (
-        <>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "flex-end",
-              paddingRight: "20px",
-            }}
-          >
-            <Button
-              variant="outlined"
-              onClick={handleClickOpentest}
-              style={{
-                marginBottom: "20px",
-                color: "#0d47a1",
-                border: "1px solid #0d47a1",
-              }}
-            >
-              Add Dispencer
-            </Button>
-          </Box>
-          <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-              <TableHead sx={{ fontStyle: "normal", background: "#e3f2fd" }}>
-                <TableRow>
-                  <TableCell
-                    align="center"
-                    colSpan={1}
-                    rowSpan={2}
-                    sx={{ fontWeight: "bold" }}
-                  >
-                    Dispencer
-                  </TableCell>
-
-                  <TableCell
-                    align="center"
-                    colSpan={2}
-                    sx={{ fontWeight: "bold" }}
-                  >
-                    Test Value (Lts)
-                  </TableCell>
-
-                  <TableCell
-                    align="center"
-                    colSpan={1}
-                    rowSpan={2}
-                    sx={{ fontWeight: "bold", background: "#e3f2fd" }}
-                  >
-                    Action
-                  </TableCell>
-                </TableRow>
-
-                <TableRow
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  <TableCell
-                    align="center"
-                    sx={{ fontWeight: "bold", background: "#e3f2fd" }}
-                  >
-                    Petrol
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    sx={{ fontWeight: "bold", background: "#e3f2fd" }}
-                  >
-                    Diesel
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                <TableRow
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  <TableCell component="th" scope="row" align="center">
-                    D1
-                  </TableCell>
-                  <TableCell align="center">2</TableCell>
-                  <TableCell align="center">3</TableCell>
-                  <TableCell align="center">
-                    {" "}
-                    <Button>
-                      <EditIcon sx={{ color: "#0d47a1" }} />
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </>
-      )}
-      {test ? <TestNew close={handleClosetest} /> : null}
     </>
   );
 }
+
+
+      

@@ -6,13 +6,14 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, TextField } from '@mui/material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, InputBase, Stack, TextField } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { Pagination } from '@mui/material';
+
 
 export default function DataTable() {
   const [employee, setEmployee] = React.useState([]);
@@ -74,6 +75,9 @@ const [totalPages, setTotalPages] = React.useState(1);
   const handleClose = () => {
     setOpen(false);
   };
+
+  
+  
 
   const handleSave = () => {
     const add = {
@@ -139,8 +143,9 @@ const [totalPages, setTotalPages] = React.useState(1);
   return (
     <Box>
       
-      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-        Add New Employee
+      
+      <Button variant="outlined"  onClick={handleClickOpen} sx={{ marginBottom:"20px",color: "#0d47a1", border: "1px solid #0d47a1" }}>
+        Add Employee
       </Button>
       <Box sx={{ mt: 2 }}>
         <Dialog

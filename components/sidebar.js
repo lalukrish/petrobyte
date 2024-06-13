@@ -4,17 +4,13 @@ import React, { useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
-import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import MailIcon from "@mui/icons-material/Mail";
-import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Link from "next/link";
@@ -29,6 +25,7 @@ import ArticleIcon from "@mui/icons-material/Article";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import BlinkingAlert from "./alertfuelrate";
+import TroubleshootIcon from '@mui/icons-material/Troubleshoot';
 
 const drawerWidth = 240;
 
@@ -80,6 +77,11 @@ export default function ResponsiveDrawer() {
       icon: <GroupsIcon sx={{ color: "#0d47a1" }} />,
     },
     {
+      name: "Test",
+      link: "/test",
+      icon: <TroubleshootIcon sx={{ color: "#0d47a1" }} />,
+    },
+    {
       name: "Credits",
       link: "/credits",
       icon: <CreditCardIcon sx={{ color: "#0d47a1" }} />,
@@ -94,6 +96,7 @@ export default function ResponsiveDrawer() {
       link: "/reports",
       icon: <ArticleIcon sx={{ color: "#0d47a1" }} />,
     },
+
   ];
 
   const drawer = (
