@@ -13,11 +13,8 @@ import axios from 'axios';
 
 export default function CreditNew({close}) {
   const [name, setName] = React.useState("");
-  const [address, setAddress] = React.useState("");
-  const [contact, setContact] = React.useState("");
   const [credit, setCredit] = React.useState("");
-  const [returnamount, setReturnamount] = React.useState("");
-  const [balance, setBalance] = React.useState("");
+  
 
 
 
@@ -43,16 +40,12 @@ export default function CreditNew({close}) {
         aria-labelledby="responsive-dialog-title"
       >
         <DialogTitle id="responsive-dialog-title">
-          Add New Credit
+           New Credit
         </DialogTitle>
         <DialogContent >
         <Stack spacing={2} sx={{width:"400px", padding:"5px"}}>
         <TextField autoFocus id="outlined-basic" placeholder="Name" variant="outlined" onChange={(event)=>{setName(event.target.value)}} />
-        <TextField  id="outlined-basic" placeholder="Address" variant="outlined" onChange={(event)=>{setAddress(event.target.value)}} />
-        <TextField id="outlined-basic" placeholder="Contact" variant="outlined" onChange={(event)=>{setContact(event.target.value)}} />
         <TextField id="outlined-basic" placeholder="Credit" variant="outlined" onChange={(event)=>{setCredit(event.target.value)}}/>
-        <TextField id="outlined-basic" placeholder="Return" variant="outlined" onChange={(event)=>{setReturnamount(event.target.value)}}/>
-        <TextField id="outlined-basic" placeholder="Balance" variant="outlined" onChange={(event)=>{setBalance(event.target.value)}}/>
 
         </Stack>
 

@@ -20,8 +20,8 @@ function Liverate() {
    <Grid sx={{display:"flex",flexDirection:"row",gap:8,alignItems:"center"}}>  
 
    <Card sx={{
-      width: "300px",
-      height: "auto",
+      width: "250px",
+      height: "110px",
       backgroundColor: "white",
       boxShadow: 10,
       color: 'black',
@@ -48,8 +48,8 @@ function Liverate() {
       </CardActions>
     </Card>
     <Card sx={{
-      width: "300px",
-      height: "auto",
+      width: "250px",
+      height: "110px",
       backgroundColor: "white",
       boxShadow: 10,
       color: 'black',
@@ -75,8 +75,8 @@ function Liverate() {
     </Card>
 
     <Card sx={{
-      width: "300px",
-      height: "auto",
+      width: "250px",
+      height: "110px",
       backgroundColor: "white",
       boxShadow: 10,
       color: 'black',
@@ -103,8 +103,8 @@ function Liverate() {
       </CardActions>
     </Card>
     <Card sx={{
-      width: "300px",
-      height: "auto",
+      width: "250px",
+      height: "110px",
       backgroundColor: "white",
       boxShadow: 10,
       color: 'black',

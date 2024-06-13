@@ -8,13 +8,8 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { Box, Button } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import axios from "axios";
-import DoneAllIcon from '@mui/icons-material/DoneAll';
-import PrintIcon from '@mui/icons-material/Print';
-import CreditNew from "./dialogcredit";
 
-export default function CreditTable({}) {
+export default function DispencerTable({}) {
 
   const [open, setOpen] = React.useState(false);
   
@@ -30,52 +25,39 @@ export default function CreditTable({}) {
   };
   return (
     <Box>
-      <Button variant="outlined" 
-        sx={{ marginBottom:"20px",color: "#0d47a1", border: "1px solid #0d47a1" }}
-        
-      >
-        Creditor Details
-      </Button>
     <Button variant="outlined" 
-        sx={{ marginBottom:"20px",color: "#0d47a1", border: "1px solid #0d47a1",marginLeft:"10px" }}
+        sx={{ marginBottom:"20px",color: "#0d47a1", border: "1px solid #0d47a1" }}
         onClick={handleClickOpen}
       >
-        New Credit
+        Add Dispencer 
       </Button>
-      {open ? <CreditNew  close={handleClose} /> : null}
+      {/* {open ? <TestNew  close={handleClose} /> : null} */}
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead sx={{ background:"#e3f2fd"}}>
           <TableRow>
-          <TableCell align="center" sx={{ fontWeight: 'bold' }}>Sl.No</TableCell>
-
-            <TableCell sx={{ fontWeight: 'bold' }}>Name</TableCell>
-
-            <TableCell align="center" sx={{ fontWeight: 'bold' }}>Credit</TableCell>
+            <TableCell align="center" sx={{ fontWeight: 'bold' }}>Dispencer</TableCell>
+            <TableCell align="center" sx={{ fontWeight: 'bold' }}>Fuel</TableCell>
+            <TableCell align="center" sx={{ fontWeight: 'bold' }}>Live Metering</TableCell>
+            
             <TableCell align="center" sx={{ fontWeight: 'bold' }}>Action</TableCell>
 
           </TableRow>
         </TableHead>
         <TableBody>
           <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-          <TableCell align="center">1</TableCell>
-
-            <TableCell component="th" scope="row">
-              Aslam
-            </TableCell>
             
-            <TableCell align="center">54000</TableCell>
+            <TableCell align="center">D1</TableCell>
+            <TableCell align="center">Petrol</TableCell>
+            <TableCell align="center">4000</TableCell>
+
+            
 
             <TableCell align="center">
               <Button>
                 <EditIcon sx={{ color: "#0d47a1" }} />
               </Button>
-              <Button>
-                <DoneAllIcon sx={{ color: "#0d47a1" }}/>
-              </Button>
-              <Button>
-                <PrintIcon sx={{ color: "#0d47a1" }}/>
-              </Button>
+              
             </TableCell>
           </TableRow>
         </TableBody>
