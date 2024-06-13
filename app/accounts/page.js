@@ -34,7 +34,7 @@ export default function Page() {
   const [expense, setExpense] = React.useState(false);
   const [test, setTest] = React.useState(false);
   const [dialogOpen, setDialogOpen] = React.useState(false);
-  const [dialogContent, setDialogContent] = React.useState("");
+  const [dialogContent, setDialogContent] = React.useState({});
 
   const [selectedTab, setSelectedTab] = React.useState(0);
   const [fuelAccounts, setfuelAccounts] = React.useState([]);
@@ -99,9 +99,12 @@ export default function Page() {
     return selectedTab === tabIndex ? "#0d47a1" : "inherit";
   };
 
-  const handleDialogOpen = (content) => {
+  const handleDialogOpen = (date,dispencer) => {
     
-    setDialogContent(content);
+    setDialogContent({
+      date:date,
+      dispencer:dispencer
+    });
     setDialogOpen(true);
   };
 
@@ -262,7 +265,7 @@ export default function Page() {
                     </TableCell>
                     <TableCell align="center">{accnt.netAmount}</TableCell>
                     <TableCell align="center">
-                      <Button onClick={() => handleDialogOpen(accnt.date)}>
+                      <Button onClick={() => handleDialogOpen(accnt.date,accnt.dispencer)}>
                         <OpenInFullIcon sx={{ color: "#0d47a1" }} />
                       </Button>
                       <Button>

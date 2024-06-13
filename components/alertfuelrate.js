@@ -3,7 +3,7 @@ import { Box, Alert } from '@mui/material';
 
 const BlinkingAlert = () => {
   const blinkingStyle = {
-    animation: 'blink 1s infinite',
+    animation: 'blink 2s infinite',
   };
 
   const keyframesStyle = `
