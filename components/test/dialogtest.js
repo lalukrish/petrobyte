@@ -45,9 +45,9 @@ export default function TestNew({close}) {
         </DialogTitle>
         <DialogContent >
         <Stack spacing={2} sx={{width:"400px", padding:"5px"}}>
-        <TextField autoFocus id="outlined-basic" placeholder="Name" variant="outlined" onChange={(event)=>{setDispencer(event.target.value)}} />
-        <TextField  id="outlined-basic" placeholder="Address" variant="outlined" onChange={(event)=>{setFuel(event.target.value)}} />
-        <TextField id="outlined-basic" placeholder="Contact" variant="outlined" onChange={(event)=>{setQty(event.target.value)}} />
+        <TextField autoFocus id="outlined-basic" label="Dispencer" variant="outlined" onChange={(event)=>{setDispencer(event.target.value)}} />
+        <TextField  id="outlined-basic" label="Fuel" variant="outlined" onChange={(event)=>{setFuel(event.target.value)}} />
+        <TextField id="outlined-basic" label="Qty" variant="outlined" onChange={(event)=>{setQty(event.target.value)}} />
 
         </Stack>
 
