@@ -2,8 +2,6 @@
 
 import { Box, Button } from "@mui/material";
 import React, { useEffect } from "react";
-import CreditTable from "@/components/credits/table";
-import CreditNew from "@/components/credits/dialogcredit";
 import ProductsTable from "@/components/products/tableproducts";
 import ProductNew from "@/components/products/dialogproduct";
 
