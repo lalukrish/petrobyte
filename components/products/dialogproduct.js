@@ -23,7 +23,7 @@ export default function ProductNew({ refresh, edit, close }) {
     };
 
     axios
-      .post(`${process.env.NEXT_PUBLIC_API_URL}/product`, productData)
+      .post(`${process.env.NEXT_PUBLIC_API_URL}/product/POSTProduct`, productData)
       .then((responce) => {
         alert(responce.data.message);
         refresh();
@@ -42,7 +42,7 @@ export default function ProductNew({ refresh, edit, close }) {
     };
 
     axios
-      .put(`${process.env.NEXT_PUBLIC_API_URL}/product`, productData)
+      .put(`${process.env.NEXT_PUBLIC_API_URL}/product/PUTProduct`, productData)
       .then((responce) => {
         alert(responce.data.message);
         refresh();

@@ -35,7 +35,7 @@ const { refreshEmployee, setRefreshEmployee } = React.useContext(PetrobyteContex
   };
 
   const fetchAllEmployee = () => {
-    axios.get("https://petro.adaptable.app/employee").then((response) => {
+    axios.get(`${process.env.NEXT_PUBLIC_API_URL}/employee/GETAllEmployee`).then((response) => {
       console.log(response.data.message.employee)
       // setData(response.data.message.employee)
     })
@@ -49,7 +49,7 @@ const { refreshEmployee, setRefreshEmployee } = React.useContext(PetrobyteContex
       "emp_address": address,
       "emp_age": age
     }
-    axios.post(`${process.env.NEXT_PUBLIC_API_URL}/employee`,add).then((response)=>{alert(response.data.message)})
+    axios.post(`${process.env.NEXT_PUBLIC_API_URL}/employee/POSTEmployee`,add).then((response)=>{alert(response.data.message)})
     close()
     console.log(name,phone,age,address,email)
     setRefreshEmployee(!refreshEmployee)

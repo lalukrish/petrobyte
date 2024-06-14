@@ -68,7 +68,7 @@ export default function FuelNew({ close }) {
   
     
     ]
-    axios.post(`${process.env.NEXT_PUBLIC_API_URL}/fuelAccounts`,add).then((response)=>{alert(response.data.message)})
+    axios.post(`${process.env.NEXT_PUBLIC_API_URL}/fuelAccounts/POSTFuelAccount`,add).then((response)=>{alert(response.data.message)})
     // close()
     // setRefreshEmployee(!refreshEmployee)
   };

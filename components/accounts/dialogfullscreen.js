@@ -34,7 +34,7 @@ export default function FullScreenDialog({ open, handleClose, content }) {
   useEffect(() => {
     // alert(content);
     axios
-      .get(`${process.env.NEXT_PUBLIC_API_URL}/fuelAccounts/bydate?date=${content.date}&dispencer=${content.dispencer}`)
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/fuelAccounts/GETFUelAccountbydate?date=${content.date}&dispencer=${content.dispencer}`)
       .then((response) => setfuelAccounts(response.data.message));
   }, []);
 

@@ -24,7 +24,7 @@ export default function ProductsNew({ close }) {
 
   const products=[]
   useEffect(() => {
-    axios.get(`${process.env.NEXT_PUBLIC_API_URL}/product`).then((responce) => {
+    axios.get(`${process.env.NEXT_PUBLIC_API_URL}/product/GETAllProduct`).then((responce) => {
       responce.data.message.map((item)=>{
         products.push(item.product_name)
       })
@@ -59,7 +59,7 @@ export default function ProductsNew({ close }) {
       alert("Please fill in at least one product completely.");
       return;
     }
-    axios.post(`${process.env.NEXT_PUBLIC_API_URL}/productAccounts`, validRows)
+    axios.post(`${process.env.NEXT_PUBLIC_API_URL}/productAccounts/POSTProductAccount`, validRows)
       .then(response => {
         alert(response.data.message);
         close();

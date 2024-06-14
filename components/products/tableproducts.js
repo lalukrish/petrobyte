@@ -22,7 +22,7 @@ export default function ProductsTable({}) {
   const [refreshProduct, setrefreshProduct] = React.useState(false);
 
   React.useEffect(() => {
-    axios.get(`${process.env.NEXT_PUBLIC_API_URL}/product`).then((responce) => {
+    axios.get(`${process.env.NEXT_PUBLIC_API_URL}/product/GETAllProduct`).then((responce) => {
       setProduct(responce.data.message);
     });
   }, [refreshProduct]);
@@ -45,7 +45,7 @@ export default function ProductsTable({}) {
   }
 
   const handleDeleteProduct=(id)=>{
-    axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/product?id=${id}`).then((responce) => {
+    axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/product/DELETEProduct?id=${id}`).then((responce) => {
       alert(responce.data.message);
     setrefreshProduct(!refreshProduct);
     });

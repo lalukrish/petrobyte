@@ -43,7 +43,7 @@ export default function FuelUpdate({ clse,data }) {
     };
 
     axios
-      .put(`${process.env.NEXT_PUBLIC_API_URL}/fuelAccounts`, add)
+      .put(`${process.env.NEXT_PUBLIC_API_URL}/fuelAccounts/PUTFuelAccount`, add)
       .then((response) => {
         alert(response.data.message);
       });

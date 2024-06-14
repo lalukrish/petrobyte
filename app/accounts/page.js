@@ -37,25 +37,25 @@ export default function Page() {
   const [dialogContent, setDialogContent] = React.useState({});
 
   const [selectedTab, setSelectedTab] = React.useState(0);
-  const [fuelAccounts, setfuelAccounts] = React.useState([]);
+  // const [fuelAccounts, setfuelAccounts] = React.useState([]);
   const [accountoverview, setAccountoverview] = React.useState([]);
   const [productaccounts, setProductAccounts] = React.useState([]);
 
-  useEffect(() => {
-    axios
-      .get(`${process.env.NEXT_PUBLIC_API_URL}/fuelAccounts`)
-      .then((response) => setfuelAccounts(response.data.message));
-  }, []);
+  // useEffect(() => {
+  //   axios
+  //     .get(`${process.env.NEXT_PUBLIC_API_URL}/fuelAccounts/GETAllFuelAccount`)
+  //     .then((response) => setfuelAccounts(response.data.message));
+  // }, []);
 
   useEffect(() => {
     axios
-      .get(`${process.env.NEXT_PUBLIC_API_URL}/fuelAccounts/overview`)
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/fuelAccounts/GETFuelAccountOverview`)
       .then((response) => setAccountoverview(response.data));
   }, []);
 
   useEffect(() => {
     axios
-      .get(`${process.env.NEXT_PUBLIC_API_URL}/productAccounts`)
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/productAccounts/GETAllProductAccount`)
       .then((response) => setProductAccounts(response.data.message));
   }, [])
   

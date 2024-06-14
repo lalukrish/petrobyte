@@ -25,6 +25,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import { Pagination } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+require("dotenv").config();
 
 export default function DataTable() {
   const [employee, setEmployee] = React.useState([]);
@@ -95,7 +96,7 @@ export default function DataTable() {
     };
 
     axios
-      .post("https://petro.adaptable.app/employee", add)
+      .post(`${process.env.NEXT_PUBLIC_API_URL}/employee/POSTEmployee`, add)
       .then((response) => {
         alert(response.data.message);
         setRefreshEmployee(!refreshEmployee);
@@ -109,7 +110,7 @@ export default function DataTable() {
 
   const fetchAllEmployee = (page = 1, limit = 10) => {
     axios
-      .get(`https://petro.adaptable.app/employee?page=${page}&limit=${limit}`)
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/employee/GETAllEmployee?page=${page}&limit=${limit}`)
       .then((response) => {
         setEmployee(response.data.message.employees);
         setTotalPages(Math.ceil(response.data.message.count / limit));
@@ -121,7 +122,7 @@ export default function DataTable() {
 
   const handleDelete = (row) => {
     axios
-      .delete(`https://petro.adaptable.app/employee?id=${row._id}`)
+      .delete(`${process.env.NEXT_PUBLIC_API_URL}/employee/DELETEEmployee?id=${row._id}`)
       .then((response) => {
         alert(response.data.message);
         setRefreshEmployee(!refreshEmployee);
