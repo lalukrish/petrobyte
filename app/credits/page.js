@@ -43,8 +43,8 @@ export default function Page() {
   return (
     <Box>
       <Tabs value={value} onChange={handleChange} sx={{ marginBottom: "20px" }}>
-        <Tab label="Credits List" />
-        <Tab label="Creditor's Details" />
+        <Tab label="Creditor's List" />
+        <Tab label="Credit History" />
       </Tabs>
 
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '20px' }}>
@@ -55,7 +55,7 @@ export default function Page() {
               sx={{ color: "#0d47a1", border: "1px solid #0d47a1", marginRight: "10px" }}
               onClick={handleClickOpen}
             >
-              Add Credit
+              Add Creditor
             </Button>
             {open && <CreditNew close={handleClose} />}
           </>
@@ -68,7 +68,7 @@ export default function Page() {
               sx={{ color: "#0d47a1", border: "1px solid #0d47a1", marginRight: "10px" }}
               onClick={handleClickOpenCreditors}
             >
-              Add Creditor
+              Add Credit
             </Button>
             {open && <CreditorsDetailsNew close={handleCloseCreditors} />}
           </>
@@ -82,15 +82,17 @@ export default function Page() {
               <TableHead sx={{ background: "#e3f2fd" }}>
                 <TableRow>
                   <TableCell align="center" sx={{ fontWeight: 'bold' }}>Sl.No</TableCell>
-                  <TableCell sx={{ fontWeight: 'bold' }}>Name</TableCell>
-                  <TableCell align="center" sx={{ fontWeight: 'bold' }}>Credit</TableCell>
+                  <TableCell align="center" sx={{ fontWeight: 'bold' }}>Name</TableCell>
+                  <TableCell align="center" sx={{ fontWeight: 'bold' }}>Contact</TableCell>
+                  <TableCell align="center" sx={{ fontWeight: 'bold' }}>Credit Amount</TableCell>
                   <TableCell align="center" sx={{ fontWeight: 'bold' }}>Action</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
                   <TableCell align="center">1</TableCell>
-                  <TableCell component="th" scope="row">Aslam</TableCell>
+                  <TableCell align="center">Aslam</TableCell>
+                  <TableCell align="center">7070707070</TableCell>
                   <TableCell align="center">54000</TableCell>
                   <TableCell align="center">
                     <Button onClick={handleOpenMediumDialog}>
@@ -113,21 +115,25 @@ export default function Page() {
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead sx={{ background: "#e3f2fd" }}>
               <TableRow>
-                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Sl.No</TableCell>
-                <TableCell sx={{ fontWeight: 'bold' }}>Name</TableCell>
-                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Address</TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Date</TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Name</TableCell>
                 <TableCell align="center" sx={{ fontWeight: 'bold' }}>Contact</TableCell>
                 <TableCell align="center" sx={{ fontWeight: 'bold' }}>Vehicle No</TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Fuel Type</TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Fuel Quantity</TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Credi Amount</TableCell>
                 <TableCell align="center" sx={{ fontWeight: 'bold' }}>Action</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-                <TableCell align="center">1</TableCell>
-                <TableCell component="th" scope="row">Aslam</TableCell>
-                <TableCell align="center">Neryamangalam</TableCell>
+                <TableCell align="center">13-06-2024</TableCell>
+                <TableCell align="center">Aslam</TableCell>
                 <TableCell align="center">7347247622</TableCell>
                 <TableCell align="center">KL44B5179</TableCell>
+                <TableCell align="center">Deisel</TableCell>
+                <TableCell align="center">100</TableCell>
+                <TableCell align="center">10000</TableCell>
 
                 <TableCell align="center">
                   <Button>

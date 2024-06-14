@@ -16,16 +16,13 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        
-        
-        <SidebarLayout/>
-        
-        <Box sx={{marginLeft:32}}>
-          <PetrobyteContextProvider>{children}
-            </PetrobyteContextProvider>
-</Box>
-          {/* </SidebarLayout> */}
-        </body>
+        <SidebarLayout />
+
+        <Box sx={{ marginLeft: 32 }}>
+          <PetrobyteContextProvider>{children}</PetrobyteContextProvider>
+        </Box>
+        {/* </SidebarLayout> */}
+      </body>
     </html>
   );
 }

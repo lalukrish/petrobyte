@@ -8,14 +8,21 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { Box, Button } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
+import axios from "axios";
 
 export default function DispencerTable({}) {
 
   const [open, setOpen] = React.useState(false);
+  const [dispencers, setDispencers] = React.useState([]);
   
+  const fetchAllDispencer = ()=>{
+    axios.get(`${process.env.NEXT_PUBLIC_API_URL}/dispencer/GETAllDispencer`).then((responce)=>setDispencers(responce.data.message.dispencers)).catch((err)=>console.log(err.message))
+  }
+
+  React.useEffect(() => {
+    fetchAllDispencer()
+  }, [])
   
-
-
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -45,11 +52,11 @@ export default function DispencerTable({}) {
           </TableRow>
         </TableHead>
         <TableBody>
+            {dispencers.map((dispencer)=>(
           <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-            
-            <TableCell align="center">D1</TableCell>
-            <TableCell align="center">Petrol</TableCell>
-            <TableCell align="center">4000</TableCell>
+            <TableCell align="center">{dispencer.dispencer}</TableCell>
+            <TableCell align="center">{dispencer.fuel_id.fuel_name}</TableCell>
+            <TableCell align="center">{dispencer.live_reading}</TableCell>
 
             
 
@@ -60,6 +67,7 @@ export default function DispencerTable({}) {
               
             </TableCell>
           </TableRow>
+            ))}
         </TableBody>
       </Table>
     </TableContainer>
