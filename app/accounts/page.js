@@ -328,7 +328,7 @@ export default function Page() {
                 </TableRow>
               </TableHead>
               <TableBody>
-              {productaccounts.map((productAccount)=>(
+              {productaccounts?.map((productAccount)=>(
                 <TableRow
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
