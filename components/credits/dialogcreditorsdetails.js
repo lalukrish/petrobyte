@@ -15,6 +15,7 @@ export default function CreditorsDetailsNew({close}) {
   const [name, setName] = React.useState("");
   const [address, setAddress] = React.useState("");
   const [contact, setContact] = React.useState("");
+  const [email, setEmail] = React.useState("");
   const [vnumber, setVnumber] = React.useState("");
 
   
@@ -50,6 +51,7 @@ export default function CreditorsDetailsNew({close}) {
         <TextField autoFocus id="outlined-basic" label="Name" variant="outlined" />
         <TextField id="outlined-basic" label="Address" variant="outlined" />
         <TextField id="outlined-basic" label="Contact" variant="outlined" />
+        <TextField id="outlined-basic" label="Email" variant="outlined" />
         <TextField id="outlined-basic" label="Vehicle No" variant="outlined" />
 
 
