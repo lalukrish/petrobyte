@@ -9,6 +9,10 @@ import Paper from "@mui/material/Paper";
 import { Box, Button } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import axios from "axios";
+import { Delete } from "@mui/icons-material";
+import { GridDeleteIcon } from "@mui/x-data-grid";
+import DeleteIcon from '@mui/icons-material/Delete';
+import DispencerNew from "./dialogdispencer";
 
 export default function DispencerTable({}) {
 
@@ -38,7 +42,7 @@ export default function DispencerTable({}) {
       >
         Add Dispencer 
       </Button>
-      {/* {open ? <TestNew  close={handleClose} /> : null} */}
+      {open ? <DispencerNew  close={handleClose} /> : null}
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead sx={{ background:"#e3f2fd"}}>
@@ -63,6 +67,9 @@ export default function DispencerTable({}) {
             <TableCell align="center">
               <Button>
                 <EditIcon sx={{ color: "#0d47a1" }} />
+              </Button>
+              <Button>
+                <DeleteIcon sx={{ color: "#ef5350" }} />
               </Button>
               
             </TableCell>
