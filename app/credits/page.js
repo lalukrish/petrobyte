@@ -10,21 +10,21 @@ import CreditorsDetailsNew from "@/components/credits/dialogcreditorsdetails";
 
 export default function Page() {
   const [open, setOpen] = useState(false);
+  const [opencreditors, setOpenCreditors] = useState(false);
   const [openMediumDialog, setOpenMediumDialog] = useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
-  };
-
+  }
   const handleClose = () => {
     setOpen(false);
   };
   //creditor details dialog
   const handleClickOpenCreditors = () => {
-    setOpen(true);
+    setOpenCreditors(true);
   };
   const handleCloseCreditors = () => {
-    setOpen(false);
+    setOpenCreditors(false);
   };
 
   const handleOpenMediumDialog = () => {
@@ -61,7 +61,7 @@ export default function Page() {
         >
           Add Creditor
         </Button>
-        {open && <CreditorsDetailsNew close={handleCloseCreditors} />}
+        {opencreditors && <CreditorsDetailsNew close={handleCloseCreditors} />}
         </>
 
 

@@ -24,7 +24,6 @@ const MediumDialog = ({ open, handleClose }) => {
                 <TableCell align="center" sx={{ fontWeight: 'bold' }}>Contact</TableCell>
                 <TableCell align="center" sx={{ fontWeight: 'bold' }}>Email</TableCell>
                 <TableCell align="center" sx={{ fontWeight: 'bold' }}>Address </TableCell>
-                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Vehicle No. </TableCell>
 
               </TableRow>
               
@@ -35,7 +34,7 @@ const MediumDialog = ({ open, handleClose }) => {
                 <TableCell align="center" >9048706798</TableCell>
                 <TableCell align="center" >aslam@gmail.com</TableCell>
                 <TableCell align="center" >Neriyamangalam </TableCell>
-                <TableCell align="center" >KL44B5179  </TableCell>
+                
 
               </TableRow>
         </TableBody>
@@ -57,6 +56,8 @@ const MediumDialog = ({ open, handleClose }) => {
                 <TableCell align="center" sx={{ fontWeight: 'bold' }}>Credit </TableCell>
                 <TableCell align="center" sx={{ fontWeight: 'bold' }}>Return</TableCell>
                 <TableCell align="center" sx={{ fontWeight: 'bold' }}>Balance</TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Vehicle No. </TableCell>
+
                 <TableCell align="center" sx={{ fontWeight: 'bold' }}>Action</TableCell>
               </TableRow>
             </TableHead>
@@ -67,6 +68,8 @@ const MediumDialog = ({ open, handleClose }) => {
                 <TableCell align="center">45000</TableCell>
                 <TableCell align="center">10000</TableCell>
                 <TableCell align="center">35000</TableCell>
+                <TableCell align="center" >KL44B5179  </TableCell>
+
 
                 
 

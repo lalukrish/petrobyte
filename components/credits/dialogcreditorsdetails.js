@@ -12,11 +12,13 @@ import { PetrobyteContext } from '@/context/context';
 import axios from 'axios';
 
 export default function CreditorsDetailsNew({close}) {
+
+// const { refreshCredit, setRefreshCredit } = React.useContext(PetrobyteContext);
+
   const [name, setName] = React.useState("");
   const [address, setAddress] = React.useState("");
   const [contact, setContact] = React.useState("");
   const [email, setEmail] = React.useState("");
-  const [vnumber, setVnumber] = React.useState("");
 
   
 
@@ -33,6 +35,22 @@ export default function CreditorsDetailsNew({close}) {
     close()
     
   };
+  const handleSave = () => {
+    let add = {
+      "cc_name":name,
+      "cc_contact_no":contact,
+      "cc_address":address,
+      "cc_email":email,
+      "Credit_amount":0,
+      "Cc_status":null
+
+    }
+    axios.post(`${process.env.NEXT_PUBLIC_API_URL}/creditcustomer/POSTCC`,add).then((response)=>{alert(response.data.message)})
+    close()
+    console.log(name,contact,address,email)
+    // setRefreshCredit(!refreshCredit)
+    
+  };
   
   return (
     
@@ -44,15 +62,14 @@ export default function CreditorsDetailsNew({close}) {
         aria-labelledby="responsive-dialog-title"
       >
         <DialogTitle id="responsive-dialog-title">
-        Add Creditor's Details
+        New Creditor's Details
         </DialogTitle>
         <DialogContent >
         <Stack spacing={2} sx={{width:"400px", padding:"5px"}}>
-        <TextField autoFocus id="outlined-basic" label="Name" variant="outlined" />
-        <TextField id="outlined-basic" label="Address" variant="outlined" />
-        <TextField id="outlined-basic" label="Contact" variant="outlined" />
-        <TextField id="outlined-basic" label="Email" variant="outlined" />
-        <TextField id="outlined-basic" label="Vehicle No" variant="outlined" />
+        <TextField autoFocus id="outlined-basic" label="Name" variant="outlined" onChange={(event)=>{setName(event.target.value)}} />
+        <TextField id="outlined-basic" label="Address" variant="outlined" onChange={(event)=>{setAddress(event.target.value)}}/>
+        <TextField id="outlined-basic" label="Contact" variant="outlined" onChange={(event)=>{setContact(event.target.value)}} />
+        <TextField id="outlined-basic" label="Email" variant="outlined" onChange={(event)=>{setEmail(event.target.value)}}/>
 
 
         </Stack>
@@ -62,7 +79,7 @@ export default function CreditorsDetailsNew({close}) {
           <Button  onClick={handleClose}>
             Cancel
           </Button>
-          <Button>
+          <Button onClick={handleSave}>
             Save
           </Button>
         </DialogActions>
