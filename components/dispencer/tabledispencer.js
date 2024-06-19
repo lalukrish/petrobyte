@@ -58,9 +58,9 @@ export default function DispencerTable({}) {
         <TableBody>
             {dispencers.map((dispencer)=>(
           <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-            <TableCell align="center">{dispencer.dispencer}</TableCell>
-            <TableCell align="center">{dispencer.fuel_id.fuel_name}</TableCell>
-            <TableCell align="center">{dispencer.live_reading}</TableCell>
+            <TableCell align="center">{dispencer?.dispencer}</TableCell>
+            <TableCell align="center">{dispencer?.fuel_id?.fuel_name}</TableCell>
+            <TableCell align="center">{dispencer?.live_reading}</TableCell>
 
             
 
