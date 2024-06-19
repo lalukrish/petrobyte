@@ -9,73 +9,76 @@ import {
   Box,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
-import DashboardNew from "./dialogadd";
+import DashboardPriceModal from "./dashboardPriceModal";
 import axios from "axios";
 
-const initialRates = [
-  {
-    id: 1,
-    type: "Diesel",
-    currentRate: "102 Rs/Lts",
-    previousRate: "100",
+const initialRates = {
+  diesel: {
+    fuel_name: "Diesel",
+    fuel_price: "Loading...",
+    previous_rate: "Loading...",
   },
-  {
-    id: 2,
-    type: "Petrol",
-    currentRate: "95 Rs/Lts",
-    previousRate: "93",
+  petrol: {
+    fuel_name: "Petrol",
+    fuel_price: "Loading...",
+    previous_rate: "Loading...",
   },
-  // Add more initial rates as needed
-];
+};
 
 const Liverate = () => {
   const [open, setOpen] = useState(false);
-  const [rates, setRates] = useState([]);
+  const [currentRate, setCurrentRate] = useState(null);
+  const [rates, setRates] = useState(initialRates);
 
   useEffect(() => {
     axios
       .get(`${process.env.NEXT_PUBLIC_API_URL}/fuelPrice/GETAllFuel`)
-      .then((responce) => setRates(responce.data.message))
+      .then((response) => {
+        const updatedRates = response.data.message.reduce((acc, rate) => {
+          if (rate.fuel_name === "Diesel") {
+            acc.diesel = rate;
+          } else if (rate.fuel_name === "Petrol") {
+            acc.petrol = rate;
+          }
+          return acc;
+        }, {});
+        setRates(updatedRates);
+      })
       .catch(() => alert(`Something went wrong`));
   }, []);
 
-  const handleClickOpen = () => {
+  const handleClickOpen = (rate) => {
+    setCurrentRate(rate);
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
+    setCurrentRate(null);
   };
-
-  const handleEditRate = (id) => {
-    // Logic to handle editing the rate based on id
-    console.log(`Editing rate with id: ${id}`);
-  };
-
   return (
     <Box mt={2}>
       <Grid container spacing={3}>
-        {/* Diesel Rate Card */}
-        {rates.map((rate)=>(
         <Grid item xs={12} md={4}>
           <Card
             sx={{
               width: "240px",
-              height: "110px",
+              height: "120px",
               backgroundColor: "white",
               boxShadow: 10,
               color: "black",
               borderRadius: 2,
               display: "flex",
               flexDirection: "column",
-              gap: 4,
+              gap: 40,
               transition: "transform 0.3s",
               "&:hover": {
                 transform: "scale(1.1)",
               },
+              //   m: 2, // Adds margin around the card
             }}
+            onClick={() => handleClickOpen(rates.diesel)}
           >
-            {open ? <DashboardNew close={handleClose} /> : null}
             <CardContent>
               <Typography
                 variant="h5"
@@ -87,21 +90,20 @@ const Liverate = () => {
                   justifyContent: "center",
                 }}
               >
-                {rate.fuel_name}
+                {rates.diesel.fuel_name}
               </Typography>
               <Typography
                 variant="h2"
                 component="div"
-                
                 sx={{
                   display: "flex",
                   justifyContent: "center",
                   mt: 1,
-                  color:'green'
+                  color: "green",
                 }}
               >
                 <span style={{ fontSize: "20px", fontWeight: "bold" }}>
-                  {rate.fuel_price} Rs/Lts
+                  {rates.diesel.fuel_price} Rs/Lts
                 </span>
               </Typography>
               <Typography
@@ -111,39 +113,40 @@ const Liverate = () => {
                   display: "flex",
                   justifyContent: "flex-start",
                   color: "gray",
+                  mt: 2,
                 }}
               >
-                Previous Rate: {rate.fuel_price} Rs/Lts
+                Previous Rate: {rates.diesel.previous_rate}
               </Typography>
             </CardContent>
             <CardActions sx={{ display: "flex", justifyContent: "flex-end" }}>
-              <Button onClick={() => handleEditRate(initialRates[0].id)}>
+              <Button onClick={() => handleClickOpen(rates.diesel)}>
                 <EditIcon />
               </Button>
             </CardActions>
           </Card>
         </Grid>
-        ))}
-        {/* Petrol Rate Card */}
-        {/* <Grid item xs={12} md={4}>
+
+        <Grid item xs={12} md={4}>
           <Card
             sx={{
               width: "240px",
-              height: "110px",
+              height: "120px",
               backgroundColor: "white",
               boxShadow: 10,
               color: "black",
               borderRadius: 2,
               display: "flex",
               flexDirection: "column",
-              gap: 4,
+              gap: 2,
               transition: "transform 0.3s",
               "&:hover": {
                 transform: "scale(1.1)",
               },
+              marginLeft: 12, // Adds margin around the card
             }}
+            onClick={() => handleClickOpen(rates.petrol)}
           >
-            {open ? <DashboardNew close={handleClose} /> : null}
             <CardContent>
               <Typography
                 variant="h5"
@@ -155,19 +158,20 @@ const Liverate = () => {
                   justifyContent: "center",
                 }}
               >
-                Petrol
+                {rates.petrol.fuel_name}
               </Typography>
               <Typography
-                variant="h6"
+                variant="h2"
                 component="div"
                 sx={{
                   display: "flex",
                   justifyContent: "center",
                   mt: 1,
+                  color: "green",
                 }}
               >
                 <span style={{ fontSize: "20px", fontWeight: "bold" }}>
-                  {initialRates[1].currentRate}
+                  {rates.petrol.fuel_price} Rs/Lts
                 </span>
               </Typography>
               <Typography
@@ -177,47 +181,28 @@ const Liverate = () => {
                   display: "flex",
                   justifyContent: "flex-start",
                   color: "gray",
+                  mt: 2,
                 }}
               >
-                Previous Rate: {initialRates[1].previousRate}
+                Previous Rate: {rates.petrol.previous_rate}
               </Typography>
             </CardContent>
             <CardActions sx={{ display: "flex", justifyContent: "flex-end" }}>
-              <Button onClick={() => handleEditRate(initialRates[1].id)}>
+              <Button onClick={() => handleClickOpen(rates.petrol)}>
                 <EditIcon />
               </Button>
             </CardActions>
           </Card>
-        </Grid> */}
-
-        {/* Add Rate Card */}
-        <Grid item xs={12} md={4}>
-          <Card
-            sx={{
-              width: "240px",
-              height: "110px",
-              backgroundColor: "white",
-              boxShadow: 10,
-              color: "black",
-              borderRadius: 2,
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              transition: "transform 0.3s",
-              "&:hover": {
-                transform: "scale(1.1)",
-              },
-            }}
-          >
-            <CardContent>
-              <Button variant="contained" onClick={handleClickOpen}>
-                Add Rate
-              </Button>
-            </CardContent>
-          </Card>
         </Grid>
       </Grid>
+
+      {open && (
+        <DashboardPriceModal
+          open={open}
+          onClose={handleClose}
+          currentRate={currentRate}
+        />
+      )}
     </Box>
   );
 };
