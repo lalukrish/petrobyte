@@ -65,7 +65,7 @@ export default function DataTable() {
       };
 
       axios
-        .put(`https://petro.adaptable.app/employee`, update)
+        .put(`${process.env.NEXT_PUBLIC_API_URL}/employee`, update)
         .then((response) => {
           alert(response.data.message);
           setRefreshEmployee(!refreshEmployee); // Refresh the employee list

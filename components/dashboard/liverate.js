@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DashboardNew from "./dialogadd";
+import axios from "axios";
 
 const initialRates = [
   {
@@ -29,7 +30,14 @@ const initialRates = [
 
 const Liverate = () => {
   const [open, setOpen] = useState(false);
-  const [rates, setRates] = useState(initialRates);
+  const [rates, setRates] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/fuelPrice/GETAllFuel`)
+      .then((responce) => setRates(responce.data.message))
+      .catch(() => alert(`Something went wrong`));
+  }, []);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -48,6 +56,7 @@ const Liverate = () => {
     <Box mt={2}>
       <Grid container spacing={3}>
         {/* Diesel Rate Card */}
+        {rates.map((rate)=>(
         <Grid item xs={12} md={4}>
           <Card
             sx={{
@@ -78,19 +87,21 @@ const Liverate = () => {
                   justifyContent: "center",
                 }}
               >
-                Diesel
+                {rate.fuel_name}
               </Typography>
               <Typography
-                variant="h6"
+                variant="h2"
                 component="div"
+                
                 sx={{
                   display: "flex",
                   justifyContent: "center",
                   mt: 1,
+                  color:'green'
                 }}
               >
                 <span style={{ fontSize: "20px", fontWeight: "bold" }}>
-                  {initialRates[0].currentRate}
+                  {rate.fuel_price} Rs/Lts
                 </span>
               </Typography>
               <Typography
@@ -102,7 +113,7 @@ const Liverate = () => {
                   color: "gray",
                 }}
               >
-                Previous Rate: {initialRates[0].previousRate}
+                Previous Rate: {rate.fuel_price} Rs/Lts
               </Typography>
             </CardContent>
             <CardActions sx={{ display: "flex", justifyContent: "flex-end" }}>
@@ -112,9 +123,9 @@ const Liverate = () => {
             </CardActions>
           </Card>
         </Grid>
-
+        ))}
         {/* Petrol Rate Card */}
-        <Grid item xs={12} md={4}>
+        {/* <Grid item xs={12} md={4}>
           <Card
             sx={{
               width: "240px",
@@ -177,7 +188,7 @@ const Liverate = () => {
               </Button>
             </CardActions>
           </Card>
-        </Grid>
+        </Grid> */}
 
         {/* Add Rate Card */}
         <Grid item xs={12} md={4}>
