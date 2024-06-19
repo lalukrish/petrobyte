@@ -18,6 +18,8 @@ export default function DispencerTable({}) {
   const [open, setOpen] = React.useState(false);
   const [dispencers, setDispencers] = React.useState([]);
   const [refreshDispencer, setrefreshDispencer] = React.useState(false);
+  const [editDispencer, setEditDispencer] = React.useState({});
+
 
   const fetchAllDispencer = () => {
     axios
@@ -41,6 +43,12 @@ export default function DispencerTable({}) {
     setrefreshDispencer(!refreshDispencer);
 
 
+  }
+  //edit dispencer
+
+  const handleEditDispencer=(data)=>{
+    setEditDispencer(data)
+    setOpen(true);
   }
 
   const handleDelete = (row) => {
@@ -102,7 +110,7 @@ export default function DispencerTable({}) {
                 <TableCell align="center">{dispencer?.live_reading}</TableCell>
 
                 <TableCell align="center">
-                  <Button>
+                  <Button onClick={()=>handleEditDispencer(dispencer)}>
                     <EditIcon sx={{ color: "#0d47a1" }} />
                   </Button>
                   <Button>

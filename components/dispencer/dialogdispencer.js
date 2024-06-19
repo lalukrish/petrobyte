@@ -11,7 +11,7 @@ import { Stack, TextField } from "@mui/material";
 import { PetrobyteContext } from "@/context/context";
 import axios from "axios";
 
-export default function DispencerNew({ close,refreshDispencer }) {
+export default function DispencerNew({ close,refreshDispencer,edit }) {
   const [dispencer, setDispencer] = React.useState("");
   const [fuel, setFuel] = React.useState("");
   const [live_reading, setLive_reading] = React.useState("");
@@ -43,6 +43,26 @@ export default function DispencerNew({ close,refreshDispencer }) {
     console.log(dispencer, live_reading);
     // setRefreshCredit(!refreshCredit)
   };
+  //edit dispencer
+
+  const updateDispencer = () => {
+    let dispencerData = {
+      _id: edit._id,
+      dispencer: dispencer ? dispencer : edit.dispencer,
+      live_reading: live_reading ? live_reading : edit.live_reading,
+    };
+
+    axios
+      .put(`${process.env.NEXT_PUBLIC_API_URL}/dispencer/PUTDispencer`, dispencerData)
+      .then((responce) => {
+        alert(responce.data.message);
+        refreshDispencer();
+        close();
+      })
+      .catch((err) => {
+        alert(err);
+      });
+  };
 
   return (
     <Dialog
@@ -58,8 +78,10 @@ export default function DispencerNew({ close,refreshDispencer }) {
             autoFocus
             id="outlined-basic"
             label="Dispencer"
+            value={dispencer ? dispencer : edit?.dispencer}
             variant="outlined"
             onChange={(event) => {
+              edit.dispencer = null;
               setDispencer(event.target.value);
             }}
           />
@@ -74,6 +96,7 @@ export default function DispencerNew({ close,refreshDispencer }) {
           <TextField
             id="outlined-basic"
             label="Live Metering"
+            value={live_reading ? live_reading : edit?.live_reading}
             variant="outlined"
             onChange={(event) => {
               setLive_reading(event.target.value);
@@ -82,8 +105,8 @@ export default function DispencerNew({ close,refreshDispencer }) {
         </Stack>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose}>Cancel</Button>
-        <Button onClick={handleSave}>Save</Button>
+        <Button color="error" onClick={handleClose}>Cancel</Button>
+        <Button color="success" onClick={edit.dispencer ? updateDispencer : handleSave}>Save</Button>
       </DialogActions>
     </Dialog>
   );
