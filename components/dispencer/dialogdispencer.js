@@ -11,7 +11,7 @@ import { Stack, TextField } from "@mui/material";
 import { PetrobyteContext } from "@/context/context";
 import axios from "axios";
 
-export default function DispencerNew({ close }) {
+export default function DispencerNew({ close,refreshDispencer }) {
   const [dispencer, setDispencer] = React.useState("");
   const [fuel, setFuel] = React.useState("");
   const [live_reading, setLive_reading] = React.useState("");
@@ -37,6 +37,7 @@ export default function DispencerNew({ close }) {
       .post(`${process.env.NEXT_PUBLIC_API_URL}/dispencer/POSTDispencer`, add)
       .then((response) => {
         alert(response.data.message);
+        refreshDispencer()
       });
     close();
     console.log(dispencer, live_reading);
