@@ -24,6 +24,8 @@ const MediumDialog = ({ open, handleClose }) => {
                 <TableCell align="center" sx={{ fontWeight: 'bold' }}>Contact</TableCell>
                 <TableCell align="center" sx={{ fontWeight: 'bold' }}>Email</TableCell>
                 <TableCell align="center" sx={{ fontWeight: 'bold' }}>Address </TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Action</TableCell>
+
 
               </TableRow>
               
@@ -34,6 +36,12 @@ const MediumDialog = ({ open, handleClose }) => {
                 <TableCell align="center" >9048706798</TableCell>
                 <TableCell align="center" >aslam@gmail.com</TableCell>
                 <TableCell align="center" >Neriyamangalam </TableCell>
+                <TableCell align="center">
+                  <Button>
+                    <EditIcon sx={{ color: "#0d47a1" }} />
+                  </Button>
+                 
+                </TableCell>
                 
 
               </TableRow>

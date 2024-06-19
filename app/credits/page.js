@@ -88,9 +88,9 @@ export default function Page() {
                 <Button onClick={handleOpenMediumDialog}>
                   <OpenInFullIcon sx={{ color: "#0d47a1" }} />
                 </Button>
-                <Button>
+                {/* <Button>
                   <EditIcon sx={{ color: "#0d47a1" }} />
-                </Button>
+                </Button> */}
               </TableCell>
             </TableRow>
           </TableBody>
