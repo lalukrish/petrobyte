@@ -3,71 +3,77 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
-import { Stack, TextField } from "@mui/material";
-import { PetrobyteContext } from "@/context/context";
+import { MenuItem, Select, Stack, TextField } from "@mui/material";
 import axios from "axios";
 
-export default function DispencerNew({ close,refreshDispencer,edit }) {
-  const [dispencer, setDispencer] = React.useState("");
-  const [fuel, setFuel] = React.useState("");
-  const [live_reading, setLive_reading] = React.useState("");
+export default function DispencerNew({ close, refreshDispencer, edit }) {
+  const [dispencer, setDispencer] = React.useState(edit?.dispencer || "");
+  const [fuel, setFuel] = React.useState(edit?.fuel_id || "");
+  const [live_reading, setLive_reading] = React.useState(
+    edit?.live_reading || ""
+  );
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
-  //   const handleClickOpen = () => {
-  //     setOpen(true);
-  //   };
+  const [fuels, setAllfuels] = React.useState([]);
+
+  React.useEffect(() => {
+    axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/fuelPrice/GETAllFuel`)
+      .then((response) => setAllfuels(response.data.message))
+      .catch((err) => console.log(err.message));
+  }, []);
 
   const handleClose = () => {
     close();
   };
 
   const handleSave = () => {
-    let add = {
-      dispencer: dispencer,
-      live_reading: live_reading,
-      fuel_id: "66669c13c600bf08974a5303",
+    const add = {
+      dispencer,
+      live_reading,
+      fuel_id: fuel,
     };
+
     axios
       .post(`${process.env.NEXT_PUBLIC_API_URL}/dispencer/POSTDispencer`, add)
       .then((response) => {
         alert(response.data.message);
-        refreshDispencer()
-      });
+        refreshDispencer();
+      })
+      .catch((err) => alert(err));
     close();
-    console.log(dispencer, live_reading);
-    // setRefreshCredit(!refreshCredit)
   };
-  //edit dispencer
 
   const updateDispencer = () => {
-    let dispencerData = {
+    const dispencerData = {
       _id: edit._id,
-      dispencer: dispencer ? dispencer : edit.dispencer,
-      live_reading: live_reading ? live_reading : edit.live_reading,
+      dispencer,
+      live_reading,
+      fuel_id: fuel,
     };
 
     axios
-      .put(`${process.env.NEXT_PUBLIC_API_URL}/dispencer/PUTDispencer`, dispencerData)
-      .then((responce) => {
-        alert(responce.data.message);
+      .put(
+        `${process.env.NEXT_PUBLIC_API_URL}/dispencer/PUTDispencer`,
+        dispencerData
+      )
+      .then((response) => {
+        alert(response.data.message);
         refreshDispencer();
         close();
       })
-      .catch((err) => {
-        alert(err);
-      });
+      .catch((err) => alert(err));
   };
 
   return (
     <Dialog
       fullScreen={fullScreen}
-      open={open}
+      open={true}
       onClose={handleClose}
       aria-labelledby="responsive-dialog-title"
     >
@@ -78,35 +84,39 @@ export default function DispencerNew({ close,refreshDispencer,edit }) {
             autoFocus
             id="outlined-basic"
             label="Dispencer"
-            value={dispencer ? dispencer : edit?.dispencer}
+            value={dispencer}
             variant="outlined"
-            onChange={(event) => {
-              edit.dispencer = null;
-              setDispencer(event.target.value);
-            }}
+            onChange={(event) => setDispencer(event.target.value)}
           />
-          <TextField
-            id="outlined-basic"
-            label="Fuel"
+          <Select
+            value={fuel}
+            onChange={(event) => setFuel(event.target.value)}
+            displayEmpty
+            placeholder="Fuel"
             variant="outlined"
-            onChange={(event) => {
-              setFuel(event.target.value);
-            }}
-          />
+          >
+            {fuels.map((fuel) => (
+              <MenuItem key={fuel._id} value={fuel._id}>
+                {fuel.fuel_name}
+              </MenuItem>
+            ))}
+          </Select>
           <TextField
             id="outlined-basic"
             label="Live Metering"
-            value={live_reading ? live_reading : edit?.live_reading}
+            value={live_reading}
             variant="outlined"
-            onChange={(event) => {
-              setLive_reading(event.target.value);
-            }}
+            onChange={(event) => setLive_reading(event.target.value)}
           />
         </Stack>
       </DialogContent>
       <DialogActions>
-        <Button color="error" onClick={handleClose}>Cancel</Button>
-        <Button color="success" onClick={edit.dispencer ? updateDispencer : handleSave}>Save</Button>
+        <Button color="error" onClick={handleClose}>
+          Cancel
+        </Button>
+        <Button color="success" onClick={edit ? updateDispencer : handleSave}>
+          Save
+        </Button>
       </DialogActions>
     </Dialog>
   );

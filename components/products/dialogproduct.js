@@ -12,7 +12,7 @@ import { PetrobyteContext } from "@/context/context";
 import axios from "axios";
 require("dotenv").config();
 
-export default function ProductNew({ refresh, edit, close }) {
+export default function ProductNew({ refresh, edit, editId, close }) {
   const [product, setProduct] = React.useState("");
   const [price, setPrice] = React.useState("");
 
@@ -23,7 +23,10 @@ export default function ProductNew({ refresh, edit, close }) {
     };
 
     axios
-      .post(`${process.env.NEXT_PUBLIC_API_URL}/product/POSTProduct`, productData)
+      .post(
+        `${process.env.NEXT_PUBLIC_API_URL}/product/POSTProduct`,
+        productData
+      )
       .then((responce) => {
         alert(responce.data.message);
         refresh();

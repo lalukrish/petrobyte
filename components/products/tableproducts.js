@@ -22,9 +22,11 @@ export default function ProductsTable({}) {
   const [refreshProduct, setrefreshProduct] = React.useState(false);
 
   React.useEffect(() => {
-    axios.get(`${process.env.NEXT_PUBLIC_API_URL}/product/GETAllProduct`).then((responce) => {
-      setProduct(responce.data.message);
-    });
+    axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/product/GETAllProduct`)
+      .then((responce) => {
+        setProduct(responce.data.message);
+      });
   }, [refreshProduct]);
 
   const handleRefresh = () => {
@@ -36,20 +38,26 @@ export default function ProductsTable({}) {
   };
   const handleClose = () => {
     setOpen(false);
-    setEditProduct({})
+    setEditProduct({});
   };
 
-  const handleEditProduct=(data)=>{
-    setEditProduct(data)
+  const [editId, setEditId] = React.useState(null);
+  const handleEditProduct = (id, data) => {
+    setEditProduct(data);
     setOpen(true);
-  }
+    setEditId(id);
+  };
 
-  const handleDeleteProduct=(id)=>{
-    axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/product/DELETEProduct?id=${id}`).then((responce) => {
-      alert(responce.data.message);
-    setrefreshProduct(!refreshProduct);
-    });
-  }
+  const handleDeleteProduct = (id) => {
+    axios
+      .delete(
+        `${process.env.NEXT_PUBLIC_API_URL}/product/DELETEProduct?id=${id}`
+      )
+      .then((responce) => {
+        alert(responce.data.message);
+        setrefreshProduct(!refreshProduct);
+      });
+  };
 
   return (
     <Box>
@@ -64,8 +72,15 @@ export default function ProductsTable({}) {
       >
         Add Product
       </Button>
-      {open ? <ProductNew refresh={handleRefresh} edit={editProduct} close={handleClose} /> : null}
-      
+      {open ? (
+        <ProductNew
+          refresh={handleRefresh}
+          edit={editProduct}
+          editId={editId}
+          close={handleClose}
+        />
+      ) : null}
+
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead sx={{ background: "#e3f2fd", fontStyle: "bold" }}>
@@ -90,10 +105,12 @@ export default function ProductsTable({}) {
                 <TableCell align="center">{product.product_price}</TableCell>
 
                 <TableCell align="center">
-                  <Button onClick={()=>handleEditProduct(product)}>
+                  <Button
+                    onClick={() => handleEditProduct(product._id, product)}
+                  >
                     <EditIcon sx={{ color: "#0d47a1" }} />
                   </Button>
-                  <Button onClick={()=>handleDeleteProduct(product._id)}>
+                  <Button onClick={() => handleDeleteProduct(product._id)}>
                     <DeleteIcon sx={{ color: "#ef5350" }} />
                   </Button>
                 </TableCell>
