@@ -15,8 +15,8 @@ import DispencerNew from "./dialogdispencer";
 export default function DispencerTable() {
   const [open, setOpen] = React.useState(false);
   const [dispencers, setDispencers] = React.useState([]);
-  const [refreshDispencer, setRefreshDispencer] = React.useState(false);
-  const [editDispencer, setEditDispencer] = React.useState(null);
+  const [refreshDispencer, setrefreshDispencer] = React.useState(false);
+  const [editDispencer, setEditDispencer] = React.useState({});
 
   const fetchAllDispencer = () => {
     axios
@@ -30,7 +30,7 @@ export default function DispencerTable() {
   }, [refreshDispencer]);
 
   const handleClickOpen = () => {
-    setEditDispencer(null);
+    setEditDispencer("");
     setOpen(true);
   };
 
@@ -39,8 +39,9 @@ export default function DispencerTable() {
   };
 
   const handleRefresh = () => {
-    setRefreshDispencer(!refreshDispencer);
+    setrefreshDispencer(!refreshDispencer);
   };
+  //edit dispencer
 
   const handleEditDispencer = (data) => {
     setEditDispencer(data);
@@ -74,13 +75,13 @@ export default function DispencerTable() {
       >
         Add Dispencer
       </Button>
-      {open && (
+      {open ? (
         <DispencerNew
           close={handleClose}
           refreshDispencer={handleRefresh}
           edit={editDispencer}
         />
-      )}
+      ) : null}
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead sx={{ background: "#e3f2fd" }}>

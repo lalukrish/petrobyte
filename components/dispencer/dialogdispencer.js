@@ -10,51 +10,77 @@ import { MenuItem, Select, Stack, TextField } from "@mui/material";
 import axios from "axios";
 
 export default function DispencerNew({ close, refreshDispencer, edit }) {
-  const [dispencer, setDispencer] = React.useState(edit?.dispencer || "");
-  const [fuel, setFuel] = React.useState(edit?.fuel_id || "");
-  const [live_reading, setLive_reading] = React.useState(
-    edit?.live_reading || ""
+  const [dispencer, setDispencer] = React.useState(edit ? edit.dispencer : "");
+  const [fuel, setFuel] = React.useState("");
+  const [live_reading, setLiveReading] = React.useState(
+    edit ? edit.live_reading : ""
   );
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
   const [fuels, setAllfuels] = React.useState([]);
+  const [optionsLoaded, setOptionsLoaded] = React.useState(false);
 
   React.useEffect(() => {
     axios
       .get(`${process.env.NEXT_PUBLIC_API_URL}/fuelPrice/GETAllFuel`)
-      .then((response) => setAllfuels(response.data.message))
+      .then((response) => {
+        setAllfuels(response.data.message);
+        setOptionsLoaded(true);
+
+        // Set the default fuel if editing
+        if (edit) {
+          //console.log("Edit Fuel ID:", edit.fuel_id._id);
+          response.data.message.forEach((fuel) => {
+            //     console.log("Fuel ID:", fuel._id);
+          });
+
+          const defaultFuel = response.data.message.find(
+            (fuel) => fuel._id === edit.fuel_id._id
+          );
+          if (defaultFuel) {
+            setFuel(defaultFuel._id);
+          }
+        }
+      })
       .catch((err) => console.log(err.message));
-  }, []);
+  }, [edit]);
 
   const handleClose = () => {
     close();
   };
 
   const handleSave = () => {
-    const add = {
-      dispencer,
-      live_reading,
+    let newDispencer = {
+      dispencer: dispencer,
+      live_reading: live_reading,
       fuel_id: fuel,
     };
 
     axios
-      .post(`${process.env.NEXT_PUBLIC_API_URL}/dispencer/POSTDispencer`, add)
+      .post(
+        `${process.env.NEXT_PUBLIC_API_URL}/dispencer/POSTDispencer`,
+        newDispencer
+      )
       .then((response) => {
         alert(response.data.message);
         refreshDispencer();
+        close();
       })
-      .catch((err) => alert(err));
-    close();
+      .catch(() => {
+        alert(`Something went wrong`);
+        close();
+      });
   };
 
+  //edit dispencer
   const updateDispencer = () => {
-    const dispencerData = {
-      _id: edit._id,
-      dispencer,
-      live_reading,
+    let dispencerData = {
+      id: edit._id,
       fuel_id: fuel,
+      dispencer: dispencer,
+      live_reading: live_reading,
     };
 
     axios
@@ -67,7 +93,10 @@ export default function DispencerNew({ close, refreshDispencer, edit }) {
         refreshDispencer();
         close();
       })
-      .catch((err) => alert(err));
+      .catch((err) => {
+        alert(err);
+        close();
+      });
   };
 
   return (
@@ -77,7 +106,9 @@ export default function DispencerNew({ close, refreshDispencer, edit }) {
       onClose={handleClose}
       aria-labelledby="responsive-dialog-title"
     >
-      <DialogTitle id="responsive-dialog-title">New Dispencer</DialogTitle>
+      <DialogTitle id="responsive-dialog-title">
+        {edit ? "Edit Dispencer" : "New Dispencer"}
+      </DialogTitle>
       <DialogContent>
         <Stack spacing={2} sx={{ width: "400px", padding: "5px" }}>
           <TextField
@@ -92,9 +123,11 @@ export default function DispencerNew({ close, refreshDispencer, edit }) {
             value={fuel}
             onChange={(event) => setFuel(event.target.value)}
             displayEmpty
-            placeholder="Fuel"
             variant="outlined"
           >
+            <MenuItem value="" disabled>
+              Select Fuel
+            </MenuItem>
             {fuels.map((fuel) => (
               <MenuItem key={fuel._id} value={fuel._id}>
                 {fuel.fuel_name}
@@ -106,7 +139,7 @@ export default function DispencerNew({ close, refreshDispencer, edit }) {
             label="Live Metering"
             value={live_reading}
             variant="outlined"
-            onChange={(event) => setLive_reading(event.target.value)}
+            onChange={(event) => setLiveReading(event.target.value)}
           />
         </Stack>
       </DialogContent>

@@ -1,85 +1,137 @@
 // components/credits/MediumDialog.js
-import React from 'react';
-import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TableRow, TableContainer, Paper, Table, TableHead, TableCell, TableBody, Typography, Divider } from "@mui/material";
-import { Delete, TableBar } from '@mui/icons-material';
-import EditIcon from '@mui/icons-material/Edit';
+import React, { useEffect } from "react";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Button,
+  TableRow,
+  TableContainer,
+  Paper,
+  Table,
+  TableHead,
+  TableCell,
+  TableBody,
+  Typography,
+  Divider,
+} from "@mui/material";
+import { Delete, TableBar } from "@mui/icons-material";
+import EditIcon from "@mui/icons-material/Edit";
+import axios from "axios";
+require("dotenv").config();
 
-const MediumDialog = ({ open, handleClose }) => {
+const MediumDialog = ({ open, handleClose, data }) => {
+  const [creditHistory, setCreditHistory] = React.useState([]);
+
+  useEffect(() => {
+    axios
+      .get(
+        `${process.env.NEXT_PUBLIC_API_URL}/creditHistory/GETAllCreditHistory?id=${data._id}`
+      )
+      .then((responce) =>
+        setCreditHistory(responce.data.message.CreditHistorys)
+      )
+      .catch(() => alert(`Something Went Wrong`));
+  }, []);
+
   return (
-    <Dialog
-      open={open}
-      onClose={handleClose}
-      maxWidth="lg"
-      fullWidth
-    >
-      <DialogTitle sx={{fontWeight:"bold"}}>Credit Details</DialogTitle>
+    <Dialog open={open} onClose={handleClose} maxWidth="lg" fullWidth>
+      <DialogTitle sx={{ fontWeight: "bold" }}>Credit Details</DialogTitle>
       <DialogContent>
         {/* Add your content here */}
-        <Typography sx={{fontWeight:"bold",marginBottom:"10px"}}>Personal Information</Typography>
+        <Typography sx={{ fontWeight: "bold", marginBottom: "10px" }}>
+          Personal Information
+        </Typography>
         <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead sx={{ background: "#b2dfdb" }}>
-        <TableRow>
-                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Name</TableCell>
-                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Contact</TableCell>
-                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Email</TableCell>
-                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Address </TableCell>
-                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Action</TableCell>
-
-
+          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableHead sx={{ background: "#b2dfdb" }}>
+              <TableRow>
+                <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                  Name
+                </TableCell>
+                <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                  Contact
+                </TableCell>
+                <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                  Email
+                </TableCell>
+                <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                  Address{" "}
+                </TableCell>
+                <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                  Action
+                </TableCell>
               </TableRow>
-              
-        </TableHead>
-        <TableBody>
-        <TableRow>
-                <TableCell align="center" >Aslam</TableCell>
-                <TableCell align="center" >9048706798</TableCell>
-                <TableCell align="center" >aslam@gmail.com</TableCell>
-                <TableCell align="center" >Neriyamangalam </TableCell>
+            </TableHead>
+            <TableBody>
+              <TableRow>
+                <TableCell align="center">{data.cc_name}</TableCell>
+                <TableCell align="center">{data.cc_contact_no}</TableCell>
+                <TableCell align="center">{data.cc_email}</TableCell>
+                <TableCell align="center">{data.cc_address} </TableCell>
                 <TableCell align="center">
                   <Button>
                     <EditIcon sx={{ color: "#0d47a1" }} />
                   </Button>
-                 
                 </TableCell>
-                
-
               </TableRow>
-        </TableBody>
-
-        </Table>
+            </TableBody>
+          </Table>
         </TableContainer>
 
         {/* <Divider sx={{ margin: "10px 0" }} /> */}
-        <Typography sx={{fontWeight:"bold",marginTop:"20px",marginBottom:"10px"}}>Credit Information</Typography>
+        <Typography
+          sx={{ fontWeight: "bold", marginTop: "20px", marginBottom: "10px" }}
+        >
+          Credit Information
+        </Typography>
 
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead sx={{ background: "#e3f2fd" }}>
-            
-              
               <TableRow>
-                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Date</TableCell>
-                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Name</TableCell>
-                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Credit </TableCell>
-                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Return</TableCell>
-                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Balance</TableCell>
-                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Vehicle No. </TableCell>
+                <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                  Date
+                </TableCell>
+                <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                  Name
+                </TableCell>
+                <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                  Vehicle No.
+                </TableCell>
+                <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                  Fuel
+                </TableCell>
+                <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                  Fuel Quantity
+                </TableCell>
+                <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                  Amount
+                </TableCell>
+                <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                  Amount Type
+                </TableCell>
 
-                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Action</TableCell>
+                <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                  Action
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-                <TableCell align="center">13-06-2024</TableCell>
-                <TableCell align="center">Aslam</TableCell>
-                <TableCell align="center">45000</TableCell>
-                <TableCell align="center">10000</TableCell>
-                <TableCell align="center">35000</TableCell>
-                <TableCell align="center" >KL44B5179  </TableCell>
+              {creditHistory.map((history)=>(
 
-
-                
+              
+              <TableRow
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              >
+                <TableCell align="center">{history.date}</TableCell>
+                <TableCell align="center">{history.cc_id.cc_name}</TableCell>
+                <TableCell align="center">{history.vehicle_no}</TableCell>
+                <TableCell align="center">{history.fuel_type}</TableCell>
+                <TableCell align="center">{history.fuel_quantity}</TableCell>
+                <TableCell align="center">{history.amount}</TableCell>
+                <TableCell align="center">{history.amount_type}</TableCell>
 
                 <TableCell align="center">
                   <Button>
@@ -90,6 +142,7 @@ const MediumDialog = ({ open, handleClose }) => {
                   </Button>
                 </TableCell>
               </TableRow>
+              ))}
             </TableBody>
           </Table>
         </TableContainer>
