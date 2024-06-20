@@ -25,14 +25,17 @@ const MediumDialog = ({ open, handleClose, data }) => {
   const [creditHistory, setCreditHistory] = React.useState([]);
 
   useEffect(() => {
-    axios
-      .get(
-        `${process.env.NEXT_PUBLIC_API_URL}/creditHistory/GETAllCreditHistory?id=${data._id}`
-      )
-      .then((responce) =>
-        setCreditHistory(responce.data.message.CreditHistorys)
-      )
-      .catch(() => alert(`Something Went Wrong`));
+    if (data._id) {
+      let idQuery = data._id.replace(/['"]/g, "");
+      console.log(idQuery);
+      axios
+        .get(`${process.env.NEXT_PUBLIC_API_URL}/creditHistory/GETAllCreditHistory?id=${idQuery}`)
+        .then((responce) =>
+          setCreditHistory(responce.data.message.CreditHistorys)
+        )
+        .catch(() => alert(`Something Went Wrong at individual`));
+    }
+    console.log(creditHistory)
   }, []);
 
   return (
@@ -57,7 +60,7 @@ const MediumDialog = ({ open, handleClose, data }) => {
                   Email
                 </TableCell>
                 <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                  Address{" "}
+                  Address
                 </TableCell>
                 <TableCell align="center" sx={{ fontWeight: "bold" }}>
                   Action
@@ -112,6 +115,9 @@ const MediumDialog = ({ open, handleClose, data }) => {
                 <TableCell align="center" sx={{ fontWeight: "bold" }}>
                   Amount Type
                 </TableCell>
+                <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                  Staff Name
+                </TableCell>
 
                 <TableCell align="center" sx={{ fontWeight: "bold" }}>
                   Action
@@ -119,36 +125,35 @@ const MediumDialog = ({ open, handleClose, data }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {creditHistory.map((history)=>(
+              {creditHistory.map((history) => (
+                <TableRow
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                  <TableCell align="center">{history.date}</TableCell>
+                  <TableCell align="center">{history.cc_id.cc_name}</TableCell>
+                  <TableCell align="center">{history.vehicle_no}</TableCell>
+                  <TableCell align="center">{history.fuel_type.fuel_name}</TableCell>
+                  <TableCell align="center">{history.fuel_quantity}</TableCell>
+                  <TableCell align="center">{history.amount}</TableCell>
+                  <TableCell align="center">{history.amount_type}</TableCell>
+                  <TableCell align="center">{history.emp_id.emp_name}</TableCell>
 
-              
-              <TableRow
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
-                <TableCell align="center">{history.date}</TableCell>
-                <TableCell align="center">{history.cc_id.cc_name}</TableCell>
-                <TableCell align="center">{history.vehicle_no}</TableCell>
-                <TableCell align="center">{history.fuel_type}</TableCell>
-                <TableCell align="center">{history.fuel_quantity}</TableCell>
-                <TableCell align="center">{history.amount}</TableCell>
-                <TableCell align="center">{history.amount_type}</TableCell>
-
-                <TableCell align="center">
-                  <Button>
-                    <EditIcon sx={{ color: "#0d47a1" }} />
-                  </Button>
-                  <Button>
-                    <Delete sx={{ color: "#ef5350" }} />
-                  </Button>
-                </TableCell>
-              </TableRow>
+                  <TableCell align="center">
+                    <Button>
+                      <EditIcon sx={{ color: "#0d47a1" }} />
+                    </Button>
+                    <Button>
+                      <Delete sx={{ color: "#ef5350" }} />
+                    </Button>
+                  </TableCell>
+                </TableRow>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} color="primary">
+        <Button onClick={()=>handleClose()} color="error">
           Close
         </Button>
       </DialogActions>
