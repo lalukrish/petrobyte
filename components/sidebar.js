@@ -109,7 +109,7 @@ export default function ResponsiveDrawer() {
   const drawer = (
     <div style={{ background: "#e3f2fd" }}>
       <Toolbar>
-        <Image src="/Petro.png" width={140} height={60} />
+        <Image src="/Petro.svg" width={140} height={60} />
       </Toolbar>
       {/* <Divider /> */} 
       <List>
