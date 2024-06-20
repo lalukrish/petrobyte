@@ -20,7 +20,6 @@ export default function DispencerTable({}) {
   const [refreshDispencer, setrefreshDispencer] = React.useState(false);
   const [editDispencer, setEditDispencer] = React.useState({});
 
-
   const fetchAllDispencer = () => {
     axios
       .get(`${process.env.NEXT_PUBLIC_API_URL}/dispencer/GETAllDispencer`)
@@ -33,23 +32,22 @@ export default function DispencerTable({}) {
   }, [refreshDispencer]);
 
   const handleClickOpen = () => {
+    setEditDispencer("");
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
   };
 
-  const handleRefresh = ()=>{
+  const handleRefresh = () => {
     setrefreshDispencer(!refreshDispencer);
-
-
-  }
+  };
   //edit dispencer
 
-  const handleEditDispencer=(data)=>{
-    setEditDispencer(data)
+  const handleEditDispencer = (data) => {
+    setEditDispencer(data);
     setOpen(true);
-  }
+  };
 
   const handleDelete = (row) => {
     axios
@@ -58,7 +56,7 @@ export default function DispencerTable({}) {
       )
       .then((response) => {
         alert(response.data.message);
-        handleRefresh()
+        handleRefresh();
       })
       .catch((error) => {
         console.error("Delete request failed:", error);
@@ -78,7 +76,9 @@ export default function DispencerTable({}) {
       >
         Add Dispencer
       </Button>
-      {open ? <DispencerNew close={handleClose} refreshDispencer={handleRefresh} /> : null}
+      {open ? (
+        <DispencerNew close={handleClose} refreshDispencer={handleRefresh} edit={editDispencer} />
+      ) : null}
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead sx={{ background: "#e3f2fd" }}>
@@ -110,7 +110,7 @@ export default function DispencerTable({}) {
                 <TableCell align="center">{dispencer?.live_reading}</TableCell>
 
                 <TableCell align="center">
-                  <Button onClick={()=>handleEditDispencer(dispencer)}>
+                  <Button onClick={() => handleEditDispencer(dispencer)}>
                     <EditIcon sx={{ color: "#0d47a1" }} />
                   </Button>
                   <Button>

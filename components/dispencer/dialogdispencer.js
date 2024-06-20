@@ -11,10 +11,10 @@ import { Stack, TextField } from "@mui/material";
 import { PetrobyteContext } from "@/context/context";
 import axios from "axios";
 
-export default function DispencerNew({ close,refreshDispencer,edit }) {
+export default function DispencerNew({ close, refreshDispencer, edit }) {
   const [dispencer, setDispencer] = React.useState("");
   const [fuel, setFuel] = React.useState("");
-  const [live_reading, setLive_reading] = React.useState("");
+  const [live_reading, setLiveReading] = React.useState("");
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
@@ -28,32 +28,42 @@ export default function DispencerNew({ close,refreshDispencer,edit }) {
   };
 
   const handleSave = () => {
-    let add = {
+    let newDispencer = {
       dispencer: dispencer,
       live_reading: live_reading,
       fuel_id: "66669c13c600bf08974a5303",
     };
+    console.log(newDispencer);
     axios
-      .post(`${process.env.NEXT_PUBLIC_API_URL}/dispencer/POSTDispencer`, add)
+      .post(
+        `${process.env.NEXT_PUBLIC_API_URL}/dispencer/POSTDispencer`,
+        newDispencer
+      )
       .then((response) => {
         alert(response.data.message);
-        refreshDispencer()
+        refreshDispencer();
+        close();
+      })
+      .catch(() => {
+        alert(`Something wnet wrong`);
+        close();
       });
-    close();
-    console.log(dispencer, live_reading);
-    // setRefreshCredit(!refreshCredit)
   };
-  //edit dispencer
 
+  //edit dispencer
   const updateDispencer = () => {
     let dispencerData = {
-      _id: edit._id,
+      id: edit._id,
+      fuel_id: "66669c13c600bf08974a5303",
       dispencer: dispencer ? dispencer : edit.dispencer,
       live_reading: live_reading ? live_reading : edit.live_reading,
     };
 
     axios
-      .put(`${process.env.NEXT_PUBLIC_API_URL}/dispencer/PUTDispencer`, dispencerData)
+      .put(
+        `${process.env.NEXT_PUBLIC_API_URL}/dispencer/PUTDispencer`,
+        dispencerData
+      )
       .then((responce) => {
         alert(responce.data.message);
         refreshDispencer();
@@ -61,6 +71,7 @@ export default function DispencerNew({ close,refreshDispencer,edit }) {
       })
       .catch((err) => {
         alert(err);
+        close();
       });
   };
 
@@ -81,7 +92,7 @@ export default function DispencerNew({ close,refreshDispencer,edit }) {
             value={dispencer ? dispencer : edit?.dispencer}
             variant="outlined"
             onChange={(event) => {
-              edit.dispencer = null;
+              edit.dispencer ? (edit.dispencer = "") : edit.dispencer;
               setDispencer(event.target.value);
             }}
           />
@@ -99,14 +110,19 @@ export default function DispencerNew({ close,refreshDispencer,edit }) {
             value={live_reading ? live_reading : edit?.live_reading}
             variant="outlined"
             onChange={(event) => {
-              setLive_reading(event.target.value);
+              edit.live_reading ? (edit.live_reading = "") : edit.live_reading;
+              setLiveReading(event.target.value);
             }}
           />
         </Stack>
       </DialogContent>
       <DialogActions>
-        <Button color="error" onClick={handleClose}>Cancel</Button>
-        <Button color="success" onClick={edit.dispencer ? updateDispencer : handleSave}>Save</Button>
+        <Button color="error" onClick={handleClose}>
+          Cancel
+        </Button>
+        <Button color="success" onClick={edit ? updateDispencer : handleSave}>
+          Save
+        </Button>
       </DialogActions>
     </Dialog>
   );

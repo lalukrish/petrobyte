@@ -11,13 +11,14 @@ import { Stack, TextField } from "@mui/material";
 import { PetrobyteContext } from "@/context/context";
 import axios from "axios";
 
-export default function CreditorsDetailsNew({ close }) {
+export default function CreditorsDetailsNew({ close, refresh }) {
   // const { refreshCredit, setRefreshCredit } = React.useContext(PetrobyteContext);
 
   const [name, setName] = React.useState("");
   const [address, setAddress] = React.useState("");
   const [contact, setContact] = React.useState("");
   const [email, setEmail] = React.useState("");
+  const [creditAmount, setCreditAmount] = React.useState("");
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
@@ -29,24 +30,31 @@ export default function CreditorsDetailsNew({ close }) {
   const handleClose = () => {
     close();
   };
+
   const handleSave = () => {
-    let add = {
+    let newCreditor = {
       cc_name: name,
       cc_contact_no: contact,
       cc_address: address,
       cc_email: email,
-      Credit_amount: 0,
-      Cc_status: "",
+      credit_amount: creditAmount ? creditAmount : 0,
+      cc_status: "",
     };
+
     axios
-      .post(`${process.env.NEXT_PUBLIC_API_URL}/creditcustomer/POSTCC`, add)
+      .post(
+        `${process.env.NEXT_PUBLIC_API_URL}/creditcustomer/POSTCC`,
+        newCreditor
+      )
       .then((response) => {
         alert(response.data.message);
+        refresh();
+        close();
       })
-      .catch(() => alert(`Something went wrog`));
-    close();
-    console.log(name, contact, address, email);
-    // setRefreshCredit(!refreshCredit)
+      .catch(() => {
+        alert(`Something went wrog`);
+        close();
+      });
   };
 
   return (
@@ -92,6 +100,14 @@ export default function CreditorsDetailsNew({ close }) {
             variant="outlined"
             onChange={(event) => {
               setEmail(event.target.value);
+            }}
+          />
+          <TextField
+            id="outlined-basic"
+            label="Amount"
+            variant="outlined"
+            onChange={(event) => {
+              setCreditAmount(event.target.value);
             }}
           />
         </Stack>
