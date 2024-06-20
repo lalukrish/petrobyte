@@ -25,7 +25,7 @@ export default function ProductsTable({}) {
     axios
       .get(`${process.env.NEXT_PUBLIC_API_URL}/product/GETAllProduct`)
       .then((responce) => {
-        setProduct(responce.data.message);
+        setProduct(responce.data.message.products);
       });
   }, [refreshProduct]);
 
