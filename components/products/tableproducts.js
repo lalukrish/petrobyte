@@ -10,12 +10,10 @@ import { Box, Button, Pagination } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
-import DoneAllIcon from "@mui/icons-material/DoneAll";
-import PrintIcon from "@mui/icons-material/Print";
 import ProductNew from "./dialogproduct";
 require("dotenv").config();
 
-export default function ProductsTable({}) {
+export default function ProductsTable() {
   const [open, setOpen] = React.useState(false);
   const [products, setProduct] = React.useState([]);
   const [editProduct, setEditProduct] = React.useState({});
@@ -23,14 +21,21 @@ export default function ProductsTable({}) {
 
   const [currentPage, setCurrentPage] = React.useState(1);
   const [totalPages, setTotalPages] = React.useState(1);
+  const limit = 10;
+
   React.useEffect(() => {
     axios
-      .get(`${process.env.NEXT_PUBLIC_API_URL}/product/GETAllProduct`)
-      .then((responce) => {
-        setProduct(responce.data.message.products);
-        setTotalPages(Math.ceil(responce.data.message.count / limit));  
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/product/GETAllProduct`, {
+        params: {
+          page: currentPage,
+          limit: limit,
+        },
+      })
+      .then((response) => {
+        setProduct(response.data.message.products);
+        setTotalPages(Math.ceil(response.data.message.count / limit));
       });
-  }, [refreshProduct]);
+  }, [refreshProduct, currentPage]);
 
   const handleRefresh = () => {
     setrefreshProduct(!refreshProduct);
@@ -56,10 +61,14 @@ export default function ProductsTable({}) {
       .delete(
         `${process.env.NEXT_PUBLIC_API_URL}/product/DELETEProduct?id=${id}`
       )
-      .then((responce) => {
-        alert(responce.data.message);
+      .then((response) => {
+        alert(response.data.message);
         setrefreshProduct(!refreshProduct);
       });
+  };
+
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
   };
 
   return (
@@ -100,6 +109,7 @@ export default function ProductsTable({}) {
           <TableBody>
             {products?.map((product) => (
               <TableRow
+                key={product._id}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell component="th" scope="row">
@@ -125,7 +135,7 @@ export default function ProductsTable({}) {
       <Pagination
         count={totalPages}
         page={currentPage}
-        onChange={(event, value) => setCurrentPage(value)}
+        onChange={handlePageChange}
         sx={{ mt: 2, display: "flex", justifyContent: "center" }}
       />
     </Box>
