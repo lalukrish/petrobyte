@@ -7,7 +7,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-import { Stack, TextField } from '@mui/material';
+import { FormControl, InputLabel, MenuItem, Select, Stack, TextField } from '@mui/material';
 import { PetrobyteContext } from '@/context/context';
 import axios from 'axios';
 
@@ -45,18 +45,52 @@ export default function TestNew({close}) {
         </DialogTitle>
         <DialogContent >
         <Stack spacing={2} sx={{width:"400px", padding:"5px"}}>
-        <TextField autoFocus id="outlined-basic" label="Dispencer" variant="outlined" onChange={(event)=>{setDispencer(event.target.value)}} />
-        <TextField  id="outlined-basic" label="Fuel" variant="outlined" onChange={(event)=>{setFuel(event.target.value)}} />
+        {/* <TextField autoFocus id="outlined-basic" label="Dispencer" variant="outlined" onChange={(event)=>{setDispencer(event.target.value)}} /> */}
+        <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">Dispencer</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={dispencer}
+              label="Fuel"
+              
+            >
+              
+                <MenuItem>
+                  D1
+                </MenuItem>
+              
+            </Select>
+          </FormControl>
+       
+        {/* <TextField  id="outlined-basic" label="Fuel" variant="outlined" onChange={(event)=>{setFuel(event.target.value)}} /> */}
+
+        <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">Fuel</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={fuel}
+              label="Fuel"
+              
+            >
+              
+                <MenuItem>
+                  Petrol
+                </MenuItem>
+              
+            </Select>
+          </FormControl>
         <TextField id="outlined-basic" label="Qty" variant="outlined" onChange={(event)=>{setQty(event.target.value)}} />
 
         </Stack>
 
         </DialogContent>
         <DialogActions>
-          <Button  onClick={handleClose}>
+          <Button color='error'  onClick={handleClose}>
             Cancel
           </Button>
-          <Button>
+          <Button color='success'>
             Save
           </Button>
         </DialogActions>
