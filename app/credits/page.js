@@ -26,14 +26,14 @@ export default function Page() {
   const [opencreditors, setOpenCreditors] = useState(false);
   const [openMediumDialog, setOpenMediumDialog] = useState(false);
   const [creditUsers, setCreditUsers] = useState([]);
-  const [creditUserData, setCreditUsersData] = useState([]);
+  const [creditUserData, setCreditUsersData] = useState({});
   const [refreshCreditors, setRefreshCreditors] = useState(false);
 
   useEffect(() => {
     axios
       .get(`${process.env.NEXT_PUBLIC_API_URL}/creditcustomer/GETAllCC`)
       .then((responce) => setCreditUsers(responce.data.message.CCs))
-      .catch(() => alert(`Something went wronf, please try after some time`));
+      .catch(() => alert(`Something went wrong, please try after some time`));
   }, [refreshCreditors]);
 
   const handelRefresh=()=>{
@@ -139,7 +139,7 @@ export default function Page() {
               <TableCell align="center">{creditUser.cc_contact_no}</TableCell>
               <TableCell align="center">{creditUser.credit_amount}</TableCell>
               <TableCell align="center">
-                <Button onClick={()=>{handleOpenMediumDialog(creditUser)}} >
+                <Button onClick={()=>handleOpenMediumDialog(creditUser)} >
                   <OpenInFullIcon sx={{ color: "#0d47a1" }} />
                 </Button>
                 {/* <Button>
@@ -151,11 +151,12 @@ export default function Page() {
           </TableBody>
         </Table>
       </TableContainer>
+      {openMediumDialog && 
       <MediumDialog
         open={openMediumDialog}
         handleClose={handleCloseMediumDialog}
         data={creditUserData}
-      />
+      />}
     </Box>
   );
 }
