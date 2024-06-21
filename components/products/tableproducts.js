@@ -6,7 +6,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Pagination } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
@@ -21,11 +21,14 @@ export default function ProductsTable({}) {
   const [editProduct, setEditProduct] = React.useState({});
   const [refreshProduct, setrefreshProduct] = React.useState(false);
 
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const [totalPages, setTotalPages] = React.useState(1);
   React.useEffect(() => {
     axios
       .get(`${process.env.NEXT_PUBLIC_API_URL}/product/GETAllProduct`)
       .then((responce) => {
-        setProduct(responce.data.message);
+        setProduct(responce.data.message.products);
+        setTotalPages(Math.ceil(responce.data.message.count / limit));
       });
   }, [refreshProduct]);
 
@@ -119,6 +122,12 @@ export default function ProductsTable({}) {
           </TableBody>
         </Table>
       </TableContainer>
+      <Pagination
+        count={totalPages}
+        page={currentPage}
+        onChange={(event, value) => setCurrentPage(value)}
+        sx={{ mt: 2, display: "flex", justifyContent: "center" }}
+      />
     </Box>
   );
 }

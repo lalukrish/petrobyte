@@ -6,7 +6,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Pagination } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import axios from "axios";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -17,17 +17,21 @@ export default function DispencerTable() {
   const [dispencers, setDispencers] = React.useState([]);
   const [refreshDispencer, setrefreshDispencer] = React.useState(false);
   const [editDispencer, setEditDispencer] = React.useState({});
-
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const [totalPages, setTotalPages] = React.useState(1);
   const fetchAllDispencer = () => {
     axios
       .get(`${process.env.NEXT_PUBLIC_API_URL}/dispencer/GETAllDispencer`)
-      .then((response) => setDispencers(response.data.message.dispencers))
+      .then((response) => {
+        setDispencers(response.data.message.dispencers),
+          setTotalPages(Math.ceil(response.data.message.count / limit));
+      })
       .catch((err) => console.log(err.message));
   };
 
   React.useEffect(() => {
     fetchAllDispencer();
-  }, [refreshDispencer]);
+  }, [currentPage, refreshDispencer]);
 
   const handleClickOpen = () => {
     setEditDispencer("");
@@ -124,6 +128,12 @@ export default function DispencerTable() {
           </TableBody>
         </Table>
       </TableContainer>
+      <Pagination
+        count={totalPages}
+        page={currentPage}
+        onChange={(event, value) => setCurrentPage(value)}
+        sx={{ mt: 2, display: "flex", justifyContent: "center" }}
+      />
     </Box>
   );
 }
