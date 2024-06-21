@@ -28,7 +28,7 @@ export default function ProductsTable({}) {
       .get(`${process.env.NEXT_PUBLIC_API_URL}/product/GETAllProduct`)
       .then((responce) => {
         setProduct(responce.data.message.products);
-        setTotalPages(Math.ceil(responce.data.message.count / limit));
+        setTotalPages(Math.ceil(responce.data.message.count / limit));  
       });
   }, [refreshProduct]);
 
