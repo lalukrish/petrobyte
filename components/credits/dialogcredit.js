@@ -22,16 +22,52 @@ import moment from "moment";
 require("dotenv").config();
 
 export default function CreditNew({ close }) {
-  const [name, setName] = React.useState("");
+  const [ccName, setCcName] = React.useState({});
   const [vehicleNo, setVehicleNo] = React.useState("");
   const [fuel, setFuel] = React.useState("");
   const [fuelQuantity, setFuelQuantity] = React.useState("");
   const [amount, setAmount] = React.useState("");
   const [amountType, setAmountType] = React.useState("");
   const [staff, setStaff] = React.useState("");
-  const [ccLists, setCcLists] = React.useState("");
-  const [fuelList, setFuelList] = React.useState("");
-  const [employeeList, setEmployeeList] = React.useState("");
+  const [ccLists, setCcLists] = React.useState([]);
+  const [fuelList, setFuelList] = React.useState([]);
+  const [employeeList, setEmployeeList] = React.useState([]);
+
+  const fetchFuels = () => {
+    axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/fuelPrice/GETAllFuel`)
+      .then((response) => {
+        setFuelList(response.data.message);
+        // setOptionsLoaded(true);
+      })
+      .catch((err) => console.log(err.message));
+  };
+
+  const fetchCCs = () => {
+    axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/creditcustomer/GETAllCC`)
+      .then((response) => {
+        setCcLists(response.data.message.CCs);
+        // setOptionsLoaded(true);
+      })
+      .catch((err) => console.log(err.message));
+  };
+
+  const fetchEmployee = () => {
+    axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/employee/GETAllEmployee`)
+      .then((response) => {
+        setEmployeeList(response.data.message.employees);
+        // setOptionsLoaded(true);
+      })
+      .catch((err) => console.log(err.message));
+  };
+
+  React.useEffect(() => {
+    fetchCCs();
+    fetchFuels();
+    fetchEmployee();
+  }, []);
 
   const datePart = moment().format("DD-MM-YYYY");
 
@@ -45,39 +81,49 @@ export default function CreditNew({ close }) {
   const handleClose = () => {
     close();
   };
+
   const staffs = ["aslam", "abhi", "lallu"];
   const fuels = ["Petrol", "Diesel"];
 
   const handelSave = () => {
     let creditData = {
       date: datePart,
-      cc_id: "6673c73c41ae9d70e864abbb",
+      cc_id: ccName._id,
       vehicle_no: vehicleNo,
-      fuel_type: "66669c13c600bf08974a5303",
+      fuel_type: fuel,
       fuel_quantity: fuelQuantity,
       amount: amount,
       amount_type: amountType,
-      emp_id: "66697b8614979931c7d323a4",
+      emp_id: staff,
       status: "",
     };
 
+    console.log(creditData);
     axios
       .post(
-        `${process.env.NEXT_PUBLIC_API_URL}/creditHistory/POSTCreditHistory`
+        `${process.env.NEXT_PUBLIC_API_URL}/creditHistory/POSTCreditHistory`,
+        creditData
       )
       .then((responce) => alert(responce.data.message))
       .catch(() => alert(`Something wnet wrong, Please Try After Some Time`));
 
-    // if(amountType=='Credit'){
+    if (amountType == "Credit") {
+      let totalUpdatedAmount = ccName.credit_amount + amount;
 
-    //   let putCreditData={
-    //     id:"6673c73c41ae9d70e864abbb",
-    //     credit_amount:oldAmount+amount
-    //   }
+      let putCreditData = {
+        id: ccName._id,
+        credit_amount: totalUpdatedAmount,
+      };
 
-    //   axios.put(`${process.env.NEXT_PUBLIC_API_URL}/creditcustomer/PUTCC`,putCreditData).then((responce) => alert(responce.data.message))
-    //   .catch(() => alert(`Something wnet wrong, Please Try After Some Time`));
-    // }
+      axios
+        .put(
+          `${process.env.NEXT_PUBLIC_API_URL}/creditcustomer/PUTCC`,
+          putCreditData
+        )
+        .then((responce) => alert(responce.data.message))
+        .catch(() => alert(`Something wnet wrong, Please Try After Some Time`));
+    }
+    close()
   };
 
   return (
@@ -95,16 +141,18 @@ export default function CreditNew({ close }) {
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
-              // value={age}
+              value={ccName}
               label="Name"
-              // onChange={handleChange}
+              onChange={(event) => setCcName(event.target.value)}
             >
-              <MenuItem value={10}>Ten</MenuItem>
-              <MenuItem value={20}>Twenty</MenuItem>
-              <MenuItem value={30}>Thirty</MenuItem>
+              {ccLists.map((cc) => (
+                <MenuItem key={cc._id} value={cc}>
+                  {cc.cc_name}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
-          
+
           <TextField
             autoFocus
             id="outlined-basic"
@@ -117,13 +165,15 @@ export default function CreditNew({ close }) {
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
-              // value={age}
+              value={fuel}
               label="Fuel"
-              // onChange={handleChange}
+              onChange={(event) => setFuel(event.target.value)}
             >
-              <MenuItem value={10}>Ten</MenuItem>
-              <MenuItem value={20}>Twenty</MenuItem>
-              <MenuItem value={30}>Thirty</MenuItem>
+              {fuelList.map((fuel) => (
+                <MenuItem key={fuel._id} value={fuel._id}>
+                  {fuel.fuel_name}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
           <TextField
@@ -139,24 +189,33 @@ export default function CreditNew({ close }) {
             variant="outlined"
             onChange={(e) => setAmount(e.target.value)}
           />
-          <TextField
-            id="outlined-basic"
-            label="Amount Type"
-            variant="outlined"
-            onChange={(e) => setAmountType(e.target.value)}
-          />
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">Amount Type</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={amountType}
+              label="Amount Type"
+              onChange={(event) => setAmountType(event.target.value)}
+            >
+              <MenuItem value="Credit">Credit</MenuItem>
+              <MenuItem value="Debit">Debit</MenuItem>
+            </Select>
+          </FormControl>
           <FormControl fullWidth>
             <InputLabel id="demo-simple-select-label">Employee</InputLabel>
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
-              // value={age}
+              value={staff}
               label="Employee"
-              // onChange={handleChange}
+              onChange={(event) => setStaff(event.target.value)}
             >
-              <MenuItem value={10}>Ten</MenuItem>
-              <MenuItem value={20}>Twenty</MenuItem>
-              <MenuItem value={30}>Thirty</MenuItem>
+              {employeeList.map((employee) => (
+                <MenuItem key={employee._id} value={employee._id}>
+                  {employee.emp_name}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         </Stack>
