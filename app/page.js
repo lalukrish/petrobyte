@@ -4,7 +4,6 @@ import ResponsiveDrawer from "@/components/sidebar";
 export default function Home() {
   return (
     <>
-      petroman
       <ResponsiveDrawer />
     </>
   );

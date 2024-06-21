@@ -25,8 +25,8 @@ import ArticleIcon from "@mui/icons-material/Article";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import BlinkingAlert from "./alertfuelrate";
-import TroubleshootIcon from '@mui/icons-material/Troubleshoot';
-import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
+import TroubleshootIcon from "@mui/icons-material/Troubleshoot";
+import LocalGasStationIcon from "@mui/icons-material/LocalGasStation";
 
 const drawerWidth = 240;
 
@@ -65,6 +65,7 @@ export default function ResponsiveDrawer() {
     {
       name: "Dashboard",
       link: "/dashboard",
+
       icon: <SpaceDashboardIcon sx={{ color: "#0d47a1" }} />,
     },
     {
@@ -92,7 +93,7 @@ export default function ResponsiveDrawer() {
       link: "/reports",
       icon: <ArticleIcon sx={{ color: "#0d47a1" }} />,
     },
-    
+
     {
       name: "Dispencer",
       link: "/dispencer",
@@ -102,8 +103,7 @@ export default function ResponsiveDrawer() {
       name: "Employee",
       link: "/employe",
       icon: <GroupsIcon sx={{ color: "#0d47a1" }} />,
-    }
-
+    },
   ];
 
   const drawer = (
@@ -169,8 +169,7 @@ export default function ResponsiveDrawer() {
             </Typography>
           </Box>
           <Box>
-            <BlinkingAlert/>
-            
+            <BlinkingAlert />
           </Box>
           <Box sx={{ alignItems: "end" }}>
             <IconButton
