@@ -97,6 +97,9 @@ export default function DispencerTable() {
                 Fuel
               </TableCell>
               <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                Valve
+              </TableCell>
+              <TableCell align="center" sx={{ fontWeight: "bold" }}>
                 Live Metering
               </TableCell>
               <TableCell align="center" sx={{ fontWeight: "bold" }}>
@@ -113,6 +116,9 @@ export default function DispencerTable() {
                 <TableCell align="center">{dispencer.dispencer}</TableCell>
                 <TableCell align="center">
                   {dispencer.fuel_id?.fuel_name}
+                </TableCell>
+                <TableCell align="center">
+                  v1
                 </TableCell>
                 <TableCell align="center">{dispencer.live_reading}</TableCell>
                 <TableCell align="center">

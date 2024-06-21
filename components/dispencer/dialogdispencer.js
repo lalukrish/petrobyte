@@ -136,6 +136,13 @@ export default function DispencerNew({ close, refreshDispencer, edit }) {
           </Select>
           <TextField
             id="outlined-basic"
+            label="Valve"
+            value={live_reading}
+            variant="outlined"
+            
+          />
+          <TextField
+            id="outlined-basic"
             label="Live Metering"
             value={live_reading}
             variant="outlined"
