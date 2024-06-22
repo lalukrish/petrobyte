@@ -221,8 +221,8 @@ export default function CreditNew({ close }) {
         </Stack>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose}>Cancel</Button>
-        <Button onClick={handelSave}>Save</Button>
+        <Button color="error" onClick={handleClose}>Cancel</Button>
+        <Button color="success" onClick={handelSave}>Save</Button>
       </DialogActions>
     </Dialog>
   );

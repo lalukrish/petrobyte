@@ -340,8 +340,8 @@ export default function DataTable() {
             </Stack>
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => setEditOpen(false)}>Cancel</Button>
-            <Button onClick={handleSaveEdit}>Save Changes</Button>
+            <Button color="error" onClick={() => setEditOpen(false)}>Cancel</Button>
+            <Button color="success" onClick={handleSaveEdit}>Save Changes</Button>
           </DialogActions>
         </Dialog>
       </Box>

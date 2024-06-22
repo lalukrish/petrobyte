@@ -82,10 +82,10 @@ const { refreshEmployee, setRefreshEmployee } = React.useContext(PetrobyteContex
 
         </DialogContent>
         <DialogActions>
-          <Button  onClick={handleClose}>
+          <Button color="error"  onClick={handleClose}>
             Cancel
           </Button>
-          <Button onClick={handleSave} >
+          <Button color="success" onClick={handleSave} >
             Save
           </Button>
         </DialogActions>

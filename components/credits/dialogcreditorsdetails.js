@@ -113,8 +113,8 @@ export default function CreditorsDetailsNew({ close, refresh }) {
         </Stack>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose}>Cancel</Button>
-        <Button onClick={handleSave}>Save</Button>
+        <Button color="error" onClick={handleClose}>Cancel</Button>
+        <Button color="success" onClick={handleSave}>Save</Button>
       </DialogActions>
     </Dialog>
   );

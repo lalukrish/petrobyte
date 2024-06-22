@@ -9,9 +9,17 @@ import Paper from "@mui/material/Paper";
 import { Box, Button } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import TestNew from "./dialogtest";
+import DialogTest from "@mui/material";
 
 export default function TestTable({}) {
   const [open, setOpen] = React.useState(false);
+  const [editTest, setEditTest] = React.useState({});
+
+
+  const handleClickOpenEdit = () => {
+    setEditTest("");
+    setOpen(true);
+  };
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -32,7 +40,7 @@ export default function TestTable({}) {
       >
         Add Test Details
       </Button>
-      {open ? <TestNew close={handleClose} /> : null}
+      {open ? <TestNew close={handleClose} edit={editTest} /> : null}
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead sx={{ background: "#e3f2fd" }}>
@@ -63,7 +71,7 @@ export default function TestTable({}) {
               <TableCell align="center">Petrol</TableCell>
               <TableCell align="center">5</TableCell>
               <TableCell align="center">
-                <Button>
+                <Button onClick={() => handleClickOpenEdit()}>
                   <EditIcon sx={{ color: "#0d47a1" }} />
                 </Button>
               </TableCell>
