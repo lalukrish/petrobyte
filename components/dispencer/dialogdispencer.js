@@ -6,7 +6,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
-import { MenuItem, Select, Stack, TextField } from "@mui/material";
+import { FormControl, InputLabel, MenuItem, Select, Stack, TextField } from "@mui/material";
 import axios from "axios";
 
 export default function DispencerNew({ close, refreshDispencer, edit }) {
@@ -119,14 +119,19 @@ export default function DispencerNew({ close, refreshDispencer, edit }) {
             variant="outlined"
             onChange={(event) => setDispencer(event.target.value)}
           />
+          <FormControl fullWidth>
+          <InputLabel id="demo-simple-select-label">Fuel</InputLabel>
           <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          
+          label="Fuel"
             value={fuel}
             onChange={(event) => setFuel(event.target.value)}
-            displayEmpty
+            // displayEmpty
             variant="outlined"
           >
             <MenuItem value="" disabled>
-              Select Fuel
             </MenuItem>
             {fuels.map((fuel) => (
               <MenuItem key={fuel._id} value={fuel._id}>
@@ -134,13 +139,26 @@ export default function DispencerNew({ close, refreshDispencer, edit }) {
               </MenuItem>
             ))}
           </Select>
-          <TextField
-            id="outlined-basic"
-            label="Valve"
-            value={live_reading}
-            variant="outlined"
-            
-          />
+          </FormControl>
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">Valve</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              
+              label="Fuel"
+              
+            >
+              
+                <MenuItem>
+                  V1
+                </MenuItem>
+                <MenuItem>
+                  V2
+                </MenuItem>
+              
+            </Select>
+          </FormControl>
           <TextField
             id="outlined-basic"
             label="Live Metering"

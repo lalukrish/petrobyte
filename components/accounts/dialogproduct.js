@@ -135,8 +135,8 @@ export default function ProductsNew({ close }) {
         ))}
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose2}>Cancel</Button>
-        <Button onClick={handleSave}>Save</Button>
+        <Button color="error" onClick={handleClose2}>Cancel</Button>
+        <Button color="success" onClick={handleSave}>Save</Button>
       </DialogActions>
     </Dialog>
   );

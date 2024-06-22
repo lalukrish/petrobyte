@@ -141,8 +141,8 @@ export default function FuelUpdate({ clse,data }) {
         </Stack>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose}>Cancel</Button>
-        <Button onClick={handleUpdate}>Update</Button>
+        <Button color="error" onClick={handleClose}>Cancel</Button>
+        <Button color="success" onClick={handleUpdate}>Update</Button>
       </DialogActions>
     </Dialog>
   );

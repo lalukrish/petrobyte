@@ -97,8 +97,8 @@ export default function ExpenseNew({ close }) {
         </Stack>
         </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose3}>Cancel</Button>
-        <Button>Save</Button>
+        <Button color="error" onClick={handleClose3}>Cancel</Button>
+        <Button color="success">Save</Button>
       </DialogActions>
     </Dialog>
   );
