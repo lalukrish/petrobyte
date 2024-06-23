@@ -7,13 +7,17 @@ import DialogTitle from "@mui/material/DialogTitle";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import { Stack, TextField, IconButton } from "@mui/material";
-import AddIcon from '@mui/icons-material/Add';
-import RemoveIcon from '@mui/icons-material/Remove';
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
 import axios from "axios";
 
 export default function DispencerNew({ close, refreshDispencer, edit }) {
   const [dispencer, setDispencer] = React.useState(edit ? edit.dispencer : "");
-  const [fields, setFields] = React.useState(edit ? [{ dispSub: "", live_reading: edit.live_reading }] : [{ dispSub: "", live_reading: "" }]);
+  const [fields, setFields] = React.useState(
+    edit
+      ? [{ dispSub: "", live_reading: edit.live_reading }]
+      : [{ dispSub: "", live_reading: "" }]
+  );
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
@@ -38,7 +42,10 @@ export default function DispencerNew({ close, refreshDispencer, edit }) {
   const handleSave = () => {
     let newDispencer = {
       dispencer: dispencer,
-      fields: fields.map(({ dispSub, live_reading }) => ({ dispSub, live_reading }))
+      fields: fields.map(({ dispSub, live_reading }) => ({
+        dispSub,
+        live_reading,
+      })),
     };
 
     axios
@@ -60,7 +67,10 @@ export default function DispencerNew({ close, refreshDispencer, edit }) {
   const updateDispencer = () => {
     let dispencerData = {
       id: edit._id,
-      fields: fields.map(({ dispSub, live_reading }) => ({ dispSub, live_reading }))
+      fields: fields.map(({ dispSub, live_reading }) => ({
+        dispSub,
+        live_reading,
+      })),
     };
 
     axios
@@ -83,7 +93,7 @@ export default function DispencerNew({ close, refreshDispencer, edit }) {
     if (fields.length < 4) {
       setFields([...fields, { dispSub: "", live_reading: "" }]);
     } else {
-      alert('You can only add up to 4 fields.');
+      alert("You can only add up to 4 fields.");
     }
   };
 
@@ -94,7 +104,9 @@ export default function DispencerNew({ close, refreshDispencer, edit }) {
 
   const handleFieldChange = (index, event) => {
     const updatedFields = fields.map((field, i) =>
-      i === index ? { ...field, [event.target.name]: event.target.value } : field
+      i === index
+        ? { ...field, [event.target.name]: event.target.value }
+        : field
     );
     setFields(updatedFields);
   };
@@ -124,7 +136,7 @@ export default function DispencerNew({ close, refreshDispencer, edit }) {
             <Stack key={index} direction="row" spacing={2} alignItems="center">
               <TextField
                 id={`disp-sub-${index}`}
-                label="Disp Sub"
+                label="Sub Name"
                 name="dispSub"
                 value={field.dispSub}
                 variant="outlined"
@@ -143,7 +155,10 @@ export default function DispencerNew({ close, refreshDispencer, edit }) {
               {index === fields.length - 1 ? (
                 <IconButton
                   onClick={handleAddFields}
-                  sx={{ width: "10%", color: fields.length < 4 ? "green" : "gray" }}
+                  sx={{
+                    width: "10%",
+                    color: fields.length < 4 ? "green" : "gray",
+                  }}
                   disabled={fields.length >= 4}
                 >
                   <AddIcon />

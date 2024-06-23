@@ -28,12 +28,12 @@ export default function DispencerTable() {
     const dummyData = [
       {
         _id: "1",
-        dispencer: "Dispencer A",
+        dispencer: "Dispencer 1",
         fuel_id: { fuel_name: "Diesel" },
         live_reading: "1000",
         subDispencers: [
           { _id: "1-1", sub_name: "D1", live_meter: "500" },
-          { _id: "1-2", sub_name: "D@", live_meter: "600" },
+          { _id: "1-2", sub_name: "D2", live_meter: "600" },
         ],
       },
       {
@@ -42,8 +42,8 @@ export default function DispencerTable() {
         fuel_id: { fuel_name: "Petrol" },
         live_reading: "1500",
         subDispencers: [
-          { _id: "2-1", sub_name: "Sub Dispencer 2-1", live_meter: "700" },
-          { _id: "2-2", sub_name: "Sub Dispencer 2-2", live_meter: "800" },
+          { _id: "2-1", sub_name: "P1", live_meter: "700" },
+          { _id: "2-2", sub_name: "P2", live_meter: "800" },
         ],
       },
     ];
@@ -191,13 +191,13 @@ export default function DispencerTable() {
                                   {subDispencer.live_meter}
                                 </TableCell>
                                 <TableCell align="center">
-                                  <Button
+                                  {/* <Button
                                     onClick={() =>
                                       handleEditDispencer(subDispencer)
                                     }
                                   >
                                     <EditIcon sx={{ color: "#0d47a1" }} />
-                                  </Button>
+                                  </Button> */}
                                   <Button
                                     onClick={() => handleDelete(subDispencer)}
                                   >
@@ -217,7 +217,7 @@ export default function DispencerTable() {
           </TableBody>
         </Table>
       </TableContainer>
-      
+
       <Pagination
         count={totalPages}
         page={currentPage}
