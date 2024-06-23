@@ -75,6 +75,8 @@ export default function FuelNew({ close }) {
   
 
   const employees = ["John Doe", "Jane Smith", "Alice Johnson"];
+  const dispencers = ["DA", "DB", "DC"];
+
   // const dispencer = ["D1", "D2", "D3", "D4"];
   const fuel = ["Petrol", "Diesel"];
   const start = [];
@@ -125,7 +127,7 @@ export default function FuelNew({ close }) {
           <Autocomplete
             disablePortal
             id="combo-box-demo"
-            options={dispencer}
+            options={dispencers}
             sx={{ width: "100%" }}
             renderInput={(params) => (
               <TextField {...params} onChange={(event)=>setdispencer(event.target.value)} label="Dispencer" fullWidth />
