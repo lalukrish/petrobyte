@@ -14,69 +14,95 @@ import {
   Select,
   FormControl,
   InputLabel,
-  Autocomplete
+  OutlinedInput,
+  Chip,
+  Autocomplete,
 } from "@mui/material";
+import { useTheme } from '@mui/material/styles';
 import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import axios from "axios";
 import moment from "moment";
-require('dotenv').config()
+require("dotenv").config();
+
+function getStyles(name, selectedFuelTypes, theme) {
+  return {
+    fontWeight:
+      selectedFuelTypes.indexOf(name) === -1
+        ? theme.typography.fontWeightRegular
+        : theme.typography.fontWeightMedium,
+  };
+}
 
 export default function FuelNew({ close }) {
+  const theme = useTheme();
   const handleClose = () => close();
   const date = moment().format("DD-MM-YYYY");
   const [fromtime, setfromtime] = useState("");
   const [totime, settotime] = useState("");
   const [dispencer, setdispencer] = useState("");
-  const [fueltype, setfueltype] = useState("");
-  const [fuelpetrol, setfuelpetrol] = useState("Petrol");
-  const [startpetrol, setstartpetrol] = useState(""); 
-  const [endpetrol, setendpetrol] = useState(""); 
-  const [fuelqtypetrol, setfuelqtypetrol] = useState(""); 
-  const [totalpetrol, settotalpetrol] = useState("");
-  const [fueldiesel, setfueldiesel] = useState("Diesel");
-  const [startdiesel, setstartdiesel] = useState(""); 
-  const [enddiesel, setenddiesel] = useState(""); 
-  const [fuelqtydiesel, setfuelqtydiesel] = useState(""); 
-  const [totaldiesel, settotaldiesel] = useState(""); 
+  const [fueltype, setfueltype] = useState([]);
+  const [fuelData, setFuelData] = useState({});
+  const employees = ["John Doe", "Jane Smith", "Alice Johnson"];
+  const dispencers = ["A", "B", "C", "D"];
+  const fuelTypes = ["P1", "P2", "D1", "D2"];
+  const todayStartOfTheDay = dayjs().startOf("day");
+  const ITEM_HEIGHT = 48;
+  const ITEM_PADDING_TOP = 8;
 
-  const handleSave = () => {
-    let add =  [
-      {
-          "date": date,
-          "emp_id": "66580f1603b55eb1929232ca",
-          "emp_from_time": fromtime,
-          "emp_to_time": totime,
-          "dispencer": dispencer,
-          "fueltype": fuelpetrol,
-          "fuel_start_reading": startpetrol,
-          "fuel_end_reading": endpetrol,
-          "fuel_qty": fuelqtypetrol,
-          "amount": totalpetrol
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+        width: 250,
       },
-      {
-          "date": date,
-          "emp_id": "66580f1603b55eb1929232ca",
-          "emp_from_time": fromtime,
-          "emp_to_time": totime,
-          "dispencer": dispencer,
-          "fueltype": fueldiesel,
-          "fuel_start_reading": startdiesel,
-          "fuel_end_reading": enddiesel,
-          "fuel_qty": fuelqtydiesel,
-          "amount": totaldiesel
-      }
-    ]
-    axios.post(`${process.env.NEXT_PUBLIC_API_URL}/fuelAccounts/POSTFuelAccount`, add).then((response) => {
-      alert(response.data.message)
-    });
+    },
   };
 
-  const employees = ["John Doe", "Jane Smith", "Alice Johnson"];
-  const dispencers = ["A", "B", "C","D"];
-  const fuelTypes = ["P1", "P2","D1","D2"];
-  const todayStartOfTheDay = dayjs().startOf("day"); 
+  const handleSave = () => {
+    const fuelDetails = fueltype.map((type) => ({
+      date: date,
+      emp_id: "66580f1603b55eb1929232ca",
+      emp_from_time: fromtime,
+      emp_to_time: totime,
+      dispencer: dispencer,
+      fueltype: type,
+      fuel_start_reading: fuelData[type]?.start || "",
+      fuel_end_reading: fuelData[type]?.end || "",
+      fuel_qty: fuelData[type]?.qty || "",
+      amount: fuelData[type]?.total || "",
+    }));
+    axios
+      .post(`${process.env.NEXT_PUBLIC_API_URL}/fuelAccounts/POSTFuelAccount`, fuelDetails)
+      .then((response) => {
+        alert(response.data.message);
+      });
+  };
+
+  const handleFuelTypeChange = (event) => {
+    const { target: { value } } = event;
+    const newFuelTypes = typeof value === "string" ? value.split(",") : value;
+    setfueltype(newFuelTypes);
+  };
+
+  const handleFuelDataChange = (type, field, value) => {
+    setFuelData((prev) => ({
+      ...prev,
+      [type]: {
+        ...prev[type],
+        [field]: value,
+      },
+    }));
+  };
+
+  const handleDeleteFuelType = (typeToDelete) => () => {
+    setfueltype((prevFuelTypes) => prevFuelTypes.filter((type) => type !== typeToDelete));
+    setFuelData((prevFuelData) => {
+      const { [typeToDelete]: _, ...rest } = prevFuelData;
+      return rest;
+    });
+  };
 
   return (
     <Dialog
@@ -105,7 +131,11 @@ export default function FuelNew({ close }) {
                   label="From"
                   defaultValue={todayStartOfTheDay}
                   renderInput={(params) => (
-                    <TextField {...params} onChange={(event) => setfromtime(event.target.value)} fullWidth />
+                    <TextField
+                      {...params}
+                      onChange={(event) => setfromtime(event.target.value)}
+                      fullWidth
+                    />
                   )}
                 />
               </Grid>
@@ -114,7 +144,11 @@ export default function FuelNew({ close }) {
                   label="To"
                   defaultValue={todayStartOfTheDay}
                   renderInput={(params) => (
-                    <TextField {...params} onChange={(event) => settotime(event.target.value)} fullWidth />
+                    <TextField
+                      {...params}
+                      onChange={(event) => settotime(event.target.value)}
+                      fullWidth
+                    />
                   )}
                 />
               </Grid>
@@ -123,7 +157,7 @@ export default function FuelNew({ close }) {
           <Box>
             <Grid container spacing={2}>
               <Grid item xs={6}>
-                <FormControl fullWidth>
+                <FormControl fullWidth sx={{ height: "100%" }}>
                   <InputLabel id="dispencer-label">Dispencer</InputLabel>
                   <Select
                     labelId="dispencer-label"
@@ -133,53 +167,79 @@ export default function FuelNew({ close }) {
                     onChange={(event) => setdispencer(event.target.value)}
                   >
                     {dispencers.map((disp) => (
-                      <MenuItem key={disp} value={disp}>{disp}</MenuItem>
+                      <MenuItem key={disp} value={disp}>
+                        {disp}
+                      </MenuItem>
                     ))}
                   </Select>
                 </FormControl>
               </Grid>
               <Grid item xs={6}>
-                <FormControl fullWidth>
-                  <InputLabel id="fuel-type-label">Sub Name</InputLabel>
+                <FormControl fullWidth sx={{ height: "100%" }}>
+                  <InputLabel id="fuel-type-label">Fuel Type</InputLabel>
                   <Select
                     labelId="fuel-type-label"
                     id="fuel-type-select"
+                    multiple
                     value={fueltype}
-                    label="Sub Name"
-                    onChange={(event) => setfueltype(event.target.value)}
+                    onChange={handleFuelTypeChange}
+                    input={<OutlinedInput id="select-multiple-chip" label="Fuel Type" />}
+                    renderValue={(selected) => (
+                      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                        {selected.map((value) => (
+                          <Chip
+                            key={value}
+                            label={value}
+                            onDelete={handleDeleteFuelType(value)}
+                          />
+                        ))}
+                      </Box>
+                    )}
+                    MenuProps={MenuProps}
                   >
-                    {fuelTypes.map((type) => (
-                      <MenuItem key={type} value={type}>{type}</MenuItem>
+                    {fuelTypes.map((name) => (
+                      <MenuItem
+                        key={name}
+                        value={name}
+                        style={getStyles(name, fueltype, theme)}
+                      >
+                        {name}
+                      </MenuItem>
                     ))}
                   </Select>
                 </FormControl>
               </Grid>
             </Grid>
           </Box>
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <Typography>{fueltype}</Typography>
-            <TextField
-              onChange={(event) => setstartpetrol(event.target.value)}
-              id="start-metering"
-              label="Start Metering"
-              fullWidth
-              variant="outlined"
-            />
-            <TextField
-              onChange={(event) => setendpetrol(event.target.value)}
-              id="end-metering"
-              label="End Metering"
-              fullWidth
-              variant="outlined"
-            />
-            <TextField
-              id=""
-              disabled
-              label="Sale Amount"
-              fullWidth
-              variant="outlined"
-            />
-          </Box>
+          {fueltype.map((type) => (
+            <Box key={type} sx={{ display: "flex", alignItems: "center", gap: 2, mt: 2 }}>
+              <Typography>{type}</Typography>
+              <TextField
+                label="Start Metering"
+                fullWidth
+                variant="outlined"
+                onChange={(e) => handleFuelDataChange(type, "start", e.target.value)}
+              />
+              <TextField
+                label="End Metering"
+                fullWidth
+                variant="outlined"
+                onChange={(e) => handleFuelDataChange(type, "end", e.target.value)}
+              />
+              <TextField
+                label="Fuel Qty"
+                fullWidth
+                variant="outlined"
+                onChange={(e) => handleFuelDataChange(type, "qty", e.target.value)}
+              />
+              <TextField
+                label="Sale Amount"
+                fullWidth
+                variant="outlined"
+                onChange={(e) => handleFuelDataChange(type, "total", e.target.value)}
+              />
+            </Box>
+          ))}
           <TextField
             id=""
             disabled
@@ -190,8 +250,12 @@ export default function FuelNew({ close }) {
         </Stack>
       </DialogContent>
       <DialogActions>
-        <Button color="error" onClick={handleClose}>Cancel</Button>
-        <Button color="success" onClick={handleSave}>Save</Button>
+        <Button color="error" onClick={handleClose}>
+          Cancel
+        </Button>
+        <Button color="success" onClick={handleSave}>
+          Save
+        </Button>
       </DialogActions>
     </Dialog>
   );
