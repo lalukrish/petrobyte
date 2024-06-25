@@ -110,6 +110,24 @@ export default function DispencerNew({ close, refreshDispencer, edit }) {
     );
     setFields(updatedFields);
   };
+  let sub_dispencers=[
+    {
+      subDispencer:"P1",
+      fuel_id:"petrolid",
+    },
+    {
+      subDispencer:"P2",
+      fuel_id:"petrolid",
+    },{
+      subDispencer:"D1",
+      fuel_id:"dieselid",
+    },
+    {
+      subDispencer:"D2",
+      fuel_id:"dieselid",
+    }
+  ]
+
 
   return (
     <Dialog

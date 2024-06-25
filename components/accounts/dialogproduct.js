@@ -26,7 +26,7 @@ export default function ProductsNew({ close }) {
     axios
       .get(`${process.env.NEXT_PUBLIC_API_URL}/product/GETAllProduct`)
       .then((responce) => {
-        responce.data.message.map((item) => {
+        responce.data.message.products.map((item) => {
           products.push(item.product_name);
         });
       });

@@ -47,7 +47,17 @@ export default function DispencerTable() {
         ],
       },
     ];
+    let post=[
+      {
+        dispencer: "Dispencer 2",
+        sub_dispencer:"P1",
+        fuel_id: "",
+        live_reading: "1500",
+        status:""
+      }
+    ]
 
+   
     // Simulate an API call
     setTimeout(() => {
       setDispencers(dummyData);
