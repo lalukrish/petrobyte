@@ -118,7 +118,7 @@ console.log("content",content)
                 </TableCell>
 
                 <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                  Fuel
+                  Sub
                 </TableCell>
 
                 <TableCell align="center" sx={{ fontWeight: "bold" }}>
