@@ -11,28 +11,33 @@ import {
   Box,
   Typography,
   Select,
-  MenuItem,
   FormControl,
   InputLabel,
+  MenuItem,
 } from "@mui/material";
 import { TextareaAutosize as BaseTextareaAutosize } from '@mui/base/TextareaAutosize';
 import { styled } from '@mui/system';
+import axios from "axios";
+require("dotenv").config();
+// import dayjs from "dayjs";
 
 export default function ExpenseNew({ close }) {
   const [expenseType, setExpenseType] = useState("");
   const [employee, setEmployee] = useState("");
   const handleClose3 = () => close();
 
-  const types = ["Salary", "Maintenance", "Bills", "Others"];
-  const employees = ["Aslam", "Lallu", "Adhi", "Abhi"];
-
-  const handleExpenseTypeChange = (event) => {
+  const type=["Salary","Maintainence","Bills","Others"]
+  const empname=["Aslam","Lallu","Adhi","Abhi"]
+  const handleExpenseTypeChange = (event, newValue) => {
     setExpenseType(event.target.value);
   };
 
-  const handleEmployeeChange = (event) => {
-    setEmployee(event.target.value);
-  };
+
+  const fetchEmployee = ()=>{
+    axios.get(`${process.env.NEXT_PUBLIC_API_URL}/employee/GETAllEmployee`).then((responce)=>setEmployee())
+  }
+
+  
 
   const Textarea = styled(BaseTextareaAutosize)(
     ({ theme }) => `
@@ -56,7 +61,7 @@ export default function ExpenseNew({ close }) {
 
   return (
     <Dialog
-      maxWidth="sm"
+      maxWidth="md"
       fullWidth
       open={true}
       onClose={handleClose3}
@@ -74,9 +79,9 @@ export default function ExpenseNew({ close }) {
               onChange={handleExpenseTypeChange}
               label="Expense Type"
             >
-              {types.map((type) => (
-                <MenuItem key={type} value={type}>
-                  {type}
+              {type.map((option, index) => (
+                <MenuItem key={index} value={option}>
+                  {option}
                 </MenuItem>
               ))}
             </Select>
@@ -87,19 +92,17 @@ export default function ExpenseNew({ close }) {
               <Select
                 labelId="employee-label"
                 id="employee-select"
-                value={employee}
-                onChange={handleEmployeeChange}
                 label="Employee"
               >
-                {employees.map((emp) => (
-                  <MenuItem key={emp} value={emp}>
-                    {emp}
+                {empname.map((option, index) => (
+                  <MenuItem key={index} value={option}>
+                    {option}
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
           )}
-          <TextField
+          <TextField 
             id="amount"
             label="Amount"
             fullWidth

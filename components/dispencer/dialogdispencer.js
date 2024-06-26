@@ -6,31 +6,44 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
-import { Stack, TextField, IconButton, Select, MenuItem, InputLabel, FormControl } from "@mui/material";
+import {
+  Stack,
+  TextField,
+  IconButton,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import axios from "axios";
+require("dotenv").config();
 
 export default function DispencerNew({ close, refreshDispencer, edit }) {
-  const [dispencer, setDispencer] = React.useState(edit ? edit.dispencer : "");
-  const [fields, setFields] = React.useState(
-    edit
-      ? [{ dispSub: "", live_reading: edit.live_reading }]
-      : [{ dispSub: "", live_reading: "" }]
-  );
-
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
-  const [fuels, setAllfuels] = React.useState([]);
-  const [optionsLoaded, setOptionsLoaded] = React.useState(false);
+  const [dispencer, setDispencer] = React.useState(edit ? edit.dispencer : "");
+  const [fields, setFields] = React.useState(
+    edit
+      ? [
+          {
+            dispencer_name: edit.dispencer,
+            sub_dispencer_id: edit.sub_dispencer_id,
+            live_reading: edit.live_reading,
+          },
+        ]
+      : [{ dispencer_name: dispencer, sub_dispencer_id: "", live_reading: "" }]
+  );
+
+  const [subDispencer, setSubDispencer] = React.useState([]);
 
   React.useEffect(() => {
     axios
-      .get(`${process.env.NEXT_PUBLIC_API_URL}/fuelPrice/GETAllFuel`)
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/subdispencer/GETAllSubDispencer`)
       .then((response) => {
-        setAllfuels(response.data.message);
-        setOptionsLoaded(true);
+        setSubDispencer(response.data);
       })
       .catch((err) => console.log(err.message));
   }, []);
@@ -39,59 +52,12 @@ export default function DispencerNew({ close, refreshDispencer, edit }) {
     close();
   };
 
-  const handleSave = () => {
-    let newDispencer = {
-      dispencer: dispencer,
-      fields: fields.map(({ dispSub, live_reading }) => ({
-        dispSub,
-        live_reading,
-      })),
-    };
-
-    axios
-      .post(
-        `${process.env.NEXT_PUBLIC_API_URL}/dispencer/POSTDispencer`,
-        newDispencer
-      )
-      .then((response) => {
-        alert(response.data.message);
-        refreshDispencer();
-        close();
-      })
-      .catch(() => {
-        alert(`Something went wrong`);
-        close();
-      });
-  };
-
-  const updateDispencer = () => {
-    let dispencerData = {
-      id: edit._id,
-      fields: fields.map(({ dispSub, live_reading }) => ({
-        dispSub,
-        live_reading,
-      })),
-    };
-
-    axios
-      .put(
-        `${process.env.NEXT_PUBLIC_API_URL}/dispencer/PUTDispencer`,
-        dispencerData
-      )
-      .then((response) => {
-        alert(response.data.message);
-        refreshDispencer();
-        close();
-      })
-      .catch((err) => {
-        alert(err);
-        close();
-      });
-  };
-
   const handleAddFields = () => {
     if (fields.length < 4) {
-      setFields([...fields, { dispSub: "", live_reading: "" }]);
+      setFields([
+        ...fields,
+        { dispencer_name: dispencer, sub_dispencer_id: "", live_reading: "" },
+      ]);
     } else {
       alert("You can only add up to 4 fields.");
     }
@@ -105,30 +71,56 @@ export default function DispencerNew({ close, refreshDispencer, edit }) {
   const handleFieldChange = (index, event) => {
     const updatedFields = fields.map((field, i) =>
       i === index
-        ? { ...field, [event.target.name]: event.target.value }
+        ? {
+            ...field,
+            dispencer_name: dispencer,
+            [event.target.name]: event.target.value,
+          }
         : field
     );
     setFields(updatedFields);
   };
 
-  const sub_dispencers = [
-    {
-      subDispencer: "P1",
-      fuel_id: "petrolid",
-    },
-    {
-      subDispencer: "P2",
-      fuel_id: "petrolid",
-    },
-    {
-      subDispencer: "D1",
-      fuel_id: "dieselid",
-    },
-    {
-      subDispencer: "D2",
-      fuel_id: "dieselid",
-    },
-  ];
+  const handleSave = () => {
+    console.log(fields);
+
+    axios
+      .post(`${process.env.NEXT_PUBLIC_API_URL}/dispencer/POSTDispencer`, fields)
+      .then((response) => {
+        alert(response.data.message);
+        refreshDispencer();
+        close();
+      })
+      .catch(() => {
+        alert(`Something went wrong`);
+        close();
+      });
+  };
+
+  // const updateDispencer = () => {
+  //   let dispencerData = {
+  //     id: edit._id,
+  //     fields: fields.map(({ sub_dispencer_id, live_reading }) => ({
+  //       sub_dispencer_id,
+  //       live_reading,
+  //     })),
+  //   };
+
+  //   axios
+  //     .put(
+  //       `${process.env.NEXT_PUBLIC_API_URL}/dispencer/PUTDispencer`,
+  //       dispencerData
+  //     )
+  //     .then((response) => {
+  //       alert(response.data.message);
+  //       refreshDispencer();
+  //       close();
+  //     })
+  //     .catch((err) => {
+  //       alert(err);
+  //       close();
+  //     });
+  // };
 
   return (
     <Dialog
@@ -149,8 +141,11 @@ export default function DispencerNew({ close, refreshDispencer, edit }) {
             label="Dispencer"
             value={dispencer}
             variant="outlined"
-            onChange={(event) => setDispencer(event.target.value)}
+            onChange={(e) => {
+              setDispencer(e.target.value);
+            }}
           />
+
           {fields.map((field, index) => (
             <Stack key={index} direction="row" spacing={2} alignItems="center">
               <FormControl sx={{ width: "45%" }} variant="outlined">
@@ -159,13 +154,13 @@ export default function DispencerNew({ close, refreshDispencer, edit }) {
                   labelId={`disp-sub-label-${index}`}
                   id={`disp-sub-${index}`}
                   label="Sub Name"
-                  name="dispSub"
-                  value={field.dispSub}
+                  name="sub_dispencer_id"
+                  value={field.sub_dispencer_id}
                   onChange={(event) => handleFieldChange(index, event)}
                 >
-                  {sub_dispencers.map((sub, i) => (
-                    <MenuItem key={i} value={sub.subDispencer}>
-                      {sub.subDispencer}
+                  {subDispencer.map((sub, i) => (
+                    <MenuItem key={i} value={sub._id}>
+                      {sub.sub_dispencer}
                     </MenuItem>
                   ))}
                 </Select>
