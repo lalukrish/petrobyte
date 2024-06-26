@@ -13,6 +13,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import axios from "axios";
 import DispencerNew from "./dialogdispencer";
+require("dotenv").config();
 
 export default function DispencerTable() {
   const [open, setOpen] = React.useState(false);
@@ -24,45 +25,10 @@ export default function DispencerTable() {
   const [openRow, setOpenRow] = React.useState(null); // To track which row is open
 
   const fetchAllDispencer = () => {
-    // Replace the following dummy data with an actual API call if necessary
-    const dummyData = [
-      {
-        _id: "1",
-        dispencer: "Dispencer 1",
-        fuel_id: { fuel_name: "Diesel" },
-        live_reading: "1000",
-        subDispencers: [
-          { _id: "1-1", sub_name: "D1", live_meter: "500" },
-          { _id: "1-2", sub_name: "D2", live_meter: "600" },
-        ],
-      },
-      {
-        _id: "2",
-        dispencer: "Dispencer 2",
-        fuel_id: { fuel_name: "Petrol" },
-        live_reading: "1500",
-        subDispencers: [
-          { _id: "2-1", sub_name: "P1", live_meter: "700" },
-          { _id: "2-2", sub_name: "P2", live_meter: "800" },
-        ],
-      },
-    ];
-    let post=[
-      {
-        dispencer: "Dispencer 2",
-        sub_dispencer:"P1",
-        fuel_id: "",
-        live_reading: "1500",
-        status:""
-      }
-    ]
-
-   
-    // Simulate an API call
-    setTimeout(() => {
-      setDispencers(dummyData);
-      setTotalPages(Math.ceil(dummyData.length / 10)); // Assuming 10 items per page
-    }, 500);
+    axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/dispencer/GETAllDispencer`)
+      .then((responce) => setDispencers(responce.data.message.allDispencers))
+      .catch(console.log("error"));
   };
 
   React.useEffect(() => {
@@ -147,7 +113,7 @@ export default function DispencerTable() {
                       )}
                     </IconButton>
                   </TableCell>
-                  <TableCell align="center">{dispencer.dispencer}</TableCell>
+                  <TableCell align="center">{dispencer.dispencer_name}</TableCell>
                   <TableCell align="center">
                     <Button onClick={() => handleEditDispencer(dispencer)}>
                       <EditIcon sx={{ color: "#0d47a1" }} />
@@ -192,13 +158,13 @@ export default function DispencerTable() {
                             </TableRow>
                           </TableHead>
                           <TableBody>
-                            {dispencer.subDispencers.map((subDispencer) => (
+                            {dispencer.sub_dispencer_id.map((subDispencer) => (
                               <TableRow key={subDispencer._id}>
                                 <TableCell align="center">
-                                  {subDispencer.sub_name}
+                                  {subDispencer.sub_dispencer}
                                 </TableCell>
                                 <TableCell align="center">
-                                  {subDispencer.live_meter}
+                                  {subDispencer.live_reading}
                                 </TableCell>
                                 <TableCell align="center">
                                   {/* <Button
