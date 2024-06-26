@@ -27,6 +27,7 @@ import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import FullScreenDialog from "@/components/accounts/dialogfullscreen";
 import OpenInFullIcon from "@mui/icons-material/OpenInFull";
 import DoneAllIcon from "@mui/icons-material/DoneAll";
+import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
 
 export default function Page() {
   const [fuel, setFuel] = React.useState(false);
@@ -139,7 +140,7 @@ export default function Page() {
             label="Product Details"
           />
           <Tab
-            icon={<PointOfSaleIcon sx={{ color: getIconColor(3) }} />}
+            icon={<ShoppingCartCheckoutIcon sx={{ color: getIconColor(3) }} />}
             iconPosition="start"
             label="Expense Details"
           />
