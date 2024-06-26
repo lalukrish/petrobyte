@@ -6,28 +6,33 @@ import {
   DialogActions,
   Button,
   TextField,
-  Autocomplete,
   Stack,
   Grid,
   Box,
   Typography,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
 import { TextareaAutosize as BaseTextareaAutosize } from '@mui/base/TextareaAutosize';
 import { styled } from '@mui/system';
-// import dayjs from "dayjs";
 
 export default function ExpenseNew({ close }) {
   const [expenseType, setExpenseType] = useState("");
+  const [employee, setEmployee] = useState("");
   const handleClose3 = () => close();
 
-  const type=["Salary","Maintainence","Bills","Others"]
-  const empname=["Aslam","Lallu","Adhi","Abhi"]
-  const handleExpenseTypeChange = (event, newValue) => {
-    setExpenseType(newValue);
+  const types = ["Salary", "Maintenance", "Bills", "Others"];
+  const employees = ["Aslam", "Lallu", "Adhi", "Abhi"];
+
+  const handleExpenseTypeChange = (event) => {
+    setExpenseType(event.target.value);
   };
 
-
-  
+  const handleEmployeeChange = (event) => {
+    setEmployee(event.target.value);
+  };
 
   const Textarea = styled(BaseTextareaAutosize)(
     ({ theme }) => `
@@ -49,53 +54,60 @@ export default function ExpenseNew({ close }) {
   `,
   );
 
- 
-
   return (
     <Dialog
-      
-      maxWidth="md"
+      maxWidth="sm"
       fullWidth
-      open={open}
+      open={true}
       onClose={handleClose3}
       aria-labelledby="responsive-dialog-title"
     >
       <DialogTitle id="responsive-dialog-title">Expense Details</DialogTitle>
-      <DialogContent sx={{padding:"5px",margin:"5px"}}>
-      <Stack spacing={2} sx={{ width: "100%", padding: "5px" }}>
-          <Autocomplete
-            disablePortal
-            id="combo-box-demo"
-            options={type}
-            sx={{ width: "100%" }}
-            renderInput={(params) => (
-              <TextField {...params} label="Expense Type" fullWidth />
-            )}
-            onChange={handleExpenseTypeChange}
-          />
+      <DialogContent sx={{ padding: "5px", margin: "5px" }}>
+        <Stack spacing={2} sx={{ width: "100%", padding: "5px" }}>
+          <FormControl fullWidth>
+            <InputLabel id="expense-type-label">Expense Type</InputLabel>
+            <Select
+              labelId="expense-type-label"
+              id="expense-type-select"
+              value={expenseType}
+              onChange={handleExpenseTypeChange}
+              label="Expense Type"
+            >
+              {types.map((type) => (
+                <MenuItem key={type} value={type}>
+                  {type}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           {expenseType === "Salary" && (
-            <Autocomplete
-              disablePortal
-              id="combo-box-demo"
-              options={empname}
-              sx={{ width: "100%" }}
-              renderInput={(params) => (
-                <TextField {...params} label="Employee" fullWidth />
-              )}
-            />
+            <FormControl fullWidth>
+              <InputLabel id="employee-label">Employee</InputLabel>
+              <Select
+                labelId="employee-label"
+                id="employee-select"
+                value={employee}
+                onChange={handleEmployeeChange}
+                label="Employee"
+              >
+                {employees.map((emp) => (
+                  <MenuItem key={emp} value={emp}>
+                    {emp}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           )}
-          <TextField 
-              id=""
-              
-              label="Amount"
-              fullWidth
-              variant="outlined"
-            />
-            <Textarea  minRows={4} placeholder="Comments" fullWidth />
-            
-          
+          <TextField
+            id="amount"
+            label="Amount"
+            fullWidth
+            variant="outlined"
+          />
+          <Textarea minRows={4} placeholder="Comments" fullWidth />
         </Stack>
-        </DialogContent>
+      </DialogContent>
       <DialogActions>
         <Button color="error" onClick={handleClose3}>Cancel</Button>
         <Button color="success">Save</Button>
