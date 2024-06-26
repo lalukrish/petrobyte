@@ -6,14 +6,17 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
-import { FormControl, InputLabel, MenuItem, Select, Stack, TextField } from "@mui/material";
+import { Stack, TextField, IconButton, Select, MenuItem, InputLabel, FormControl } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
 import axios from "axios";
 
 export default function DispencerNew({ close, refreshDispencer, edit }) {
   const [dispencer, setDispencer] = React.useState(edit ? edit.dispencer : "");
-  const [fuel, setFuel] = React.useState("");
-  const [live_reading, setLiveReading] = React.useState(
-    edit ? edit.live_reading : ""
+  const [fields, setFields] = React.useState(
+    edit
+      ? [{ dispSub: "", live_reading: edit.live_reading }]
+      : [{ dispSub: "", live_reading: "" }]
   );
 
   const theme = useTheme();
@@ -28,24 +31,9 @@ export default function DispencerNew({ close, refreshDispencer, edit }) {
       .then((response) => {
         setAllfuels(response.data.message);
         setOptionsLoaded(true);
-
-        // Set the default fuel if editing
-        if (edit) {
-          //console.log("Edit Fuel ID:", edit.fuel_id._id);
-          response.data.message.forEach((fuel) => {
-            //     console.log("Fuel ID:", fuel._id);
-          });
-
-          const defaultFuel = response.data.message.find(
-            (fuel) => fuel._id === edit.fuel_id._id
-          );
-          if (defaultFuel) {
-            setFuel(defaultFuel._id);
-          }
-        }
       })
       .catch((err) => console.log(err.message));
-  }, [edit]);
+  }, []);
 
   const handleClose = () => {
     close();
@@ -54,8 +42,10 @@ export default function DispencerNew({ close, refreshDispencer, edit }) {
   const handleSave = () => {
     let newDispencer = {
       dispencer: dispencer,
-      live_reading: live_reading,
-      fuel_id: fuel,
+      fields: fields.map(({ dispSub, live_reading }) => ({
+        dispSub,
+        live_reading,
+      })),
     };
 
     axios
@@ -74,13 +64,13 @@ export default function DispencerNew({ close, refreshDispencer, edit }) {
       });
   };
 
-  //edit dispencer
   const updateDispencer = () => {
     let dispencerData = {
       id: edit._id,
-      fuel_id: fuel,
-      dispencer: dispencer,
-      live_reading: live_reading,
+      fields: fields.map(({ dispSub, live_reading }) => ({
+        dispSub,
+        live_reading,
+      })),
     };
 
     axios
@@ -99,18 +89,60 @@ export default function DispencerNew({ close, refreshDispencer, edit }) {
       });
   };
 
+  const handleAddFields = () => {
+    if (fields.length < 4) {
+      setFields([...fields, { dispSub: "", live_reading: "" }]);
+    } else {
+      alert("You can only add up to 4 fields.");
+    }
+  };
+
+  const handleRemoveField = (index) => {
+    const updatedFields = fields.filter((_, i) => i !== index);
+    setFields(updatedFields);
+  };
+
+  const handleFieldChange = (index, event) => {
+    const updatedFields = fields.map((field, i) =>
+      i === index
+        ? { ...field, [event.target.name]: event.target.value }
+        : field
+    );
+    setFields(updatedFields);
+  };
+
+  const sub_dispencers = [
+    {
+      subDispencer: "P1",
+      fuel_id: "petrolid",
+    },
+    {
+      subDispencer: "P2",
+      fuel_id: "petrolid",
+    },
+    {
+      subDispencer: "D1",
+      fuel_id: "dieselid",
+    },
+    {
+      subDispencer: "D2",
+      fuel_id: "dieselid",
+    },
+  ];
+
   return (
     <Dialog
       fullScreen={fullScreen}
       open={true}
       onClose={handleClose}
       aria-labelledby="responsive-dialog-title"
+      maxWidth="md"
     >
       <DialogTitle id="responsive-dialog-title">
         {edit ? "Edit Dispencer" : "New Dispencer"}
       </DialogTitle>
       <DialogContent>
-        <Stack spacing={2} sx={{ width: "400px", padding: "5px" }}>
+        <Stack spacing={2} sx={{ width: "500px", padding: "5px" }}>
           <TextField
             autoFocus
             id="outlined-basic"
@@ -119,53 +151,55 @@ export default function DispencerNew({ close, refreshDispencer, edit }) {
             variant="outlined"
             onChange={(event) => setDispencer(event.target.value)}
           />
-          <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label">Fuel</InputLabel>
-          <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          
-          label="Fuel"
-            value={fuel}
-            onChange={(event) => setFuel(event.target.value)}
-            // displayEmpty
-            variant="outlined"
-          >
-            <MenuItem value="" disabled>
-            </MenuItem>
-            {fuels.map((fuel) => (
-              <MenuItem key={fuel._id} value={fuel._id}>
-                {fuel.fuel_name}
-              </MenuItem>
-            ))}
-          </Select>
-          </FormControl>
-          <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Valve</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              
-              label="Fuel"
-              
-            >
-              
-                <MenuItem>
-                  V1
-                </MenuItem>
-                <MenuItem>
-                  V2
-                </MenuItem>
-              
-            </Select>
-          </FormControl>
-          <TextField
-            id="outlined-basic"
-            label="Live Metering"
-            value={live_reading}
-            variant="outlined"
-            onChange={(event) => setLiveReading(event.target.value)}
-          />
+          {fields.map((field, index) => (
+            <Stack key={index} direction="row" spacing={2} alignItems="center">
+              <FormControl sx={{ width: "45%" }} variant="outlined">
+                <InputLabel id={`disp-sub-label-${index}`}>Sub Name</InputLabel>
+                <Select
+                  labelId={`disp-sub-label-${index}`}
+                  id={`disp-sub-${index}`}
+                  label="Sub Name"
+                  name="dispSub"
+                  value={field.dispSub}
+                  onChange={(event) => handleFieldChange(index, event)}
+                >
+                  {sub_dispencers.map((sub, i) => (
+                    <MenuItem key={i} value={sub.subDispencer}>
+                      {sub.subDispencer}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <TextField
+                id={`live-metering-${index}`}
+                label="Live Metering"
+                name="live_reading"
+                value={field.live_reading}
+                variant="outlined"
+                onChange={(event) => handleFieldChange(index, event)}
+                sx={{ width: "45%" }}
+              />
+              {index === fields.length - 1 ? (
+                <IconButton
+                  onClick={handleAddFields}
+                  sx={{
+                    width: "10%",
+                    color: fields.length < 4 ? "green" : "gray",
+                  }}
+                  disabled={fields.length >= 4}
+                >
+                  <AddIcon />
+                </IconButton>
+              ) : (
+                <IconButton
+                  onClick={() => handleRemoveField(index)}
+                  sx={{ width: "10%", color: "red" }}
+                >
+                  <RemoveIcon />
+                </IconButton>
+              )}
+            </Stack>
+          ))}
         </Stack>
       </DialogContent>
       <DialogActions>

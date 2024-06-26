@@ -329,26 +329,22 @@ export default function Page() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {productaccounts?.map((productAccount) => (
-                  <TableRow
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-                    <TableCell align="center">{productAccount.date}</TableCell>
-                    <TableCell align="center">Grease</TableCell>
-                    <TableCell align="center">700</TableCell>
-                    <TableCell align="center">
-                      {productAccount.quantity}
-                    </TableCell>
-                    <TableCell align="center">
-                      {productAccount.total_amount}
-                    </TableCell>
-                    <TableCell align="center">
-                      <Button>
-                        <EditIcon sx={{ color: "#0d47a1" }} />
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
+              {productaccounts?.map((productAccount)=>(
+                <TableRow
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                  <TableCell align="center">{productAccount?.date}</TableCell>
+                  <TableCell align="center">Grease</TableCell>
+                  <TableCell align="center">700</TableCell>
+                  <TableCell align="center">{productAccount?.quantity}</TableCell>
+                  <TableCell align="center">{productAccount?.total_amount}</TableCell>
+                  <TableCell align="center">
+                    <Button>
+                      <EditIcon sx={{ color: "#0d47a1" }} />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
               </TableBody>
             </Table>
           </TableContainer>
