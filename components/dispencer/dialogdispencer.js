@@ -6,7 +6,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
-import { Stack, TextField, IconButton } from "@mui/material";
+import { Stack, TextField, IconButton, Select, MenuItem, InputLabel, FormControl } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import axios from "axios";
@@ -110,24 +110,25 @@ export default function DispencerNew({ close, refreshDispencer, edit }) {
     );
     setFields(updatedFields);
   };
-  let sub_dispencers=[
-    {
-      subDispencer:"P1",
-      fuel_id:"petrolid",
-    },
-    {
-      subDispencer:"P2",
-      fuel_id:"petrolid",
-    },{
-      subDispencer:"D1",
-      fuel_id:"dieselid",
-    },
-    {
-      subDispencer:"D2",
-      fuel_id:"dieselid",
-    }
-  ]
 
+  const sub_dispencers = [
+    {
+      subDispencer: "P1",
+      fuel_id: "petrolid",
+    },
+    {
+      subDispencer: "P2",
+      fuel_id: "petrolid",
+    },
+    {
+      subDispencer: "D1",
+      fuel_id: "dieselid",
+    },
+    {
+      subDispencer: "D2",
+      fuel_id: "dieselid",
+    },
+  ];
 
   return (
     <Dialog
@@ -152,15 +153,23 @@ export default function DispencerNew({ close, refreshDispencer, edit }) {
           />
           {fields.map((field, index) => (
             <Stack key={index} direction="row" spacing={2} alignItems="center">
-              <TextField
-                id={`disp-sub-${index}`}
-                label="Sub Name"
-                name="dispSub"
-                value={field.dispSub}
-                variant="outlined"
-                onChange={(event) => handleFieldChange(index, event)}
-                sx={{ width: "45%" }}
-              />
+              <FormControl sx={{ width: "45%" }} variant="outlined">
+                <InputLabel id={`disp-sub-label-${index}`}>Sub Name</InputLabel>
+                <Select
+                  labelId={`disp-sub-label-${index}`}
+                  id={`disp-sub-${index}`}
+                  label="Sub Name"
+                  name="dispSub"
+                  value={field.dispSub}
+                  onChange={(event) => handleFieldChange(index, event)}
+                >
+                  {sub_dispencers.map((sub, i) => (
+                    <MenuItem key={i} value={sub.subDispencer}>
+                      {sub.subDispencer}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
               <TextField
                 id={`live-metering-${index}`}
                 label="Live Metering"

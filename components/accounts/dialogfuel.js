@@ -18,7 +18,7 @@ import {
   Chip,
   Autocomplete,
 } from "@mui/material";
-import { useTheme } from '@mui/material/styles';
+import { useTheme } from "@mui/material/styles";
 import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
@@ -44,6 +44,9 @@ export default function FuelNew({ close }) {
   const [dispencer, setdispencer] = useState("");
   const [fueltype, setfueltype] = useState([]);
   const [fuelData, setFuelData] = useState({});
+  const [cash, setCash] = useState("");
+  const [bank, setBank] = useState("");
+  const [hpCard, setHpCard] = useState("");
   const employees = ["John Doe", "Jane Smith", "Alice Johnson"];
   const dispencers = ["A", "B", "C", "D"];
   const fuelTypes = ["P1", "P2", "D1", "D2"];
@@ -72,16 +75,24 @@ export default function FuelNew({ close }) {
       fuel_end_reading: fuelData[type]?.end || "",
       fuel_qty: fuelData[type]?.qty || "",
       amount: fuelData[type]?.total || "",
+      cash: cash,
+      bank: bank,
+      hpCard: hpCard,
     }));
     axios
-      .post(`${process.env.NEXT_PUBLIC_API_URL}/fuelAccounts/POSTFuelAccount`, fuelDetails)
+      .post(
+        `${process.env.NEXT_PUBLIC_API_URL}/fuelAccounts/POSTFuelAccount`,
+        fuelDetails
+      )
       .then((response) => {
         alert(response.data.message);
       });
   };
 
   const handleFuelTypeChange = (event) => {
-    const { target: { value } } = event;
+    const {
+      target: { value },
+    } = event;
     const newFuelTypes = typeof value === "string" ? value.split(",") : value;
     setfueltype(newFuelTypes);
   };
@@ -240,6 +251,29 @@ export default function FuelNew({ close }) {
               />
             </Box>
           ))}
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2, mt: 2 }}>
+            <TextField
+              label="Cash"
+              fullWidth
+              variant="outlined"
+              value={cash}
+              onChange={(e) => setCash(e.target.value)}
+            />
+            <TextField
+              label="Bank"
+              fullWidth
+              variant="outlined"
+              value={bank}
+              onChange={(e) => setBank(e.target.value)}
+            />
+            <TextField
+              label="HP Card"
+              fullWidth
+              variant="outlined"
+              value={hpCard}
+              onChange={(e) => setHpCard(e.target.value)}
+            />
+          </Box>
           <TextField
             id=""
             disabled
