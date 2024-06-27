@@ -64,7 +64,7 @@ export default function Page() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8000/expenceaccount/GETAllExpenceAccount`)
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/expenceaccount/GETAllExpenceAccount`)
       .then((response) => setExpenceAccount(response.data.message.expenceDetails));
   }, [refreshExpence])
   const handleRefeshExpence=()=>{

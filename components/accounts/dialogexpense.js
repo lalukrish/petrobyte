@@ -61,7 +61,7 @@ export default function ExpenseNew({ close, refresh }) {
 
     axios
       .post(
-        `http://localhost:8000/expenceaccount/POSTExpenceAccount`,
+        `${process.env.NEXT_PUBLIC_API_URL}/expenceaccount/POSTExpenceAccount`,
         expenseData
       )
       .then((responce) => {
