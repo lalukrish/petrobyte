@@ -41,6 +41,9 @@ export default function Page() {
   // const [fuelAccounts, setfuelAccounts] = React.useState([]);
   const [accountoverview, setAccountoverview] = React.useState([]);
   const [productaccounts, setProductAccounts] = React.useState([]);
+  const [expenceaccount, setExpenceAccount] = React.useState([]);
+
+  const [refreshExpence, setRefreshExpence] = React.useState(false);
 
   // useEffect(() => {
   //   axios
@@ -62,7 +65,16 @@ export default function Page() {
         `${process.env.NEXT_PUBLIC_API_URL}/productAccounts/GETAllProductAccount`
       )
       .then((response) => setProductAccounts(response.data.message));
-  }, []);
+  }, [])
+
+  useEffect(() => {
+    axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/expenceaccount/GETAllExpenceAccount`)
+      .then((response) => setExpenceAccount(response.data.message.expenceDetails));
+  }, [refreshExpence])
+  const handleRefeshExpence=()=>{
+    setRefreshExpence(!refreshExpence)
+  }
 
   const handleTabChange = (event, newValue) => {
     setSelectedTab(newValue);
@@ -399,16 +411,19 @@ export default function Page() {
                 </TableRow>
               </TableHead>
               <TableBody>
+                {expenceaccount.map((expAcc)=>(
+
+                
                 <TableRow
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
                   <TableCell component="th" scope="row" align="center">
-                    18/07/2001
+                    {expAcc.date}
                   </TableCell>
-                  <TableCell align="center">Bills</TableCell>
-                  <TableCell align="center">4000</TableCell>
-                  <TableCell align="center">N/A</TableCell>
-                  <TableCell align="center">Electricity</TableCell>
+                  <TableCell align="center">{expAcc.expence_type}</TableCell>
+                  <TableCell align="center">{expAcc.expence_amount}</TableCell>
+                  <TableCell align="center">{expAcc.emp_id?expAcc.emp_id.emp_name:"N/A"}</TableCell>
+                  <TableCell align="center">{expAcc.expence_comment}</TableCell>
 
                   <TableCell align="center">
                     <Button>
@@ -416,12 +431,13 @@ export default function Page() {
                     </Button>
                   </TableCell>
                 </TableRow>
+                ))}
               </TableBody>
             </Table>
           </TableContainer>
         </>
       )}
-      {expense ? <ExpenseNew close={handleCloseexpense} /> : null}
+      {expense ? <ExpenseNew close={handleCloseexpense} refresh={handleRefeshExpence} /> : null}
     </>
   );
 }
