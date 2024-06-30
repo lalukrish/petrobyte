@@ -97,7 +97,7 @@ export default function DispencerTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {dispencers.map((dispencer) => (
+            {dispencers?.map((dispencer) => (
               <React.Fragment key={dispencer._id}>
                 <TableRow>
                   <TableCell>
@@ -113,7 +113,9 @@ export default function DispencerTable() {
                       )}
                     </IconButton>
                   </TableCell>
-                  <TableCell align="center">{dispencer.dispencer_name}</TableCell>
+                  <TableCell align="center">
+                    {dispencer.dispencer_name}
+                  </TableCell>
                   <TableCell align="center">
                     <Button onClick={() => handleEditDispencer(dispencer)}>
                       <EditIcon sx={{ color: "#0d47a1" }} />

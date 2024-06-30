@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useEffect, useState } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -9,12 +9,12 @@ import Paper from "@mui/material/Paper";
 import { Box, Button } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import TestNew from "./dialogtest";
-import DialogTest from "@mui/material";
+import axios from "axios";
 
-export default function TestTable({}) {
-  const [open, setOpen] = React.useState(false);
-  const [editTest, setEditTest] = React.useState({});
-
+export default function TestTable() {
+  const [open, setOpen] = useState(false);
+  const [editTest, setEditTest] = useState({});
+  const [testData, setTestData] = useState([]);
 
   const handleClickOpenEdit = () => {
     setEditTest("");
@@ -24,9 +24,27 @@ export default function TestTable({}) {
   const handleClickOpen = () => {
     setOpen(true);
   };
+
   const handleClose = () => {
     setOpen(false);
   };
+
+  useEffect(() => {
+    // Replace with your API endpoint
+    const fetchTestData = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/test/GETAllTest`
+        );
+        setTestData(response.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchTestData();
+  }, []);
+
   return (
     <Box>
       <Button
@@ -49,7 +67,7 @@ export default function TestTable({}) {
                 Date
               </TableCell>
               <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                Dispencer
+                Dispenser
               </TableCell>
               <TableCell align="center" sx={{ fontWeight: "bold" }}>
                 Fuel
@@ -63,19 +81,22 @@ export default function TestTable({}) {
             </TableRow>
           </TableHead>
           <TableBody>
-            <TableRow
-              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-            >
-              <TableCell align="center">13-06-2024</TableCell>
-              <TableCell align="center">D1</TableCell>
-              <TableCell align="center">Petrol</TableCell>
-              <TableCell align="center">5</TableCell>
-              <TableCell align="center">
-                <Button onClick={() => handleClickOpenEdit()}>
-                  <EditIcon sx={{ color: "#0d47a1" }} />
-                </Button>
-              </TableCell>
-            </TableRow>
+            {testData?.map((test) => (
+              <TableRow
+                key={test.id}
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              >
+                <TableCell align="center">{test.date}</TableCell>
+                <TableCell align="center">{test.dispenser}</TableCell>
+                <TableCell align="center">{test.fuel}</TableCell>
+                <TableCell align="center">{test.quantity}</TableCell>
+                <TableCell align="center">
+                  <Button onClick={handleClickOpenEdit}>
+                    <EditIcon sx={{ color: "#0d47a1" }} />
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </TableContainer>
