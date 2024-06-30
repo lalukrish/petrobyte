@@ -24,12 +24,12 @@ import moment from "moment";
 require("dotenv").config();
 // import dayjs from "dayjs";
 
-export default function ExpenseNew({ close, refresh }) {
-  const [expenseType, setExpenseType] = useState("");
+export default function ExpenseNew({ close, refresh, edit }) {
+  const [expenseType, setExpenseType] = useState(edit?edit.expence_type:"");
   const [allEmployee, setAllEmployee] = useState([]);
-  const [employee, setEmployee] = useState("");
-  const [amount, setAmount] = useState("");
-  const [comment, setComment] = useState("");
+  const [employee, setEmployee] = useState(edit?edit.emp_id.emp_name:"");
+  const [amount, setAmount] = useState(edit?edit.expence_amount:"");
+  const [comment, setComment] = useState(edit?edit.expence_comment:"");
   const handleClose3 = () => close();
   const datePart = moment().format("DD-MM-YYYY");
 

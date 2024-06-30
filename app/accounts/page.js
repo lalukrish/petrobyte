@@ -33,7 +33,7 @@ export default function Page() {
   const [fuel, setFuel] = React.useState(false);
   const [product, setProduct] = React.useState(false);
   const [expense, setExpense] = React.useState(false);
-  const [test, setTest] = React.useState(false);
+  const [editExpence, setEditExpence] = React.useState({});
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [dialogContent, setDialogContent] = React.useState({});
 
@@ -76,6 +76,11 @@ export default function Page() {
     setRefreshExpence(!refreshExpence)
   }
 
+  const handleEditExpence =(editData)=>{
+    setEditExpence(editData)
+    setExpense(true);
+  }
+
   const handleTabChange = (event, newValue) => {
     setSelectedTab(newValue);
   };
@@ -104,13 +109,6 @@ export default function Page() {
     setExpense(false);
   };
 
-  const handleClickOpentest = () => {
-    setTest(true);
-  };
-
-  const handleClosetest = () => {
-    setTest(false);
-  };
   const getIconColor = (tabIndex) => {
     return selectedTab === tabIndex ? "#0d47a1" : "inherit";
   };
@@ -426,7 +424,7 @@ export default function Page() {
                   <TableCell align="center">{expAcc.expence_comment}</TableCell>
 
                   <TableCell align="center">
-                    <Button>
+                    <Button onClick={()=>handleEditExpence(expAcc)}>
                       <EditIcon sx={{ color: "#0d47a1" }} />
                     </Button>
                   </TableCell>
@@ -437,7 +435,7 @@ export default function Page() {
           </TableContainer>
         </>
       )}
-      {expense ? <ExpenseNew close={handleCloseexpense} refresh={handleRefeshExpence} /> : null}
+      {expense ? <ExpenseNew close={handleCloseexpense} refresh={handleRefeshExpence} edit={editExpence} /> : null}
     </>
   );
 }
