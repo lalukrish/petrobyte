@@ -75,6 +75,35 @@ export default function ExpenseNew({ close, refresh, edit }) {
       });
   };
 
+  const handleUpdate = () => {
+    let expenseData = {
+      _id:edit._id,
+      date: datePart,
+      expence_type: expenseType,
+      emp_id: employee?employee:null,
+      expence_amount: amount,
+      expence_comment: comment,
+    };
+
+    console.log(expenseData);
+
+    axios
+      .post(
+        `${process.env.NEXT_PUBLIC_API_URL}/expenceaccount/POSTExpenceAccount`,
+        expenseData
+      )
+      .then((responce) => {
+        alert(responce.data.message);
+        refresh();
+        close();
+      })
+      .catch((err) => {
+        alert("error");
+        refresh();
+        close();
+      });
+  };
+
   const Textarea = styled(BaseTextareaAutosize)(
     ({ theme }) => `
     box-sizing: border-box;
@@ -161,7 +190,7 @@ export default function ExpenseNew({ close, refresh, edit }) {
         <Button color="error" onClick={handleClose3}>
           Cancel
         </Button>
-        <Button color="success" onClick={handleSave}>
+        <Button color="success" onClick={edit?handleUpdate:handleSave}>
           Save
         </Button>
       </DialogActions>
