@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
-require('dotenv').config()
+require("dotenv").config();
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -26,7 +26,8 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import FullScreenDialog from "@/components/accounts/dialogfullscreen";
 import OpenInFullIcon from "@mui/icons-material/OpenInFull";
-import DoneAllIcon from '@mui/icons-material/DoneAll';
+import DoneAllIcon from "@mui/icons-material/DoneAll";
+import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
 
 export default function Page() {
   const [fuel, setFuel] = React.useState(false);
@@ -52,13 +53,17 @@ export default function Page() {
 
   useEffect(() => {
     axios
-      .get(`${process.env.NEXT_PUBLIC_API_URL}/fuelAccounts/GETFuelAccountOverview`)
+      .get(
+        `${process.env.NEXT_PUBLIC_API_URL}/fuelAccounts/GETFuelAccountOverview`
+      )
       .then((response) => setAccountoverview(response.data));
   }, []);
 
   useEffect(() => {
     axios
-      .get(`${process.env.NEXT_PUBLIC_API_URL}/productAccounts/GETAllProductAccount`)
+      .get(
+        `${process.env.NEXT_PUBLIC_API_URL}/productAccounts/GETAllProductAccount`
+      )
       .then((response) => setProductAccounts(response.data.message));
   }, [])
 
@@ -108,10 +113,10 @@ export default function Page() {
     return selectedTab === tabIndex ? "#0d47a1" : "inherit";
   };
 
-  const handleDialogOpen = (date,dispencer) => { 
+  const handleDialogOpen = (date, dispencer) => {
     setDialogContent({
-      date:date,
-      dispencer:dispencer
+      date: date,
+      dispencer: dispencer,
     });
     setDialogOpen(true);
   };
@@ -145,11 +150,10 @@ export default function Page() {
             label="Product Details"
           />
           <Tab
-            icon={<PointOfSaleIcon sx={{ color: getIconColor(3) }} />}
+            icon={<ShoppingCartCheckoutIcon sx={{ color: getIconColor(3) }} />}
             iconPosition="start"
             label="Expense Details"
           />
-          
         </Tabs>
       </Box>
 
@@ -179,12 +183,9 @@ export default function Page() {
                 <TableCell align="center" sx={{ fontWeight: "bold" }}>
                   Action
                 </TableCell>
-                
               </TableRow>
             </TableHead>
             <TableBody>
-              
-
               <TableRow
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
@@ -197,11 +198,10 @@ export default function Page() {
                 <TableCell align="center">7000</TableCell>
                 <TableCell align="center">23000</TableCell>
 
-                <TableCell align="center"><DoneAllIcon/></TableCell>
-                
+                <TableCell align="center">
+                  <DoneAllIcon />
+                </TableCell>
               </TableRow>
-              
-
             </TableBody>
           </Table>
         </TableContainer>
@@ -257,7 +257,7 @@ export default function Page() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {accountoverview.map((accnt) => (
+                {accountoverview?.map((accnt) => (
                   <TableRow
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
@@ -273,7 +273,11 @@ export default function Page() {
                     </TableCell>
                     <TableCell align="center">{accnt.netAmount}</TableCell>
                     <TableCell align="center">
-                      <Button onClick={() => handleDialogOpen(accnt.date,accnt.dispencer)}>
+                      <Button
+                        onClick={() =>
+                          handleDialogOpen(accnt.date, accnt.dispencer)
+                        }
+                      >
                         <OpenInFullIcon sx={{ color: "#0d47a1" }} />
                       </Button>
                       <Button>
@@ -435,6 +439,3 @@ export default function Page() {
     </>
   );
 }
-
-
-      

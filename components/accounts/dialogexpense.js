@@ -6,7 +6,6 @@ import {
   DialogActions,
   Button,
   TextField,
-  Autocomplete,
   Stack,
   Grid,
   Box,
@@ -100,7 +99,7 @@ export default function ExpenseNew({ close, refresh, edit }) {
     <Dialog
       maxWidth="md"
       fullWidth
-      open={open}
+      open={true}
       onClose={handleClose3}
       aria-labelledby="responsive-dialog-title"
     >

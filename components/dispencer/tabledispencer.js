@@ -97,7 +97,7 @@ export default function DispencerTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {dispencers.map((dispencer) => (
+            {dispencers?.map((dispencer) => (
               <React.Fragment key={dispencer._id}>
                 <TableRow>
                   <TableCell>
