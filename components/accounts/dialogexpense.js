@@ -83,7 +83,7 @@ export default function ExpenseNew({ close, refresh, edit }) {
       _id:edit._id,
       date: datePart,
       expence_type: expenseType,
-      emp_id: employee?employee:null,
+      emp_id:edit.emp_id._id,
       expence_amount: amount,
       expence_comment: comment,
     };
@@ -91,8 +91,8 @@ export default function ExpenseNew({ close, refresh, edit }) {
     console.log(expenseData);
 
     axios
-      .post(
-        `${process.env.NEXT_PUBLIC_API_URL}/expenceaccount/POSTExpenceAccount`,
+      .put(
+        `${process.env.NEXT_PUBLIC_API_URL}/expenceaccount/PUTExpenceAccount`,
         expenseData
       )
       .then((responce) => {
@@ -107,25 +107,6 @@ export default function ExpenseNew({ close, refresh, edit }) {
       });
   };
 
-  // const Textarea = styled(BaseTextareaAutosize)(
-  //   ({ theme }) => `
-  //   box-sizing: border-box;
-  //   width: fullwidth;
-  //   font-family: 'IBM Plex Sans', sans-serif;
-  //   font-size: 0.875rem;
-  //   font-weight: 400;
-  //   font-color:black;
-  //   line-height: 1.5;
-  //   padding: 8px 12px;
-  //   border-radius: 8px;
-  //   color:black;
-
-  //   // firefox
-  //   &:focus-visible {
-  //     outline: 0;
-  //   }
-  // `
-  // );
 
   return (
     <Dialog
