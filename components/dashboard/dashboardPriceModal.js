@@ -11,18 +11,18 @@ import axios from "axios";
 
 const DashboardPriceModal = ({ open, onClose, currentRate }) => {
   console.log("c--rate",currentRate);
-  const [fuelPrice, setFuelPrice] = useState("");
+  const [fuelPrice, setFuelPrice] = useState(currentRate?currentRate:"");
 
   const handleUpdate = () => {
     axios
       .put(`${process.env.NEXT_PUBLIC_API_URL}/fuelPrice/PUTFuel`, {
         _id: currentRate._id,
         fuel_name: currentRate.fuel_name,
-        fuel_price: fuelPrice,
+        fuelPrice: fuelPrice,
       })
       .then((responce) => {
-        alert(responce.data.message)
         onClose();
+        alert(responce.data.message)
       })
       .catch(() => alert("Something went wrong"));
   };
@@ -42,7 +42,7 @@ const DashboardPriceModal = ({ open, onClose, currentRate }) => {
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="primary">
+        <Button onClick={()=>onClose()} color="primary">
           Cancel
         </Button>
         <Button onClick={handleUpdate} color="primary">
