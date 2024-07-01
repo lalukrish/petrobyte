@@ -36,6 +36,7 @@ function getStyles(name, selectedFuelTypes, theme) {
 }
 
 export default function FuelNew({ close }) {
+  const [allEmployee, setAllEmployee] = useState([]);
   const theme = useTheme();
   const handleClose = () => close();
   const date = moment().format("DD-MM-YYYY");
@@ -47,8 +48,7 @@ export default function FuelNew({ close }) {
   const [cash, setCash] = useState("");
   const [bank, setBank] = useState("");
   const [hpCard, setHpCard] = useState("");
-  const [employee, setEmployee] = useState([]);
-  const employees = ["John Doe", "Jane Smith", "Alice Johnson"];
+  const [employee, setEmployee] = useState("");
   const dispencers = ["A", "B", "C", "D"];
   const fuelTypes = ["P1", "P2", "D1", "D2"];
   const todayStartOfTheDay = dayjs().startOf("day");
@@ -64,13 +64,14 @@ export default function FuelNew({ close }) {
     },
   };
 
-  useEffect(() => {
+  const fetchEmployee = () => {
     axios
       .get(`${process.env.NEXT_PUBLIC_API_URL}/employee/GETAllEmployee`)
-      .then((response) => {
-        console.log("log", response);
-        //  setEmployee();
-      });
+      .then((responce) => setAllEmployee(responce.data.message.employees));
+  };
+
+  useEffect(() => {
+    fetchEmployee();
   }, []);
 
   const handleSave = () => {
@@ -138,7 +139,7 @@ export default function FuelNew({ close }) {
       <DialogTitle id="responsive-dialog-title">Add Fuel Details</DialogTitle>
       <DialogContent>
         <Stack spacing={2} sx={{ width: "100%", padding: "5px" }}>
-          <Autocomplete
+          {/* <Autocomplete
             disablePortal
             id="combo-box-demo"
             options={employees}
@@ -146,7 +147,23 @@ export default function FuelNew({ close }) {
             renderInput={(params) => (
               <TextField {...params} label="Name" fullWidth />
             )}
-          />
+          /> */}
+          <FormControl fullWidth>
+            <InputLabel id="employee-label">Employee</InputLabel>
+            <Select
+              labelId="employee-label"
+              id="employee-select"
+              label="Employee"
+              value={employee}
+              onChange={(event) => setEmployee(event.target.value)}
+            >
+              {allEmployee.map((option, index) => (
+                <MenuItem key={index} value={option._id}>
+                  {option.emp_name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <Grid container spacing={2} sx={{ display: "flex" }}>
               <Grid item xs={6}>

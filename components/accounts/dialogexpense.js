@@ -15,6 +15,8 @@ import {
   InputLabel,
   MenuItem,
 } from "@mui/material";
+import Textarea from "@mui/joy/Textarea";
+
 import { TextareaAutosize as BaseTextareaAutosize } from "@mui/base/TextareaAutosize";
 import { styled } from "@mui/system";
 import axios from "axios";
@@ -22,12 +24,13 @@ import moment from "moment";
 require("dotenv").config();
 // import dayjs from "dayjs";
 
-export default function ExpenseNew({ close, refresh }) {
-  const [expenseType, setExpenseType] = useState("");
+export default function ExpenseNew({ close, refresh, edit }) {
+  console.log(edit)
+  const [expenseType, setExpenseType] = useState(edit?edit.expence_type:"");
   const [allEmployee, setAllEmployee] = useState([]);
-  const [employee, setEmployee] = useState("");
-  const [amount, setAmount] = useState("");
-  const [comment, setComment] = useState("");
+  const [employee, setEmployee] = useState(edit.emp_id?edit.emp_id.emp_name:"");
+  const [amount, setAmount] = useState(edit?edit.expence_amount:"");
+  const [comment, setComment] = useState(edit?edit.expence_comment:"");
   const handleClose3 = () => close();
   const datePart = moment().format("DD-MM-YYYY");
 
@@ -51,7 +54,7 @@ export default function ExpenseNew({ close, refresh }) {
     let expenseData = {
       date: datePart,
       expence_type: expenseType,
-      emp_id: employee?employee:null,
+      emp_id: employee ? employee : null,
       expence_amount: amount,
       expence_comment: comment,
     };
@@ -75,25 +78,35 @@ export default function ExpenseNew({ close, refresh }) {
       });
   };
 
-  const Textarea = styled(BaseTextareaAutosize)(
-    ({ theme }) => `
-    box-sizing: border-box;
-    width: fullwidth;
-    font-family: 'IBM Plex Sans', sans-serif;
-    font-size: 0.875rem;
-    font-weight: 400;
-    font-color:black;
-    line-height: 1.5;
-    padding: 8px 12px;
-    border-radius: 8px;
-    color:black;
+  const handleUpdate = () => {
+    let expenseData = {
+      _id:edit._id,
+      date: datePart,
+      expence_type: expenseType,
+      emp_id:edit.emp_id._id,
+      expence_amount: amount,
+      expence_comment: comment,
+    };
 
-    // firefox
-    &:focus-visible {
-      outline: 0;
-    }
-  `
-  );
+    console.log(expenseData);
+
+    axios
+      .put(
+        `${process.env.NEXT_PUBLIC_API_URL}/expenceaccount/PUTExpenceAccount`,
+        expenseData
+      )
+      .then((responce) => {
+        alert(responce.data.message);
+        refresh();
+        close();
+      })
+      .catch((err) => {
+        alert("error");
+        refresh();
+        close();
+      });
+  };
+
 
   return (
     <Dialog
@@ -148,10 +161,12 @@ export default function ExpenseNew({ close, refresh }) {
             value={amount}
             onChange={(event) => setAmount(event.target.value)}
           />
-          <Textarea
-            minRows={4}
-            placeholder="Comments"
+
+          <TextField
+            id="comment"
+            label="Comments"
             fullWidth
+            variant="outlined"
             value={comment}
             onChange={(event) => setComment(event.target.value)}
           />
@@ -161,7 +176,7 @@ export default function ExpenseNew({ close, refresh }) {
         <Button color="error" onClick={handleClose3}>
           Cancel
         </Button>
-        <Button color="success" onClick={handleSave}>
+        <Button color="success" onClick={edit?handleUpdate:handleSave}>
           Save
         </Button>
       </DialogActions>
