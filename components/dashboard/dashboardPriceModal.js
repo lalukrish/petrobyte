@@ -10,13 +10,8 @@ import {
 import axios from "axios";
 
 const DashboardPriceModal = ({ open, onClose, currentRate }) => {
+  console.log("c--rate",currentRate);
   const [fuelPrice, setFuelPrice] = useState("");
-
-  // useEffect(() => {
-  //   if (currentRate) {
-  //     setFuelPrice(currentRate.fuel_price);
-  //   }
-  // }, [currentRate]);
 
   const handleUpdate = () => {
     axios
@@ -25,9 +20,9 @@ const DashboardPriceModal = ({ open, onClose, currentRate }) => {
         fuel_name: currentRate.fuel_name,
         fuel_price: fuelPrice,
       })
-      .then(() => {
+      .then((responce) => {
+        alert(responce.data.message)
         onClose();
-        window.location.reload(); // Optionally, refresh the page after update
       })
       .catch(() => alert("Something went wrong"));
   };
