@@ -61,18 +61,20 @@ export default function DispencerTable() {
       .then((resp) => alert(resp.data.message))
       .catch((resp) => alert(resp.data.message));
 
-    handleRefresh();
+      setRefreshDispencer(!refreshDispencer);
   };
 
   const handleDeleteSubDispencer = (subDispencer) => {
+    let id=subDispencer._id
+    id = id.replace(/"/g, '');
     axios
       .delete(
-        `${process.env.NEXT_PUBLIC_API_URL}/dispencer/DELETESubDispencer?id=${subDispencer._id}`
+        `${process.env.NEXT_PUBLIC_API_URL}/dispencer/DELETESubDispencer?id=${id}`
       )
       .then((resp) => alert(resp.data.message))
       .catch((resp) => alert(resp.data.message));
 
-    handleRefresh();
+      setRefreshDispencer(!refreshDispencer);
   };
 
   const handleRowClick = (dispencerId) => {
