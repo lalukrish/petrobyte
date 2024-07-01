@@ -216,7 +216,7 @@ export default function FuelNew({ close }) {
               </Grid>
               <Grid item xs={6}>
                 <FormControl fullWidth sx={{ height: "100%" }}>
-                  <InputLabel id="fuel-type-label">Fuel Type</InputLabel>
+                  <InputLabel id="fuel-type-label">Sub Name</InputLabel>
                   <Select
                     labelId="fuel-type-label"
                     id="fuel-type-select"
