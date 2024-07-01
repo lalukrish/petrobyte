@@ -112,7 +112,7 @@ export default function CreditNew({ close }) {
 
       let putCreditData = {
         id: ccName._id,
-        credit_amount: totalUpdatedAmount,
+        credit_amount: parseInt(totalUpdatedAmount),
       };
 
       axios
@@ -129,7 +129,7 @@ export default function CreditNew({ close }) {
 
       let putCreditData = {
         id: ccName._id,
-        credit_amount: totalUpdatedAmount,
+        credit_amount: parseInt(totalUpdatedAmount),
       };
 
       axios
