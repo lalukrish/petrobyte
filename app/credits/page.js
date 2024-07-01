@@ -84,7 +84,7 @@ export default function Page() {
             }}
             onClick={handleClickOpen}
           >
-            Add Credit
+             Credit / Debit
           </Button>
           {open && <CreditNew close={handleClose} />}
         </>
