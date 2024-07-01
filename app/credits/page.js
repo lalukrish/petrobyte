@@ -30,8 +30,8 @@ export default function Page() {
   const [refreshCreditors, setRefreshCreditors] = useState(false);
 
   useEffect(() => {
-    axios
-      .get(`${process.env.NEXT_PUBLIC_API_URL}/creditcustomer/GETAllCC`)
+    axios      .get(`${process.env.NEXT_PUBLIC_API_URL}/creditcustomer/GETAllCC`)
+
       .then((responce) => setCreditUsers(responce.data.message.CCs))
       .catch(() => alert(`Something went wrong, please try after some time`));
   }, [refreshCreditors]);

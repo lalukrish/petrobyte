@@ -113,7 +113,9 @@ export default function DispencerTable() {
                       )}
                     </IconButton>
                   </TableCell>
-                  <TableCell align="center">{dispencer.dispencer_name}</TableCell>
+                  <TableCell align="center">
+                    {dispencer.dispencer_name}
+                  </TableCell>
                   <TableCell align="center">
                     <Button onClick={() => handleEditDispencer(dispencer)}>
                       <EditIcon sx={{ color: "#0d47a1" }} />
