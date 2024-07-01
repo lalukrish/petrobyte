@@ -90,11 +90,11 @@ export default function CreditNew({ close }) {
       date: datePart,
       cc_id: ccName._id,
       vehicle_no: vehicleNo,
-      fuel_type: fuel,
+      fuel_type: fuel?fuel:null,
       fuel_quantity: fuelQuantity,
       amount: amount,
       amount_type: amountType,
-      emp_id: staff,
+      emp_id: staff?staff:null,
       status: "",
     };
 
@@ -108,7 +108,7 @@ export default function CreditNew({ close }) {
       .catch(() => alert(`Something wnet wrong, Please Try After Some Time`));
 
     if (amountType == "Credit") {
-      let totalUpdatedAmount = ccName.credit_amount + amount;
+      let totalUpdatedAmount = parseInt(ccName.credit_amount) + parseInt(amount);
 
       let putCreditData = {
         id: ccName._id,
@@ -117,7 +117,24 @@ export default function CreditNew({ close }) {
 
       axios
         .put(
-          `${process.env.NEXT_PUBLIC_API_URL}/creditcustomer/PUTCC`,
+          `${process.env.NEXT_PUBLIC_API_URL}/creditcustomer/updateCreditAmount`,
+          putCreditData
+        )
+        .then((responce) => alert(responce.data.message))
+        .catch(() => alert(`Something wnet wrong, Please Try After Some Time`));
+    }
+
+    if (amountType == "Debit") {
+      let totalUpdatedAmount = parseInt(ccName.credit_amount) - parseInt(amount);
+
+      let putCreditData = {
+        id: ccName._id,
+        credit_amount: totalUpdatedAmount,
+      };
+
+      axios
+        .put(
+          `${process.env.NEXT_PUBLIC_API_URL}/creditcustomer/updateCreditAmount`,
           putCreditData
         )
         .then((responce) => alert(responce.data.message))

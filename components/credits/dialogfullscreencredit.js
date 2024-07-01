@@ -28,7 +28,6 @@ const MediumDialog = ({ open, handleClose, data }) => {
   const [creditHistory, setCreditHistory] = React.useState([]);
 
   useEffect(() => {
-    if (data._id) {
       let idQuery = data._id.replace(/['"]/g, "");
       console.log(idQuery);
       axios
@@ -38,10 +37,8 @@ const MediumDialog = ({ open, handleClose, data }) => {
         .then((responce) =>
           setCreditHistory(responce.data.message.CreditHistorys)
         )
-        .catch(() => alert(`Something Went Wrong at individual`));
-    }
-    console.log(creditHistory);
-  }, [data._id, creditHistory]);
+        .catch(() => alert(`Something Went Wrong at individual`))
+  }, [creditHistory]);
 
   const exportPDF = () => {
     const actionElements = document.getElementsByClassName("action-buttons");
@@ -173,16 +170,16 @@ const MediumDialog = ({ open, handleClose, data }) => {
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
                   <TableCell align="center">{history.date}</TableCell>
-                  <TableCell align="center">{history.cc_id.cc_name}</TableCell>
+                  <TableCell align="center">{history.cc_id?.cc_name}</TableCell>
                   <TableCell align="center">{history.vehicle_no}</TableCell>
                   <TableCell align="center">
-                    {history.fuel_type.fuel_name}
+                    {history.fuel_type?.fuel_name}
                   </TableCell>
                   <TableCell align="center">{history.fuel_quantity}</TableCell>
                   <TableCell align="center">{history.amount}</TableCell>
                   <TableCell align="center">{history.amount_type}</TableCell>
                   <TableCell align="center">
-                    {history.emp_id.emp_name}
+                    {history.emp_id?.emp_name}
                   </TableCell>
 
                   <TableCell align="center" className="action-buttons">

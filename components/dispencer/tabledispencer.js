@@ -65,11 +65,15 @@ export default function DispencerTable() {
       .catch((resp) => alert(resp.data.message));
   };
 
-  const handleDeleteSubDispencer = (dispencer,subDispencer) => {
-    // id = id.replace(/"/g, "");
+  const handleDeleteSubDispencer = (dispencer, subDispencer) => {
+    let id = subDispencer._id;
+    id = id.replace(/"/g, "");
+    let name = dispencer.dispencer_name;
+    name = name.replace(/"/g, "");
+    
     axios
       .delete(
-        `${process.env.NEXT_PUBLIC_API_URL}/dispencer/DELETESubDispencer?name=${dispencer.dispencer_name}&id=${subDispencer._id}`
+        `${process.env.NEXT_PUBLIC_API_URL}/dispencer/DELETESubDispencer?name=${name}&id=${id}`
       )
       .then((resp) => {
         alert(resp.data.message);
@@ -197,7 +201,10 @@ export default function DispencerTable() {
                                   </Button> */}
                                   <Button
                                     onClick={() =>
-                                      handleDeleteSubDispencer(dispencer,subDispencer)
+                                      handleDeleteSubDispencer(
+                                        dispencer,
+                                        subDispencer
+                                      )
                                     }
                                   >
                                     <DeleteIcon sx={{ color: "#ef5350" }} />
