@@ -12,11 +12,11 @@ import axios from "axios";
 const DashboardPriceModal = ({ open, onClose, currentRate }) => {
   const [fuelPrice, setFuelPrice] = useState("");
 
-  useEffect(() => {
-    if (currentRate) {
-      setFuelPrice(currentRate.fuel_price);
-    }
-  }, [currentRate]);
+  // useEffect(() => {
+  //   if (currentRate) {
+  //     setFuelPrice(currentRate.fuel_price);
+  //   }
+  // }, [currentRate]);
 
   const handleUpdate = () => {
     axios
