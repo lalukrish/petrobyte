@@ -40,6 +40,7 @@ export default function DispencerNew({ close, refreshDispencer, edit }) {
   const [subDispencer, setSubDispencer] = React.useState([]);
 
   React.useEffect(() => {
+    console.log(edit)
     axios
       .get(`${process.env.NEXT_PUBLIC_API_URL}/subdispencer/GETAllSubDispencer`)
       .then((response) => {
@@ -97,30 +98,31 @@ export default function DispencerNew({ close, refreshDispencer, edit }) {
       });
   };
 
-  // const updateDispencer = () => {
-  //   let dispencerData = {
-  //     id: edit._id,
-  //     fields: fields.map(({ sub_dispencer_id, live_reading }) => ({
-  //       sub_dispencer_id,
-  //       live_reading,
-  //     })),
-  //   };
+  const updateDispencer = () => {
 
-  //   axios
-  //     .put(
-  //       `${process.env.NEXT_PUBLIC_API_URL}/dispencer/PUTDispencer`,
-  //       dispencerData
-  //     )
-  //     .then((response) => {
-  //       alert(response.data.message);
-  //       refreshDispencer();
-  //       close();
-  //     })
-  //     .catch((err) => {
-  //       alert(err);
-  //       close();
-  //     });
-  // };
+    let dispencerData = {
+      id: edit._id,
+      fields: fields.map(({ sub_dispencer_id, live_reading }) => ({
+        sub_dispencer_id,
+        live_reading,
+      })),
+    };
+console.log(dispencerData)
+    // axios
+    //   .put(
+    //     `${process.env.NEXT_PUBLIC_API_URL}/dispencer/PUTDispencer`,
+    //     dispencerData
+    //   )
+    //   .then((response) => {
+    //     alert(response.data.message);
+    //     refreshDispencer();
+    //     close();
+    //   })
+    //   .catch((err) => {
+    //     alert(err);
+    //     close();
+    //   });
+  };
 
   return (
     <Dialog
