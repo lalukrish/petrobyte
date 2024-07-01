@@ -15,7 +15,6 @@ export default function TestTable() {
   const [open, setOpen] = useState(false);
   const [editTest, setEditTest] = useState({});
   const [testData, setTestData] = useState([]);
-
   const handleClickOpenEdit = () => {
     setEditTest("");
     setOpen(true);
@@ -36,7 +35,9 @@ export default function TestTable() {
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_API_URL}/test/GETAllTest`
         );
-        setTestData(response.data);
+        console.log("testdata", response.data.message.test);
+
+        setTestData(response.data.message.test);
       } catch (error) {
         console.error("Error fetching data:", error);
       }

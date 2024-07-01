@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -47,6 +47,7 @@ export default function FuelNew({ close }) {
   const [cash, setCash] = useState("");
   const [bank, setBank] = useState("");
   const [hpCard, setHpCard] = useState("");
+  const [employee, setEmployee] = useState([]);
   const employees = ["John Doe", "Jane Smith", "Alice Johnson"];
   const dispencers = ["A", "B", "C", "D"];
   const fuelTypes = ["P1", "P2", "D1", "D2"];
@@ -62,6 +63,15 @@ export default function FuelNew({ close }) {
       },
     },
   };
+
+  useEffect(() => {
+    axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/employee/GETAllEmployee`)
+      .then((response) => {
+        console.log("log", response);
+        //  setEmployee();
+      });
+  }, []);
 
   const handleSave = () => {
     const fuelDetails = fueltype.map((type) => ({
@@ -108,7 +118,9 @@ export default function FuelNew({ close }) {
   };
 
   const handleDeleteFuelType = (typeToDelete) => () => {
-    setfueltype((prevFuelTypes) => prevFuelTypes.filter((type) => type !== typeToDelete));
+    setfueltype((prevFuelTypes) =>
+      prevFuelTypes.filter((type) => type !== typeToDelete)
+    );
     setFuelData((prevFuelData) => {
       const { [typeToDelete]: _, ...rest } = prevFuelData;
       return rest;
@@ -194,7 +206,12 @@ export default function FuelNew({ close }) {
                     multiple
                     value={fueltype}
                     onChange={handleFuelTypeChange}
-                    input={<OutlinedInput id="select-multiple-chip" label="Fuel Type" />}
+                    input={
+                      <OutlinedInput
+                        id="select-multiple-chip"
+                        label="Fuel Type"
+                      />
+                    }
                     renderValue={(selected) => (
                       <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
                         {selected.map((value) => (
@@ -223,31 +240,42 @@ export default function FuelNew({ close }) {
             </Grid>
           </Box>
           {fueltype.map((type) => (
-            <Box key={type} sx={{ display: "flex", alignItems: "center", gap: 2, mt: 2 }}>
+            <Box
+              key={type}
+              sx={{ display: "flex", alignItems: "center", gap: 2, mt: 2 }}
+            >
               <Typography>{type}</Typography>
               <TextField
                 label="Start Metering"
                 fullWidth
                 variant="outlined"
-                onChange={(e) => handleFuelDataChange(type, "start", e.target.value)}
+                onChange={(e) =>
+                  handleFuelDataChange(type, "start", e.target.value)
+                }
               />
               <TextField
                 label="End Metering"
                 fullWidth
                 variant="outlined"
-                onChange={(e) => handleFuelDataChange(type, "end", e.target.value)}
+                onChange={(e) =>
+                  handleFuelDataChange(type, "end", e.target.value)
+                }
               />
               <TextField
                 label="Fuel Qty"
                 fullWidth
                 variant="outlined"
-                onChange={(e) => handleFuelDataChange(type, "qty", e.target.value)}
+                onChange={(e) =>
+                  handleFuelDataChange(type, "qty", e.target.value)
+                }
               />
               <TextField
                 label="Sale Amount"
                 fullWidth
                 variant="outlined"
-                onChange={(e) => handleFuelDataChange(type, "total", e.target.value)}
+                onChange={(e) =>
+                  handleFuelDataChange(type, "total", e.target.value)
+                }
               />
             </Box>
           ))}
