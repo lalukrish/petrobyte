@@ -12,9 +12,9 @@ import { PetrobyteContext } from "@/context/context";
 import axios from "axios";
 require("dotenv").config();
 
-export default function ProductNew({ refresh, edit, editId, close }) {
-  const [product, setProduct] = React.useState(edit?edit.product_name:"");
-  const [price, setPrice] = React.useState(edit?edit.product_price:"");
+export default function ProductNew({ refresh, edit, close }) {
+  const [product, setProduct] = React.useState(edit ? edit.product_name : "");
+  const [price, setPrice] = React.useState(edit ? edit.product_price : "");
 
   const saveProduct = () => {
     let productData = {
@@ -23,10 +23,7 @@ export default function ProductNew({ refresh, edit, editId, close }) {
     };
 
     axios
-      .post(
-        `${process.env.NEXT_PUBLIC_API_URL}/product/POSTProduct`,
-        productData
-      )
+      .post(`${process.env.NEXT_PUBLIC_API_URL}/product/POSTProduct`, productData)
       .then((responce) => {
         alert(responce.data.message);
         refresh();
@@ -44,6 +41,8 @@ export default function ProductNew({ refresh, edit, editId, close }) {
       product_price: price,
     };
 
+    console.log(productData)
+
     axios
       .put(`${process.env.NEXT_PUBLIC_API_URL}/product/PUTProduct`, productData)
       .then((responce) => {
@@ -59,10 +58,6 @@ export default function ProductNew({ refresh, edit, editId, close }) {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
-  //   const handleClickOpen = () => {
-  //     setOpen(true);
-  //   };
-
   const handleClose = () => {
     close();
   };
@@ -74,7 +69,9 @@ export default function ProductNew({ refresh, edit, editId, close }) {
       onClose={handleClose}
       aria-labelledby="responsive-dialog-title"
     >
-      <DialogTitle id="responsive-dialog-title">{edit ? `Edit Product` :`Add New Product`}</DialogTitle>
+      <DialogTitle id="responsive-dialog-title">
+        {edit.product_name ? `Edit Product` : `Add New Product`}
+      </DialogTitle>
       <DialogContent sx={{ paddingTop: "5px" }}>
         <Stack spacing={2} sx={{ width: "400px", padding: "5px" }}>
           <TextField
@@ -102,11 +99,8 @@ export default function ProductNew({ refresh, edit, editId, close }) {
         <Button color="error" onClick={handleClose}>
           Cancel
         </Button>
-        <Button
-          color="success"
-          onClick={edit ? updateProduct : saveProduct}
-        >
-          {edit ? `Update` : `Save`}
+        <Button color="success" onClick={edit.product_name ? updateProduct : saveProduct}>
+          {edit.product_name ? `Update` : `Save`}
         </Button>
       </DialogActions>
     </Dialog>
