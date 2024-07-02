@@ -19,7 +19,7 @@ export default function DispencerTable() {
   const [open, setOpen] = React.useState(false);
   const [dispencers, setDispencers] = React.useState([]);
   const [refreshDispencer, setRefreshDispencer] = React.useState(false);
-  const [editDispencer, setEditDispencer] = React.useState({});
+  const [editDispencer, setEditDispencer] = React.useState(null); // Changed to null
   const [currentPage, setCurrentPage] = React.useState(1);
   const [totalPages, setTotalPages] = React.useState(1);
   const [openRow, setOpenRow] = React.useState(null); // To track which row is open
@@ -36,7 +36,7 @@ export default function DispencerTable() {
   }, [currentPage, refreshDispencer]);
 
   const handleClickOpen = () => {
-    setEditDispencer("");
+    setEditDispencer(null); // Changed to null
     setOpen(true);
   };
 
@@ -103,7 +103,7 @@ export default function DispencerTable() {
         <DispencerNew
           close={handleClose}
           refreshDispencer={handleRefresh}
-          edit={editDispencer}
+          edit={editDispencer} // Pass the edit object
         />
       )}
       <TableContainer component={Paper}>
@@ -192,13 +192,6 @@ export default function DispencerTable() {
                                   {subDispencer.live_reading}
                                 </TableCell>
                                 <TableCell align="center">
-                                  {/* <Button
-                                    onClick={() =>
-                                      handleEditDispencer(subDispencer)
-                                    }
-                                  >
-                                    <EditIcon sx={{ color: "#0d47a1" }} />
-                                  </Button> */}
                                   <Button
                                     onClick={() =>
                                       handleDeleteSubDispencer(

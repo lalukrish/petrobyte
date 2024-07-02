@@ -24,27 +24,26 @@ export default function DispencerNew({ close, refreshDispencer, edit }) {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
-  const [dispencer, setDispencer] = React.useState(edit ? edit.dispencer : "");
+  const [dispencer, setDispencer] = React.useState(edit ? edit.dispencer_name : "");
   const [fields, setFields] = React.useState(
     edit
-      ? [
-          {
-            dispencer_name: edit.dispencer,
-            sub_dispencer_id: edit.sub_dispencer_id,
-            live_reading: edit.live_reading,
-          },
-        ]
-      : [{ dispencer_name: dispencer, sub_dispencer_id: "", live_reading: "" }]
+      ? edit.sub_dispencer_id.map((sub) => ({
+          sub_dispencer_id: sub._id,
+          live_reading: sub.live_reading,
+        }))
+      : [{ sub_dispencer_id: "", live_reading: "" }]
   );
 
   const [subDispencer, setSubDispencer] = React.useState([]);
 
+  // Fetch subdispencer data on mount
   React.useEffect(() => {
-    console.log(edit)
     axios
       .get(`${process.env.NEXT_PUBLIC_API_URL}/subdispencer/GETAllSubDispencer`)
       .then((response) => {
-        setSubDispencer(response.data);
+        if (response.data && response.data.message) {
+          setSubDispencer(response.data.message.allSubDispencers);
+        }
       })
       .catch((err) => console.log(err.message));
   }, []);
@@ -57,7 +56,7 @@ export default function DispencerNew({ close, refreshDispencer, edit }) {
     if (fields.length < 4) {
       setFields([
         ...fields,
-        { dispencer_name: dispencer, sub_dispencer_id: "", live_reading: "" },
+        { sub_dispencer_id: "", live_reading: "" },
       ]);
     } else {
       alert("You can only add up to 4 fields.");
@@ -74,7 +73,6 @@ export default function DispencerNew({ close, refreshDispencer, edit }) {
       i === index
         ? {
             ...field,
-            dispencer_name: dispencer,
             [event.target.name]: event.target.value,
           }
         : field
@@ -83,10 +81,13 @@ export default function DispencerNew({ close, refreshDispencer, edit }) {
   };
 
   const handleSave = () => {
-    console.log(fields);
+    const newDispencer = {
+      dispencer_name: dispencer,
+      sub_dispencer_id: fields,
+    };
 
     axios
-      .post(`${process.env.NEXT_PUBLIC_API_URL}/dispencer/POSTDispencer`, fields)
+      .post(`${process.env.NEXT_PUBLIC_API_URL}/dispencer/POSTDispencer`, newDispencer)
       .then((response) => {
         alert(response.data.message);
         refreshDispencer();
@@ -99,29 +100,23 @@ export default function DispencerNew({ close, refreshDispencer, edit }) {
   };
 
   const updateDispencer = () => {
-
-    let dispencerData = {
+    const dispencerData = {
       id: edit._id,
-      fields: fields.map(({ sub_dispencer_id, live_reading }) => ({
-        sub_dispencer_id,
-        live_reading,
-      })),
+      dispencer_name: dispencer,
+      sub_dispencer_id: fields,
     };
-console.log(dispencerData)
-    // axios
-    //   .put(
-    //     `${process.env.NEXT_PUBLIC_API_URL}/dispencer/PUTDispencer`,
-    //     dispencerData
-    //   )
-    //   .then((response) => {
-    //     alert(response.data.message);
-    //     refreshDispencer();
-    //     close();
-    //   })
-    //   .catch((err) => {
-    //     alert(err);
-    //     close();
-    //   });
+
+    axios
+      .put(`${process.env.NEXT_PUBLIC_API_URL}/dispencer/PUTDispencer`, dispencerData)
+      .then((response) => {
+        alert(response.data.message);
+        refreshDispencer();
+        close();
+      })
+      .catch((err) => {
+        alert(err.message);
+        close();
+      });
   };
 
   return (
@@ -160,8 +155,8 @@ console.log(dispencerData)
                   value={field.sub_dispencer_id}
                   onChange={(event) => handleFieldChange(index, event)}
                 >
-                  {subDispencer.map((sub, i) => (
-                    <MenuItem key={i} value={sub._id}>
+                  {subDispencer.map((sub) => (
+                    <MenuItem key={sub._id} value={sub._id}>
                       {sub.sub_dispencer}
                     </MenuItem>
                   ))}
