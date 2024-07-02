@@ -1,5 +1,4 @@
-// components/credits/MediumDialog.js
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogActions,
@@ -14,31 +13,35 @@ import {
   TableCell,
   TableBody,
   Typography,
-  Divider,
   IconButton,
 } from "@mui/material";
-import { Delete, PictureAsPdf, TableBar } from "@mui/icons-material";
+import PrintIcon from '@mui/icons-material/Print';
+import { Delete, PictureAsPdf } from "@mui/icons-material";
 import EditIcon from "@mui/icons-material/Edit";
 import axios from "axios";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import CreditorsDetailsNew from "./dialogcreditorsdetails";  // Adjust the import path as necessary
+
 require("dotenv").config();
 
 const MediumDialog = ({ open, handleClose, data }) => {
-  const [creditHistory, setCreditHistory] = React.useState([]);
+  const [creditHistory, setCreditHistory] = useState([]);
+  const [isEditOpen, setIsEditOpen] = useState(false);
 
   useEffect(() => {
+    if (data?._id) {
       let idQuery = data._id.replace(/['"]/g, "");
-      console.log(idQuery);
       axios
         .get(
           `${process.env.NEXT_PUBLIC_API_URL}/creditHistory/GETAllCreditHistory?id=${idQuery}`
         )
-        .then((responce) =>
-          setCreditHistory(responce.data.message.CreditHistorys)
-        )
-        .catch(() => alert(`Something Went Wrong at individual`))
-  }, [creditHistory]);
+        .then((responce) => {
+          setCreditHistory(responce.data.message.CreditHistorys);
+        })
+        .catch(() => alert(`Something Went Wrong at individual`));
+    }
+  }, [data]);
 
   const exportPDF = () => {
     const actionElements = document.getElementsByClassName("action-buttons");
@@ -70,141 +73,151 @@ const MediumDialog = ({ open, handleClose, data }) => {
       }
     });
   };
+
+  const handleEditClose = () => {
+    setIsEditOpen(false);
+  };
+
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth="lg" fullWidth>
-      <DialogTitle sx={{ fontWeight: "bold" }}>Credit Details</DialogTitle>
-      <DialogContent id="pdfContent">
-        {/* Add your content here */}
-        <Typography sx={{ fontWeight: "bold", marginBottom: "10px" }}>
-          Personal Information
-        </Typography>
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead sx={{ background: "#b2dfdb" }}>
-              <TableRow>
-                <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                  Name
-                </TableCell>
-                <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                  Contact
-                </TableCell>
-                <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                  Email
-                </TableCell>
-                <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                  Address
-                </TableCell>
-                <TableCell
-                  align="center"
-                  sx={{ fontWeight: "bold" }}
-                  className="action-buttons"
-                >
-                  Action
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              <TableRow>
-                <TableCell align="center">{data.cc_name}</TableCell>
-                <TableCell align="center">{data.cc_contact_no}</TableCell>
-                <TableCell align="center">{data.cc_email}</TableCell>
-                <TableCell align="center">{data.cc_address} </TableCell>
-                <TableCell align="center" className="action-buttons">
-                  <Button>
-                    <EditIcon sx={{ color: "#0d47a1" }} />
-                  </Button>
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </TableContainer>
-
-        {/* <Divider sx={{ margin: "10px 0" }} /> */}
-        <Typography
-          sx={{ fontWeight: "bold", marginTop: "20px", marginBottom: "10px" }}
-        >
-          Credit Information
-        </Typography>
-
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead sx={{ background: "#e3f2fd" }}>
-              <TableRow>
-                <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                  Date
-                </TableCell>
-                <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                  Name
-                </TableCell>
-                <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                  Vehicle No.
-                </TableCell>
-                <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                  Fuel
-                </TableCell>
-                <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                  Fuel Quantity
-                </TableCell>
-                <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                  Amount
-                </TableCell>
-                <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                  Amount Type
-                </TableCell>
-                <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                  Staff Name
-                </TableCell>
-
-                <TableCell
-                  align="center"
-                  sx={{ fontWeight: "bold" }}
-                  className="action-buttons"
-                >
-                  Action
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {creditHistory.map((history) => (
-                <TableRow
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  <TableCell align="center">{history.date}</TableCell>
-                  <TableCell align="center">{history.cc_id?.cc_name}</TableCell>
-                  <TableCell align="center">{history.vehicle_no}</TableCell>
-                  <TableCell align="center">
-                    {history.fuel_type?.fuel_name}
+    <>
+      <Dialog open={open} onClose={handleClose} maxWidth="lg" fullWidth>
+        <DialogTitle sx={{ fontWeight: "bold" }}>Credit Details</DialogTitle>
+        <DialogContent id="pdfContent">
+          <Typography sx={{ fontWeight: "bold", marginBottom: "10px" }}>
+            Personal Information
+          </Typography>
+          <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+              <TableHead sx={{ background: "#b2dfdb" }}>
+                <TableRow>
+                  <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                    Name
                   </TableCell>
-                  <TableCell align="center">{history.fuel_quantity}</TableCell>
-                  <TableCell align="center">{history.amount}</TableCell>
-                  <TableCell align="center">{history.amount_type}</TableCell>
-                  <TableCell align="center">
-                    {history.emp_id?.emp_name}
+                  <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                    Contact
                   </TableCell>
-
+                  <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                    Email
+                  </TableCell>
+                  <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                    Address
+                  </TableCell>
+                  <TableCell
+                    align="center"
+                    sx={{ fontWeight: "bold" }}
+                    className="action-buttons"
+                  >
+                    Action
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                <TableRow>
+                  <TableCell align="center">{data.cc_name}</TableCell>
+                  <TableCell align="center">{data.cc_contact_no}</TableCell>
+                  <TableCell align="center">{data.cc_email}</TableCell>
+                  <TableCell align="center">{data.cc_address}</TableCell>
                   <TableCell align="center" className="action-buttons">
-                    <Button>
+                    <Button onClick={() => setIsEditOpen(true)}>
                       <EditIcon sx={{ color: "#0d47a1" }} />
-                    </Button>
-                    <Button>
-                      <Delete sx={{ color: "#ef5350" }} />
                     </Button>
                   </TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </DialogContent>
-      <DialogActions>
-        <IconButton onClick={exportPDF} color="primary">
-          <PictureAsPdf />
-        </IconButton>
-        <Button onClick={() => handleClose()} color="error">
-          Close
-        </Button>
-      </DialogActions>
-    </Dialog>
+              </TableBody>
+            </Table>
+          </TableContainer>
+
+          <Typography
+            sx={{ fontWeight: "bold", marginTop: "20px", marginBottom: "10px" }}
+          >
+            Credit Information
+          </Typography>
+
+          <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+              <TableHead sx={{ background: "#e3f2fd" }}>
+                <TableRow>
+                  <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                    Date
+                  </TableCell>
+                  <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                    Name
+                  </TableCell>
+                  <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                    Vehicle No.
+                  </TableCell>
+                  <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                    Fuel
+                  </TableCell>
+                  <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                    Fuel Quantity
+                  </TableCell>
+                  <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                    Amount
+                  </TableCell>
+                  <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                    Amount Type
+                  </TableCell>
+                  <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                    Staff Name
+                  </TableCell>
+
+                  <TableCell
+                    align="center"
+                    sx={{ fontWeight: "bold" }}
+                    className="action-buttons"
+                  >
+                    Action
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {creditHistory.map((history) => (
+                  <TableRow key={history._id} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
+                    <TableCell align="center">{history.date}</TableCell>
+                    <TableCell align="center">{history.cc_id?.cc_name}</TableCell>
+                    <TableCell align="center">{history.vehicle_no}</TableCell>
+                    <TableCell align="center">{history.fuel_type?.fuel_name}</TableCell>
+                    <TableCell align="center">{history.fuel_quantity}</TableCell>
+                    <TableCell align="center">{history.amount}</TableCell>
+                    <TableCell align="center">{history.amount_type}</TableCell>
+                    <TableCell align="center">{history.emp_id?.emp_name}</TableCell>
+
+                    <TableCell align="center" className="action-buttons">
+                      <Button>
+                        <EditIcon sx={{ color: "#0d47a1" }} />
+                      </Button>
+                      <Button>
+                        <PrintIcon sx={{ color: "#039be5" }} />
+                      </Button>
+                      <Button>
+                        <Delete sx={{ color: "#ef5350" }} />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </DialogContent>
+        <DialogActions>
+          <IconButton onClick={exportPDF} color="primary">
+            <PictureAsPdf />
+          </IconButton>
+          <Button onClick={handleClose} color="error">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {isEditOpen && (
+        <CreditorsDetailsNew
+          close={handleEditClose}
+          refresh={handleClose} // You might want to adjust this based on your refresh logic
+          data={data}
+        />
+      )}
+    </>
   );
 };
 
