@@ -41,8 +41,8 @@ export default function DispencerNew({ close, refreshDispencer, edit }) {
     axios
       .get(`${process.env.NEXT_PUBLIC_API_URL}/subdispencer/GETAllSubDispencer`)
       .then((response) => {
-        if (response.data && response.data.message) {
-          setSubDispencer(response.data.message.allSubDispencers);
+        if (response.data && response.data) {
+          setSubDispencer(response.data);
         }
       })
       .catch((err) => console.log(err.message));
