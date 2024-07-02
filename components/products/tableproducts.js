@@ -49,11 +49,9 @@ export default function ProductsTable() {
     setEditProduct({});
   };
 
-  const [editId, setEditId] = React.useState(null);
-  const handleEditProduct = (id, data) => {
+  const handleEditProduct = (data) => {
     setEditProduct(data);
     setOpen(true);
-    setEditId(id);
   };
 
   const handleDeleteProduct = (id) => {
@@ -84,14 +82,13 @@ export default function ProductsTable() {
       >
         Add Product
       </Button>
-      {open ? (
+      {open &&
         <ProductNew
           refresh={handleRefresh}
           edit={editProduct}
-          editId={editId}
           close={handleClose}
         />
-      ) : null}
+      }
 
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -119,7 +116,7 @@ export default function ProductsTable() {
 
                 <TableCell align="center">
                   <Button
-                    onClick={() => handleEditProduct(product._id, product)}
+                    onClick={() => handleEditProduct(product)}
                   >
                     <EditIcon sx={{ color: "#0d47a1" }} />
                   </Button>
