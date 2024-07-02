@@ -84,7 +84,7 @@ export default function Page() {
             }}
             onClick={handleClickOpen}
           >
-            Add Credit
+             Credit / Debit
           </Button>
           {open && <CreditNew close={handleClose} />}
         </>
@@ -156,6 +156,7 @@ export default function Page() {
         open={openMediumDialog}
         handleClose={handleCloseMediumDialog}
         data={creditUserData}
+        refresh={handelRefresh}
       />}
     </Box>
   );

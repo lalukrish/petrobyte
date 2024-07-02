@@ -80,7 +80,7 @@ export default function TestNew({ close }) {
             </Select>
           </FormControl>
           <FormControl fullWidth>
-            <InputLabel id="fuel-label">Fuel</InputLabel>
+            <InputLabel id="fuel-label">Sub Name</InputLabel>
             <Select
               labelId="fuel-label"
               id="fuel-select"

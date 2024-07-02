@@ -13,8 +13,8 @@ import axios from "axios";
 require("dotenv").config();
 
 export default function ProductNew({ refresh, edit, editId, close }) {
-  const [product, setProduct] = React.useState("");
-  const [price, setPrice] = React.useState("");
+  const [product, setProduct] = React.useState(edit?edit.product_name:"");
+  const [price, setPrice] = React.useState(edit?edit.product_price:"");
 
   const saveProduct = () => {
     let productData = {
@@ -40,8 +40,8 @@ export default function ProductNew({ refresh, edit, editId, close }) {
   const updateProduct = () => {
     let productData = {
       _id: edit._id,
-      product_name: product ? product : edit.product_name,
-      product_price: price ? price : edit.product_price,
+      product_name: product,
+      product_price: price,
     };
 
     axios
@@ -74,7 +74,7 @@ export default function ProductNew({ refresh, edit, editId, close }) {
       onClose={handleClose}
       aria-labelledby="responsive-dialog-title"
     >
-      <DialogTitle id="responsive-dialog-title">Add New Product</DialogTitle>
+      <DialogTitle id="responsive-dialog-title">{edit ? `Edit Product` :`Add New Product`}</DialogTitle>
       <DialogContent sx={{ paddingTop: "5px" }}>
         <Stack spacing={2} sx={{ width: "400px", padding: "5px" }}>
           <TextField
@@ -82,9 +82,8 @@ export default function ProductNew({ refresh, edit, editId, close }) {
             id="outlined-basic"
             label="Product"
             variant="outlined"
-            value={product ? product : edit?.product_name}
+            value={product}
             onChange={(event) => {
-              edit.product_name = null;
               setProduct(event.target.value);
             }}
           />
@@ -92,9 +91,8 @@ export default function ProductNew({ refresh, edit, editId, close }) {
             id="outlined-basic"
             label="Price"
             variant="outlined"
-            value={price ? price : edit?.product_price}
+            value={price}
             onChange={(event) => {
-              edit.product_price = null;
               setPrice(event.target.value);
             }}
           />
@@ -106,9 +104,9 @@ export default function ProductNew({ refresh, edit, editId, close }) {
         </Button>
         <Button
           color="success"
-          onClick={edit.product_name ? updateProduct : saveProduct}
+          onClick={edit ? updateProduct : saveProduct}
         >
-          {edit.product_name ? `Update` : `Save`}
+          {edit ? `Update` : `Save`}
         </Button>
       </DialogActions>
     </Dialog>

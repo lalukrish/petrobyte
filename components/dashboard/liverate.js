@@ -45,7 +45,7 @@ const Liverate = () => {
         setRates(updatedRates);
       })
       .catch(() => alert(`Something went wrong`));
-  }, []);
+  }, [open]);
 
   const handleClickOpen = (rate) => {
     setCurrentRate(rate);

@@ -71,7 +71,7 @@ export default function TestTable() {
                 Dispenser
               </TableCell>
               <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                Fuel
+                Sub Name
               </TableCell>
               <TableCell align="center" sx={{ fontWeight: "bold" }}>
                 Qty(Lts)
