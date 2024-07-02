@@ -79,10 +79,11 @@ export default function DispencerNew({ close, refreshDispencer, edit }) {
   };
 
   const handleSave = () => {
-    const newDispencer = {
+    const newDispencer = fields.map(field => ({
       dispencer_name: dispencer,
-      sub_dispencer_id: fields,
-    };
+      sub_dispencer_id: field.sub_dispencer_id,
+      live_reading: field.live_reading
+    }));
 
     axios
       .post(
@@ -101,11 +102,12 @@ export default function DispencerNew({ close, refreshDispencer, edit }) {
   };
 
   const updateDispencer = () => {
-    const dispencerData = {
+    const dispencerData = fields.map(field => ({
       id: edit._id,
       dispencer_name: dispencer,
-      sub_dispencer_id: fields,
-    };
+      sub_dispencer_id: field.sub_dispencer_id,
+      live_reading: field.live_reading
+    }));
 
     axios
       .put(
