@@ -21,9 +21,6 @@ require('dotenv').config()
 
 export default function FuelUpdate({ clse,data }) {
     useEffect(() => {
-      console.log(data)
-    
-      
     }, [])
     
   const handleClose = () => clse();
