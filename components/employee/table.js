@@ -65,7 +65,7 @@ export default function DataTable() {
       };
 
       axios
-        .put(`${process.env.NEXT_PUBLIC_API_URL}/employee`, update)
+        .put(`${process.env.NEXT_PUBLIC_API_URL}/employee/PUTEmployee`, update)
         .then((response) => {
           alert(response.data.message);
           setRefreshEmployee(!refreshEmployee); // Refresh the employee list
@@ -214,26 +214,31 @@ export default function DataTable() {
                 autoFocus
                 placeholder="Name"
                 variant="outlined"
+                label="Name"
                 onChange={(event) => setName(event.target.value)}
               />
               <TextField
                 placeholder="Phone"
                 variant="outlined"
+                label="Phone"
                 onChange={(event) => setPhone(event.target.value)}
               />
               <TextField
                 placeholder="Age"
                 variant="outlined"
+                label="Age"
                 onChange={(event) => setAge(event.target.value)}
               />
               <TextField
                 placeholder="Address"
                 variant="outlined"
+                label="Address"
                 onChange={(event) => setAddress(event.target.value)}
               />
               <TextField
                 placeholder="Email"
                 variant="outlined"
+                label="Email"
                 onChange={(event) => setEmail(event.target.value)}
               />
             </Stack>

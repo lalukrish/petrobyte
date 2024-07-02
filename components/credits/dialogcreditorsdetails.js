@@ -33,8 +33,18 @@ export default function CreditorsDetailsNew({ close, refresh, data }) {
       cc_status: "",
     };
 
+    const updateCreditor = {
+      id:data._id,
+      cc_name: name,
+      cc_contact_no: contact,
+      cc_address: address,
+      cc_email: email,
+      credit_amount: data.credit_amount,
+      cc_status: "",
+    };
+
     const request = data?._id
-      ? axios.put(`${process.env.NEXT_PUBLIC_API_URL}/creditcustomer/PUTCC/${data._id}`, newCreditor)
+      ? axios.put(`${process.env.NEXT_PUBLIC_API_URL}/creditcustomer/PUTCC`, updateCreditor)
       : axios.post(`${process.env.NEXT_PUBLIC_API_URL}/creditcustomer/POSTCC`, newCreditor);
 
     request

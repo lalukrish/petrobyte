@@ -22,12 +22,15 @@ import axios from "axios";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import CreditorsDetailsNew from "./dialogcreditorsdetails";  // Adjust the import path as necessary
+import CreditNew from "./dialogcredit";
 
 require("dotenv").config();
 
-const MediumDialog = ({ open, handleClose, data }) => {
+const MediumDialog = ({ open, handleClose, data,refresh }) => {
   const [creditHistory, setCreditHistory] = useState([]);
+  const [creditData, setCreditData] = useState({});
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const [editCreditHistory, setEditCreditHistory] = useState(false);
 
   useEffect(() => {
     if (data?._id) {
@@ -76,6 +79,14 @@ const MediumDialog = ({ open, handleClose, data }) => {
 
   const handleEditClose = () => {
     setIsEditOpen(false);
+  };
+  
+  const handleEditCreditHistoryOpen = (history) => {
+    setCreditData(history)
+    setEditCreditHistory(true);
+  };
+  const handleEditCreditHistoryClose = () => {
+    setEditCreditHistory(false);
   };
 
   return (
@@ -184,7 +195,7 @@ const MediumDialog = ({ open, handleClose, data }) => {
                     <TableCell align="center">{history.emp_id?.emp_name}</TableCell>
 
                     <TableCell align="center" className="action-buttons">
-                      <Button>
+                      <Button onClick={()=>handleEditCreditHistoryOpen(history)}>
                         <EditIcon sx={{ color: "#0d47a1" }} />
                       </Button>
                       <Button>
@@ -213,8 +224,17 @@ const MediumDialog = ({ open, handleClose, data }) => {
       {isEditOpen && (
         <CreditorsDetailsNew
           close={handleEditClose}
-          refresh={handleClose} // You might want to adjust this based on your refresh logic
+          refresh={refresh} // You might want to adjust this based on your refresh logic
           data={data}
+        />
+      )}
+
+      {editCreditHistory && (
+        <CreditNew
+          close={handleEditCreditHistoryClose}
+          refresh={handleClose} // You might want to adjust this based on your refresh logic
+          data={creditData}
+          currentAmount={data.credit_amount}
         />
       )}
     </>

@@ -156,6 +156,7 @@ export default function Page() {
         open={openMediumDialog}
         handleClose={handleCloseMediumDialog}
         data={creditUserData}
+        refresh={handelRefresh}
       />}
     </Box>
   );
