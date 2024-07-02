@@ -1,30 +1,31 @@
-import * as React from "react";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import useMediaQuery from "@mui/material/useMediaQuery";
+import React from "react";
+import axios from "axios";
 import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import {
-  Stack,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
   TextField,
-  IconButton,
+  Stack,
+  FormControl,
+  InputLabel,
   Select,
   MenuItem,
-  InputLabel,
-  FormControl,
+  IconButton,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
-import axios from "axios";
-require("dotenv").config();
 
 export default function DispencerNew({ close, refreshDispencer, edit }) {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
-  const [dispencer, setDispencer] = React.useState(edit ? edit.dispencer_name : "");
+  const [dispencer, setDispencer] = React.useState(
+    edit ? edit.dispencer_name : ""
+  );
   const [fields, setFields] = React.useState(
     edit
       ? edit.sub_dispencer_id.map((sub) => ({
@@ -41,8 +42,8 @@ export default function DispencerNew({ close, refreshDispencer, edit }) {
     axios
       .get(`${process.env.NEXT_PUBLIC_API_URL}/subdispencer/GETAllSubDispencer`)
       .then((response) => {
-        if (response.data && response.data.message) {
-          setSubDispencer(response.data.message.allSubDispencers);
+        if (response.data) {
+          setSubDispencer(response.data);
         }
       })
       .catch((err) => console.log(err.message));
@@ -54,10 +55,7 @@ export default function DispencerNew({ close, refreshDispencer, edit }) {
 
   const handleAddFields = () => {
     if (fields.length < 4) {
-      setFields([
-        ...fields,
-        { sub_dispencer_id: "", live_reading: "" },
-      ]);
+      setFields([...fields, { sub_dispencer_id: "", live_reading: "" }]);
     } else {
       alert("You can only add up to 4 fields.");
     }
@@ -87,14 +85,17 @@ export default function DispencerNew({ close, refreshDispencer, edit }) {
     };
 
     axios
-      .post(`${process.env.NEXT_PUBLIC_API_URL}/dispencer/POSTDispencer`, newDispencer)
+      .post(
+        `${process.env.NEXT_PUBLIC_API_URL}/dispencer/POSTDispencer`,
+        newDispencer
+      )
       .then((response) => {
         alert(response.data.message);
         refreshDispencer();
         close();
       })
       .catch(() => {
-        alert(`Something went wrong`);
+        alert("Something went wrong");
         close();
       });
   };
@@ -107,7 +108,10 @@ export default function DispencerNew({ close, refreshDispencer, edit }) {
     };
 
     axios
-      .put(`${process.env.NEXT_PUBLIC_API_URL}/dispencer/PUTDispencer`, dispencerData)
+      .put(
+        `${process.env.NEXT_PUBLIC_API_URL}/dispencer/PUTDispencer`,
+        dispencerData
+      )
       .then((response) => {
         alert(response.data.message);
         refreshDispencer();
