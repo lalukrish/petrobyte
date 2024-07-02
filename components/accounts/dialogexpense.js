@@ -15,7 +15,7 @@ import {
   InputLabel,
   MenuItem,
 } from "@mui/material";
-import Textarea from "@mui/joy/Textarea";
+//import Textarea from "@mui/joy/Textarea";
 
 import { TextareaAutosize as BaseTextareaAutosize } from "@mui/base/TextareaAutosize";
 import { styled } from "@mui/system";
@@ -25,12 +25,12 @@ require("dotenv").config();
 // import dayjs from "dayjs";
 
 export default function ExpenseNew({ close, refresh, edit }) {
-  console.log(edit)
-  const [expenseType, setExpenseType] = useState(edit?edit.expence_type:"");
+  console.log(edit);
+  const [expenseType, setExpenseType] = useState(edit ? edit.expence_type : "");
   const [allEmployee, setAllEmployee] = useState([]);
-  const [employee, setEmployee] = useState(edit.emp_id?edit.emp_id._id:"");
-  const [amount, setAmount] = useState(edit?edit.expence_amount:"");
-  const [comment, setComment] = useState(edit?edit.expence_comment:"");
+  const [employee, setEmployee] = useState(edit.emp_id ? edit.emp_id._id : "");
+  const [amount, setAmount] = useState(edit ? edit.expence_amount : "");
+  const [comment, setComment] = useState(edit ? edit.expence_comment : "");
   const handleClose3 = () => close();
   const datePart = moment().format("DD-MM-YYYY");
 
@@ -80,10 +80,10 @@ export default function ExpenseNew({ close, refresh, edit }) {
 
   const handleUpdate = () => {
     let expenseData = {
-      _id:edit._id,
+      _id: edit._id,
       date: datePart,
       expence_type: expenseType,
-      emp_id:edit.emp_id._id,
+      emp_id: edit.emp_id._id,
       expence_amount: amount,
       expence_comment: comment,
     };
@@ -106,7 +106,6 @@ export default function ExpenseNew({ close, refresh, edit }) {
         close();
       });
   };
-
 
   return (
     <Dialog
@@ -176,7 +175,7 @@ export default function ExpenseNew({ close, refresh, edit }) {
         <Button color="error" onClick={handleClose3}>
           Cancel
         </Button>
-        <Button color="success" onClick={edit?handleUpdate:handleSave}>
+        <Button color="success" onClick={edit ? handleUpdate : handleSave}>
           Save
         </Button>
       </DialogActions>
