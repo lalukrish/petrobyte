@@ -6,8 +6,11 @@ import {
   DialogActions,
   Button,
   TextField,
-  Autocomplete,
+  Select,
+  MenuItem,
   Stack,
+  InputLabel,
+  FormControl,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
@@ -17,34 +20,45 @@ import moment from "moment";
 export default function ProductsNew({ close }) {
   const todayDate = moment().format("DD-MM-YYYY");
 
-  // const [products,setProducts]=React.useState([])
-
   const handleClose2 = () => close();
 
-  const products = [];
-  useEffect(() => {
-    axios
-      .get(`${process.env.NEXT_PUBLIC_API_URL}/product/GETAllProduct`)
-      .then((responce) => {
-        responce.data.message.products.map((item) => {
-          products.push(item.product_name);
-        });
-      });
-  }, []);
-
+  const [products, setProducts] = useState([]);
   const [rows, setRows] = useState([
     {
+      date: todayDate,
       product_id: "",
+      product_name: "",
       quantity: 1,
+      price: "",
       total_amount: "",
     },
   ]);
 
+  useEffect(() => {
+    axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/product/GETAllProduct`)
+      .then((response) => {
+        const productData = response.data.message.products.map((item) => ({
+          product_id: item.product_id,
+          product_name: item.product_name,
+          price: item.product_price,
+        }));
+        setProducts(productData);
+      });
+  }, []);
+
   const handleAddClick = () => {
     setRows([
       ...rows,
-      { date: todayDate, product_id: "", quantity: 1, total: "" },
-    ]); //actual value needed for backend, change below fields acording to this, date is fixed
+      {
+        date: todayDate,
+        product_id: "",
+        product_name: "",
+        quantity: 1,
+        price: "",
+        total_amount: "",
+      },
+    ]);
   };
 
   const handleRemoveClick = (index) => {
@@ -54,14 +68,37 @@ export default function ProductsNew({ close }) {
 
   const handleChange = (index, field, value) => {
     const updatedRows = [...rows];
-    updatedRows[index][field] = value;
+    if (field === "product_name") {
+      updatedRows[index].product_id = value.product_id;
+      updatedRows[index].product_name = value.product_name;
+      const selectedProduct = products.find(
+        (product) => product.product_id === value.product_id
+      );
+      if (selectedProduct) {
+        updatedRows[index].price = selectedProduct.price;
+        updatedRows[index].total_amount =
+          selectedProduct.price * updatedRows[index].quantity;
+      }
+    } else {
+      updatedRows[index][field] = value;
+    }
+
+    setRows(updatedRows);
+  };
+
+  const handleQuantityChange = (index, value) => {
+    const updatedRows = [...rows];
+    updatedRows[index].quantity = value;
+    updatedRows[index].total_amount = updatedRows[index].price * value;
     setRows(updatedRows);
   };
 
   const handleSave = () => {
-    const validRows = rows.filter(
-      (row) => row.products && row.price && row.quantity && row.total
-    );
+    const validRows = rows.filter((row) => {
+      console.log("dataconsole", row);
+      return row.product_id && row.quantity && row.total_amount;
+    });
+    console.log(validRows);
     if (validRows.length === 0) {
       alert("Please fill in at least one product completely.");
       return;
@@ -73,6 +110,16 @@ export default function ProductsNew({ close }) {
       )
       .then((response) => {
         alert(response.data.message);
+        setRows([
+          {
+            date: todayDate,
+            product_id: "",
+            product_name: "",
+            quantity: 1,
+            price: "",
+            total_amount: "",
+          },
+        ]);
         close();
       })
       .catch((error) => {
@@ -92,39 +139,40 @@ export default function ProductsNew({ close }) {
       <DialogTitle id="responsive-dialog-title">Products Details</DialogTitle>
       <DialogContent sx={{ height: 600 }}>
         {rows.map((row, index) => (
-          <Stack
-            key={index}
-            spacing={2}
-            direction="row"
-            sx={{ padding: "10px" }}
-          >
-            <Autocomplete
-              disablePortal
-              id={`combo-box-demo-${index}`}
-              options={products}
-              sx={{ width: "100%" }}
-              value={row.products}
-              onChange={(event, value) =>
-                handleChange(index, "products", value)
-              }
-              renderInput={(params) => (
-                <TextField {...params} label="Products" fullWidth />
-              )}
-            />
+          <Stack key={index} spacing={2} direction="row" sx={{ padding: "10px" }}>
+            <FormControl fullWidth>
+              <InputLabel id={`select-label-${index}`}>Products</InputLabel>
+              <Select
+                labelId={`select-label-${index}`}
+                id={`select-${index}`}
+                value={{  product_name: row.product_name }}
+                label="Products"
+                onChange={(event) =>
+                  handleChange(index, "product_name", event.target.value)
+                }
+              >
+                {products.map((product) => (
+                  <MenuItem
+                    key={product.product_id}
+                    value={{ product_id: product.product_id, product_name: product.product_name }}
+                  >
+                    {product.product_name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
             <TextField
               label="Price"
               variant="outlined"
               value={row.price}
-              // onChange={(event) => handleChange(index, 'price', event.target.value)}
+              disabled
             />
             <TextField
               id={`outlined-number-${index}`}
-              label="quantity"
+              label="Qty"
               type="number"
               value={row.quantity}
-              onChange={(event) =>
-                handleChange(index, "quantity", event.target.value)
-              }
+              onChange={(event) => handleQuantityChange(index, event.target.value)}
               InputLabelProps={{
                 shrink: true,
               }}
@@ -137,10 +185,8 @@ export default function ProductsNew({ close }) {
               label="Total"
               fullWidth
               variant="outlined"
-              value={row.total}
-              onChange={(event) =>
-                handleChange(index, "total", event.target.value)
-              }
+              value={row.total_amount}
+              disabled
             />
 
             {rows.length > 1 && (
