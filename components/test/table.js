@@ -10,6 +10,7 @@ import { Box, Button } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import TestNew from "./dialogtest";
 import axios from "axios";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export default function TestTable() {
   const [open, setOpen] = useState(false);
@@ -49,6 +50,17 @@ export default function TestTable() {
   const handleClickOpenEdit = (test) => {
     setEditTest(test);
     setOpen(true);
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(
+        `${process.env.NEXT_PUBLIC_API_URL}/test/DELETETest?id=${id}`
+      );
+      fetchTestData();
+    } catch (error) {
+      console.error("There was an error deleting the data!", error);
+    }
   };
 
   return (
@@ -109,6 +121,9 @@ export default function TestTable() {
                 <TableCell align="center">
                   <Button onClick={() => handleClickOpenEdit(test)}>
                     <EditIcon sx={{ color: "#0d47a1" }} />
+                  </Button>
+                  <Button onClick={() => handleDelete(test._id)}>
+                    <DeleteIcon sx={{ color: "#d32f2f" }} />
                   </Button>
                 </TableCell>
               </TableRow>
