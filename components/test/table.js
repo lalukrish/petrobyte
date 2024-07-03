@@ -13,14 +13,27 @@ import axios from "axios";
 
 export default function TestTable() {
   const [open, setOpen] = useState(false);
-  const [editTest, setEditTest] = useState({});
+  const [editTest, setEditTest] = useState(null);
   const [testData, setTestData] = useState([]);
-  const handleClickOpenEdit = () => {
-    setEditTest("");
-    setOpen(true);
+
+  const fetchTestData = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/test/GETAllTest`
+      );
+      console.log("testdata", response.data.message.test);
+      setTestData(response.data.message.test);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
 
+  useEffect(() => {
+    fetchTestData();
+  }, []);
+
   const handleClickOpen = () => {
+    setEditTest(null);
     setOpen(true);
   };
 
@@ -28,23 +41,15 @@ export default function TestTable() {
     setOpen(false);
   };
 
-  useEffect(() => {
-    // Replace with your API endpoint
-    const fetchTestData = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/test/GETAllTest`
-        );
-        console.log("testdata", response.data.message.test);
-
-        setTestData(response.data.message.test);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
+  const handleDataUpdated = () => {
     fetchTestData();
-  }, []);
+    setOpen(false);
+  };
+
+  const handleClickOpenEdit = (test) => {
+    setEditTest(test);
+    setOpen(true);
+  };
 
   return (
     <Box>
@@ -59,7 +64,13 @@ export default function TestTable() {
       >
         Add Test Details
       </Button>
-      {open ? <TestNew close={handleClose} edit={editTest} /> : null}
+      {open ? (
+        <TestNew
+          close={handleClose}
+          onDataUpdated={handleDataUpdated}
+          editTest={editTest}
+        />
+      ) : null}
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead sx={{ background: "#e3f2fd" }}>
@@ -88,11 +99,15 @@ export default function TestTable() {
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell align="center">{test.date}</TableCell>
-                <TableCell align="center">{test.dispenser}</TableCell>
-                <TableCell align="center">{test.fuel}</TableCell>
-                <TableCell align="center">{test.quantity}</TableCell>
                 <TableCell align="center">
-                  <Button onClick={handleClickOpenEdit}>
+                  {test?.dispencer_id?.dispencer_name}
+                </TableCell>
+                <TableCell align="center">
+                  {test?.dispencer_id?.sub_dispencer_id?.sub_dispencer}
+                </TableCell>
+                <TableCell align="center">{test?.fuel_quantity}</TableCell>
+                <TableCell align="center">
+                  <Button onClick={() => handleClickOpenEdit(test)}>
                     <EditIcon sx={{ color: "#0d47a1" }} />
                   </Button>
                 </TableCell>

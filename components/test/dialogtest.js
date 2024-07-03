@@ -15,20 +15,70 @@ import {
   TextField,
 } from "@mui/material";
 import axios from "axios";
+import moment from "moment";
 
-export default function TestNew({ close }) {
-  const [dispencer, setDispencer] = React.useState("");
-  const [fuel, setFuel] = React.useState("");
-  const [qty, setQty] = React.useState("");
+export default function TestNew({ close, onDataUpdated, editTest }) {
+  const [dispencer, setDispencer] = React.useState(
+    editTest ? editTest.dispencer_name : ""
+  );
+  const [subDispencer, setSubDispencer] = React.useState(
+    editTest ? editTest.sub_dispencer_id : ""
+  );
+  const [qty, setQty] = React.useState(editTest ? editTest.fuel_quantity : "");
+  const [dispencers, setDispencers] = React.useState([]);
+  const [subDispencers, setSubDispencers] = React.useState([]);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
+  const datePart = moment().format("DD-MM-YYYY");
 
-  const handleDispencerChange = (event) => {
-    setDispencer(event.target.value);
+  React.useEffect(() => {
+    const fetchDispensers = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/dispencer/GETAllDispencer`
+        );
+        setDispencers(response.data.message.allDispencers);
+      } catch (error) {
+        console.error("Error fetching dispensers:", error);
+      }
+    };
+
+    fetchDispensers();
+  }, []);
+
+  React.useEffect(() => {
+    if (editTest) {
+      const fetchSubDispencers = async () => {
+        try {
+          const response = await axios.get(
+            `${process.env.NEXT_PUBLIC_API_URL}/dispencer/GETSubDispencer?name=${editTest.dispencer_name}`
+          );
+          setSubDispencers(response.data.message);
+        } catch (error) {
+          console.error("Error fetching sub dispensers:", error);
+        }
+      };
+
+      fetchSubDispencers();
+    }
+  }, [editTest]);
+
+  const handleDispencerChange = async (event) => {
+    const selectedDispencer = event.target.value;
+    setDispencer(selectedDispencer);
+
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/dispencer/GETSubDispencer?name=${selectedDispencer}`
+      );
+      setSubDispencers(response.data.message);
+    } catch (error) {
+      console.error("Error fetching sub dispensers:", error);
+    }
   };
 
-  const handleFuelChange = (event) => {
-    setFuel(event.target.value);
+  const handleSubDispencerChange = (event) => {
+    setSubDispencer(event.target.value);
   };
 
   const handleQtyChange = (event) => {
@@ -36,17 +86,27 @@ export default function TestNew({ close }) {
   };
 
   const handleSave = () => {
-    const newTest = {
-      dispencer,
-      fuel,
-      qty,
+    const testData = {
+      date: datePart,
+      dispencer_name: dispencer,
+      sub_dispencer_id: subDispencer,
+      fuel_quantity: qty,
     };
 
-    axios
-      .post(`${process.env.NEXT_PUBLIC_API_URL}/test/POSTTest`, newTest)
+    const request = editTest
+      ? axios.put(
+          `${process.env.NEXT_PUBLIC_API_URL}/test/PUTTest/${editTest.id}`,
+          testData
+        )
+      : axios.post(
+          `${process.env.NEXT_PUBLIC_API_URL}/test/POSTTest`,
+          testData
+        );
+
+    request
       .then((response) => {
         console.log("Data saved successfully:", response.data);
-        close();
+        onDataUpdated();
       })
       .catch((error) => {
         console.error("There was an error saving the data!", error);
@@ -60,11 +120,13 @@ export default function TestNew({ close }) {
   return (
     <Dialog
       fullScreen={fullScreen}
-      open={true} // Make sure the dialog opens
+      open={true}
       onClose={handleClose}
       aria-labelledby="responsive-dialog-title"
     >
-      <DialogTitle id="responsive-dialog-title">Test Details</DialogTitle>
+      <DialogTitle id="responsive-dialog-title">
+        {editTest ? "Edit Test Details" : "Add Test Details"}
+      </DialogTitle>
       <DialogContent>
         <Stack spacing={2} sx={{ width: "400px", padding: "5px" }}>
           <FormControl fullWidth>
@@ -76,19 +138,28 @@ export default function TestNew({ close }) {
               onChange={handleDispencerChange}
               label="Dispencer"
             >
-              <MenuItem value="D1">D1</MenuItem>
+              {dispencers.map((dispencer) => (
+                <MenuItem key={dispencer._id} value={dispencer.dispencer_name}>
+                  {dispencer.dispencer_name}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
           <FormControl fullWidth>
-            <InputLabel id="fuel-label">Sub Name</InputLabel>
+            <InputLabel id="sub-dispencer-label">Sub Dispencer</InputLabel>
             <Select
-              labelId="fuel-label"
-              id="fuel-select"
-              value={fuel}
-              onChange={handleFuelChange}
-              label="Fuel"
+              labelId="sub-dispencer-label"
+              id="sub-dispencer-select"
+              value={subDispencer}
+              onChange={handleSubDispencerChange}
+              label="Sub Dispencer"
+              disabled={!subDispencers.length}
             >
-              <MenuItem value="Petrol">Petrol</MenuItem>
+              {subDispencers.map((subDispencer) => (
+                <MenuItem key={subDispencer._id} value={subDispencer._id}>
+                  {subDispencer.sub_dispencer}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
           <TextField
