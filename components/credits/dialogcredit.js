@@ -141,6 +141,7 @@ export default function CreditNew({ close, refresh, data, currentAmount }) {
         .then((responce) => alert(responce.data.message))
         .catch(() => alert(`Something wnet wrong, Please Try After Some Time`));
     }
+    refresh()
     close();
   };
 
@@ -158,8 +159,7 @@ export default function CreditNew({ close, refresh, data, currentAmount }) {
       status: "",
     };
 
-    console.log("update data-----",updateData)
-    console.log("credit amount data-----",data.credit_amount)
+    console.log("data-----",data)
 
     axios
       .put(
@@ -170,22 +170,24 @@ export default function CreditNew({ close, refresh, data, currentAmount }) {
       .catch(() => alert(`Something went wrong, At update CreditHistory`));
 
     if (amountType == "Credit") {
-      let totalUpdatedAmount = data.credit_amount;
 
-      if (data.credit_amount > amount) {
-        let difference = parseInt(data.credit_amount) - parseInt(amount);
+      let totalUpdatedAmount = data.amount;
+
+      if (data.amount > amount) {
+        let difference = parseInt(data.amount) - parseInt(amount);
         totalUpdatedAmount = parseInt(currentAmount) - parseInt(difference);
       }
-      if (data.credit_amount < amount) {
-        let difference = parseInt(amount) - parseInt(data.credit_amount);
+      if (data.amount < amount) {
+        let difference = parseInt(amount) - parseInt(data.amount);
         totalUpdatedAmount = parseInt(currentAmount) + parseInt(difference);
       }
 
+      console.log("amount to save---",totalUpdatedAmount)
       let putCreditData = {
-        id: ccName._id,
+        id: data.cc_id._id,
         credit_amount: parseInt(totalUpdatedAmount),
       };
-
+      console.log(putCreditData)
       axios
         .put(
           `${process.env.NEXT_PUBLIC_API_URL}/creditcustomer/updateCreditAmount`,
@@ -196,19 +198,19 @@ export default function CreditNew({ close, refresh, data, currentAmount }) {
     }
 
     if (amountType == "Debit") {
-      let totalUpdatedAmount = data.credit_amount;
+      let totalUpdatedAmount = data.amount;
 
-      if (data.credit_amount > amount) {
-        let difference = parseInt(data.credit_amount) - parseInt(amount);
+      if (data.amount > amount) {
+        let difference = parseInt(data.amount) - parseInt(amount);
         totalUpdatedAmount = parseInt(currentAmount) + parseInt(difference);
       }
-      if (data.credit_amount < amount) {
-        let difference = parseInt(amount) - parseInt(data.credit_amount);
+      if (data.amount < amount) {
+        let difference = parseInt(amount) - parseInt(data.amount);
         totalUpdatedAmount = parseInt(currentAmount) - parseInt(difference);
       }
 
       let putCreditData = {
-        id: ccName._id,
+        id: data.cc_id._id,
         credit_amount: parseInt(totalUpdatedAmount),
       };
 
@@ -220,6 +222,7 @@ export default function CreditNew({ close, refresh, data, currentAmount }) {
         .then((responce) => alert(responce.data.message))
         .catch(() => alert(`Something went wrong, at update amount in debit`));
     }
+    refresh()
     close();
   };
 
