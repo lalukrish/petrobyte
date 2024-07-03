@@ -44,7 +44,7 @@ const MediumDialog = ({ open, handleClose, data,refresh }) => {
         })
         .catch(() => alert(`Something Went Wrong at individual`));
     }
-  }, [data]);
+  }, [refresh]);
 
   const exportPDF = () => {
     const actionElements = document.getElementsByClassName("action-buttons");
@@ -232,7 +232,7 @@ const MediumDialog = ({ open, handleClose, data,refresh }) => {
       {editCreditHistory && (
         <CreditNew
           close={handleEditCreditHistoryClose}
-          refresh={handleClose} // You might want to adjust this based on your refresh logic
+          refresh={refresh} // You might want to adjust this based on your refresh logic
           data={creditData}
           currentAmount={data.credit_amount}
         />
