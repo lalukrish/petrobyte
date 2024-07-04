@@ -25,6 +25,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import { Pagination } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import { Search } from "@mui/icons-material";
 require("dotenv").config();
 
@@ -190,13 +191,13 @@ export default function DataTable() {
           },
           marginBottom: "20px",
           marginLeft: "10px",
-          width: "160px", // Ensure the width matches the button
+          width: "250px", // Increase the width of the search field
         }}
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
               <IconButton>
-                <SearchIcon />
+                <PersonSearchIcon />
               </IconButton>
             </InputAdornment>
           ),
