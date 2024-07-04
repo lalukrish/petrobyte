@@ -27,7 +27,7 @@ import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import FullScreenDialog from "@/components/accounts/dialogfullscreen";
 import OpenInFullIcon from "@mui/icons-material/OpenInFull";
 import DoneAllIcon from "@mui/icons-material/DoneAll";
-import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
+import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 
 export default function Page() {
   const [fuel, setFuel] = React.useState(false);
@@ -62,24 +62,32 @@ export default function Page() {
   useEffect(() => {
     axios
       .get(
-        `${process.env.NEXT_PUBLIC_API_URL}/productAccounts/GETAllProductAccount`
+        `${
+          process.env.NEXT_PUBLIC_API_URL
+        }/productAccounts/GETAllProductAccount?page=${1}`
       )
-      .then((response) => setProductAccounts(response.data.message));
-  }, [])
+      .then((response) =>
+        setProductAccounts(response.data.message.fuelDetails)
+      );
+  }, []);
 
   useEffect(() => {
     axios
-      .get(`${process.env.NEXT_PUBLIC_API_URL}/expenceaccount/GETAllExpenceAccount`)
-      .then((response) => setExpenceAccount(response.data.message.expenceDetails));
-  }, [refreshExpence])
-  const handleRefeshExpence=()=>{
-    setRefreshExpence(!refreshExpence)
-  }
+      .get(
+        `${process.env.NEXT_PUBLIC_API_URL}/expenceaccount/GETAllExpenceAccount`
+      )
+      .then((response) =>
+        setExpenceAccount(response.data.message.expenceDetails)
+      );
+  }, [refreshExpence]);
+  const handleRefeshExpence = () => {
+    setRefreshExpence(!refreshExpence);
+  };
 
-  const handleEditExpence =(editData)=>{
-    setEditExpence(editData)
+  const handleEditExpence = (editData) => {
+    setEditExpence(editData);
     setExpense(true);
-  }
+  };
 
   const handleTabChange = (event, newValue) => {
     setSelectedTab(newValue);
@@ -340,22 +348,30 @@ export default function Page() {
                 </TableRow>
               </TableHead>
               <TableBody>
-              {productaccounts?.map((productAccount)=>(
-                <TableRow
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  <TableCell align="center">{productAccount?.date}</TableCell>
-                  <TableCell align="center">Grease</TableCell>
-                  <TableCell align="center">700</TableCell>
-                  <TableCell align="center">{productAccount?.quantity}</TableCell>
-                  <TableCell align="center">{productAccount?.total_amount}</TableCell>
-                  <TableCell align="center">
-                    <Button>
-                      <EditIcon sx={{ color: "#0d47a1" }} />
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
+                {productaccounts?.map((productAccount) => (
+                  <TableRow
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  >
+                    <TableCell align="center">{productAccount?.date}</TableCell>
+                    <TableCell align="center">
+                      {productAccount?.product_id?.product_name}
+                    </TableCell>
+                    <TableCell align="center">
+                      {productAccount?.product_id?.product_price}
+                    </TableCell>
+                    <TableCell align="center">
+                      {productAccount?.quantity}
+                    </TableCell>
+                    <TableCell align="center">
+                      {productAccount?.total_amount}
+                    </TableCell>
+                    <TableCell align="center">
+                      <Button>
+                        <EditIcon sx={{ color: "#0d47a1" }} />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </TableContainer>
@@ -409,33 +425,43 @@ export default function Page() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {expenceaccount.map((expAcc)=>(
+                {expenceaccount.map((expAcc) => (
+                  <TableRow
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  >
+                    <TableCell component="th" scope="row" align="center">
+                      {expAcc.date}
+                    </TableCell>
+                    <TableCell align="center">{expAcc.expence_type}</TableCell>
+                    <TableCell align="center">
+                      {expAcc.expence_amount}
+                    </TableCell>
+                    <TableCell align="center">
+                      {expAcc.emp_id ? expAcc.emp_id.emp_name : "N/A"}
+                    </TableCell>
+                    <TableCell align="center">
+                      {expAcc.expence_comment}
+                    </TableCell>
 
-                
-                <TableRow
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  <TableCell component="th" scope="row" align="center">
-                    {expAcc.date}
-                  </TableCell>
-                  <TableCell align="center">{expAcc.expence_type}</TableCell>
-                  <TableCell align="center">{expAcc.expence_amount}</TableCell>
-                  <TableCell align="center">{expAcc.emp_id?expAcc.emp_id.emp_name:"N/A"}</TableCell>
-                  <TableCell align="center">{expAcc.expence_comment}</TableCell>
-
-                  <TableCell align="center">
-                    <Button onClick={()=>handleEditExpence(expAcc)}>
-                      <EditIcon sx={{ color: "#0d47a1" }} />
-                    </Button>
-                  </TableCell>
-                </TableRow>
+                    <TableCell align="center">
+                      <Button onClick={() => handleEditExpence(expAcc)}>
+                        <EditIcon sx={{ color: "#0d47a1" }} />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
                 ))}
               </TableBody>
             </Table>
           </TableContainer>
         </>
       )}
-      {expense ? <ExpenseNew close={handleCloseexpense} refresh={handleRefeshExpence} edit={editExpence} /> : null}
+      {expense ? (
+        <ExpenseNew
+          close={handleCloseexpense}
+          refresh={handleRefeshExpence}
+          edit={editExpence}
+        />
+      ) : null}
     </>
   );
 }
