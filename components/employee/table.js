@@ -197,7 +197,7 @@ export default function DataTable() {
           endAdornment: (
             <InputAdornment position="end">
               <IconButton>
-                <PersonSearchIcon />
+                <PersonSearchIcon  />
               </IconButton>
             </InputAdornment>
           ),

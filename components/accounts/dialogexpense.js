@@ -80,10 +80,10 @@ export default function ExpenseNew({ close, refresh, edit }) {
 
   const handleUpdate = () => {
     let expenseData = {
-      _id: edit._id,
+      _id: edit?._id,
       date: datePart,
       expence_type: expenseType,
-      emp_id: edit.emp_id._id,
+      emp_id: edit?.emp_id?._id,
       expence_amount: amount,
       expence_comment: comment,
     };
@@ -175,7 +175,7 @@ export default function ExpenseNew({ close, refresh, edit }) {
         <Button color="error" onClick={handleClose3}>
           Cancel
         </Button>
-        <Button color="success" onClick={edit ? handleUpdate : handleSave}>
+        <Button color="success" onClick={edit._id ? handleUpdate : handleSave}>
           Save
         </Button>
       </DialogActions>
