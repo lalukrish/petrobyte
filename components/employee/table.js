@@ -25,6 +25,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import { Pagination } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+import { Search } from "@mui/icons-material";
 require("dotenv").config();
 
 export default function DataTable() {
@@ -50,8 +51,9 @@ export default function DataTable() {
     setEditOpen(true); // Open the edit dialog
   };
   const [currentPage, setCurrentPage] = React.useState(1);
-  const [totalPages, setTotalPages] = React.useState(1);
 
+  const [totalPages, setTotalPages] = React.useState(1);
+  const [search, setSearch] = React.useState("");
   const handleSaveEdit = () => {
     console.log("editingEmployee", editingEmployee.emp_name);
     if (editingEmployee) {
@@ -110,7 +112,9 @@ export default function DataTable() {
 
   const fetchAllEmployee = (page = 1, limit = 10) => {
     axios
-      .get(`${process.env.NEXT_PUBLIC_API_URL}/employee/GETAllEmployee?page=${page}&limit=${limit}`)
+      .get(
+        `${process.env.NEXT_PUBLIC_API_URL}/employee/GETAllEmployee?page=${page}&limit=${limit}&name=${search}`
+      )
       .then((response) => {
         setEmployee(response.data.message.employees);
         setTotalPages(Math.ceil(response.data.message.count / limit));
@@ -122,7 +126,9 @@ export default function DataTable() {
 
   const handleDelete = (row) => {
     axios
-      .delete(`${process.env.NEXT_PUBLIC_API_URL}/employee/DELETEEmployee?id=${row._id}`)
+      .delete(
+        `${process.env.NEXT_PUBLIC_API_URL}/employee/DELETEEmployee?id=${row._id}`
+      )
       .then((response) => {
         alert(response.data.message);
         setRefreshEmployee(!refreshEmployee);
@@ -137,7 +143,7 @@ export default function DataTable() {
       fetchAllEmployee(currentPage); // Fetch data for the current page
     }
     isFirstRender.current = false;
-  }, [currentPage, refreshEmployee]);
+  }, [currentPage, refreshEmployee, search]);
 
   const handleInputChange = (event, fieldName) => {
     // Assuming editingEmployee is part of your component's state
@@ -147,9 +153,10 @@ export default function DataTable() {
     }));
   };
 
-  const handleSearch = () => {
+  const handleSearch = (value) => {
     // Handle the search functionality here
-    console.log('Search clicked');
+    console.log("Search clicked", value);
+    setSearch(value);
   };
 
   return (
@@ -158,41 +165,44 @@ export default function DataTable() {
         variant="outlined"
         placeholder="Search..."
         sx={{
-          '& .MuiOutlinedInput-root': {
-            height: '42px',
+          "& .MuiOutlinedInput-root": {
+            height: "42px",
             padding: 0,
-            '& fieldset': {
-              borderColor: '#0d47a1',
+            "& fieldset": {
+              borderColor: "#0d47a1",
             },
-            '&:hover fieldset': {
-              borderColor: '#0d47a1',
+            "&:hover fieldset": {
+              borderColor: "#0d47a1",
             },
-            '&.Mui-focused fieldset': {
-              borderColor: '#0d47a1',
+            "&.Mui-focused fieldset": {
+              borderColor: "#0d47a1",
             },
-            '& input': {
-              padding: '0 14px',
+            "& input": {
+              padding: "0 14px",
             },
-            '& .MuiInputAdornment-root': {
-              display: 'flex',
-              alignItems: 'center',
-              '& .MuiSvgIcon-root': {
-                color: '#0d47a1',
+            "& .MuiInputAdornment-root": {
+              display: "flex",
+              alignItems: "center",
+              "& .MuiSvgIcon-root": {
+                color: "#0d47a1",
               },
             },
           },
           marginBottom: "20px",
           marginLeft: "10px",
-          width: "160px" // Ensure the width matches the button
+          width: "160px", // Ensure the width matches the button
         }}
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
-              <IconButton onClick={handleSearch}>
+              <IconButton>
                 <SearchIcon />
               </IconButton>
             </InputAdornment>
           ),
+        }}
+        onChange={() => {
+          handleSearch(event.target.value);
         }}
       />
 
@@ -205,7 +215,7 @@ export default function DataTable() {
           border: "1px solid #0d47a1",
           marginLeft: "10px",
           height: "42px",
-          width: "160px" // Ensure the width matches the TextField
+          width: "160px", // Ensure the width matches the TextField
         }}
       >
         Add Employee
@@ -354,8 +364,12 @@ export default function DataTable() {
             </Stack>
           </DialogContent>
           <DialogActions>
-            <Button color="error" onClick={() => setEditOpen(false)}>Cancel</Button>
-            <Button color="success" onClick={handleSaveEdit}>Save Changes</Button>
+            <Button color="error" onClick={() => setEditOpen(false)}>
+              Cancel
+            </Button>
+            <Button color="success" onClick={handleSaveEdit}>
+              Save Changes
+            </Button>
           </DialogActions>
         </Dialog>
       </Box>
