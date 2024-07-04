@@ -14,7 +14,7 @@ import {
   DialogContent,
   DialogTitle,
   InputAdornment,
-  InputBase,
+  IconButton,
   Stack,
   TextField,
 } from "@mui/material";
@@ -147,44 +147,54 @@ export default function DataTable() {
     }));
   };
 
+  const handleSearch = () => {
+    // Handle the search functionality here
+    console.log('Search clicked');
+  };
+
   return (
     <Box>
- <TextField
-      variant="outlined"
-      placeholder="Search..."
-      sx={{
-        '& .MuiOutlinedInput-root': {
-          height: '42px', // Set a reasonable height for the root element to fit the 18px input
-          padding: 0, // Remove default padding
-          '& fieldset': {
-            height: '100%', // Ensure the fieldset covers the entire height
-          },
-          '&.Mui-focused fieldset': {
-            height: '100%', // Ensure the fieldset covers the entire height when focused
-          },
-          '& input': {
-            height: '18px', // Set the height of the input element to 18px
-            padding: '0 14px', // Adjust padding to ensure the input is usable
-            boxSizing: 'border-box', // Include padding in the height calculation
-          },
-          '& .MuiInputAdornment-root': {
-            height: '100%', // Ensure the adornment covers the entire height
-            display: 'flex',
-            alignItems: 'center', // Center the icon vertically
-            '& .MuiSvgIcon-root': {
-              fontSize: '1.4rem', // Adjust the icon size if needed
+      <TextField
+        variant="outlined"
+        placeholder="Search..."
+        sx={{
+          '& .MuiOutlinedInput-root': {
+            height: '42px',
+            padding: 0,
+            '& fieldset': {
+              borderColor: '#0d47a1',
+            },
+            '&:hover fieldset': {
+              borderColor: '#0d47a1',
+            },
+            '&.Mui-focused fieldset': {
+              borderColor: '#0d47a1',
+            },
+            '& input': {
+              padding: '0 14px',
+            },
+            '& .MuiInputAdornment-root': {
+              display: 'flex',
+              alignItems: 'center',
+              '& .MuiSvgIcon-root': {
+                color: '#0d47a1',
+              },
             },
           },
-        },
-      }}
-      InputProps={{
-        startAdornment: (
-          <InputAdornment position="start">
-            <SearchIcon />
-          </InputAdornment>
-        ),
-      }}
-    />
+          marginBottom: "20px",
+          marginLeft: "10px",
+          width: "160px" // Ensure the width matches the button
+        }}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton onClick={handleSearch}>
+                <SearchIcon />
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
+      />
 
       <Button
         variant="outlined"
@@ -193,7 +203,9 @@ export default function DataTable() {
           marginBottom: "20px",
           color: "#0d47a1",
           border: "1px solid #0d47a1",
-          marginLeft:"10px"
+          marginLeft: "10px",
+          height: "42px",
+          width: "160px" // Ensure the width matches the TextField
         }}
       >
         Add Employee
@@ -271,9 +283,9 @@ export default function DataTable() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {employee?.map((row) => (
+              {employee.map((row) => (
                 <TableRow
-                  key={row.emp_email}
+                  key={row._id}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
                   <TableCell component="th" scope="row">
@@ -314,34 +326,31 @@ export default function DataTable() {
           <DialogTitle id="responsive-dialog-title">Edit Employee</DialogTitle>
           <DialogContent>
             <Stack spacing={2} sx={{ width: "400px", padding: "5px" }}>
-              {/* Pre-fill the fields with editingEmployee details */}
               <TextField
                 value={editingEmployee ? editingEmployee.emp_name : ""}
                 variant="outlined"
-                onChange={(e) => handleInputChange(e, "emp_name")} // Assuming you have a handler for input change
+                onChange={(e) => handleInputChange(e, "emp_name")}
               />
               <TextField
                 value={editingEmployee ? editingEmployee.emp_email : ""}
                 variant="outlined"
-                onChange={(e) => handleInputChange(e, "emp_email")} // Assuming you have a handler for input change
+                onChange={(e) => handleInputChange(e, "emp_email")}
               />
-
               <TextField
                 value={editingEmployee ? editingEmployee.emp_contact_no : ""}
                 variant="outlined"
-                onChange={(e) => handleInputChange(e, "emp_contact_no")} // Assuming you have a handler for input change
+                onChange={(e) => handleInputChange(e, "emp_contact_no")}
               />
               <TextField
                 value={editingEmployee ? editingEmployee.emp_address : ""}
                 variant="outlined"
-                onChange={(e) => handleInputChange(e, "emp_address")} // Assuming you have a handler for input change
+                onChange={(e) => handleInputChange(e, "emp_address")}
               />
               <TextField
                 value={editingEmployee ? editingEmployee.emp_age : ""}
                 variant="outlined"
-                onChange={(e) => handleInputChange(e, "emp_age")} // Assuming you have a handler for input change
+                onChange={(e) => handleInputChange(e, "emp_age")}
               />
-              {/* Repeat for other fields */}
             </Stack>
           </DialogContent>
           <DialogActions>
