@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
-import axios from "axios"; // Assuming you are using axios to send requests to the backend
+import axios from "axios";
 import moment from "moment";
 
 export default function ProductsNew({ close }) {
@@ -27,9 +27,8 @@ export default function ProductsNew({ close }) {
     {
       date: todayDate,
       product_id: "",
-      product_name: "",
       quantity: 1,
-      price: "",
+      //  price: "",
       total_amount: "",
     },
   ]);
@@ -39,7 +38,7 @@ export default function ProductsNew({ close }) {
       .get(`${process.env.NEXT_PUBLIC_API_URL}/product/GETAllProduct`)
       .then((response) => {
         const productData = response.data.message.products.map((item) => ({
-          product_id: item.product_id,
+          product_id: item._id,
           product_name: item.product_name,
           price: item.product_price,
         }));
@@ -53,9 +52,8 @@ export default function ProductsNew({ close }) {
       {
         date: todayDate,
         product_id: "",
-        product_name: "",
         quantity: 1,
-        price: "",
+        //   price: "",
         total_amount: "",
       },
     ]);
@@ -68,37 +66,27 @@ export default function ProductsNew({ close }) {
 
   const handleChange = (index, field, value) => {
     const updatedRows = [...rows];
-    if (field === "product_name") {
-      updatedRows[index].product_id = value.product_id;
-      updatedRows[index].product_name = value.product_name;
+    if (field === "product_id") {
       const selectedProduct = products.find(
-        (product) => product.product_id === value.product_id
+        (product) => product.product_id === value
       );
-      if (selectedProduct) {
-        updatedRows[index].price = selectedProduct.price;
-        updatedRows[index].total_amount =
-          selectedProduct.price * updatedRows[index].quantity;
-      }
+      updatedRows[index].product_id = value;
+      updatedRows[index].price = selectedProduct.price;
+      updatedRows[index].total_amount =
+        selectedProduct.price * updatedRows[index].quantity;
     } else {
       updatedRows[index][field] = value;
+      if (field === "quantity") {
+        updatedRows[index].total_amount = updatedRows[index].price * value;
+      }
     }
-
-    setRows(updatedRows);
-  };
-
-  const handleQuantityChange = (index, value) => {
-    const updatedRows = [...rows];
-    updatedRows[index].quantity = value;
-    updatedRows[index].total_amount = updatedRows[index].price * value;
     setRows(updatedRows);
   };
 
   const handleSave = () => {
-    const validRows = rows.filter((row) => {
-      console.log("dataconsole", row);
-      return row.product_id && row.quantity && row.total_amount;
-    });
-    console.log(validRows);
+    const validRows = rows.filter(
+      (row) => row.product_id && row.quantity && row.total_amount
+    );
     if (validRows.length === 0) {
       alert("Please fill in at least one product completely.");
       return;
@@ -114,9 +102,8 @@ export default function ProductsNew({ close }) {
           {
             date: todayDate,
             product_id: "",
-            product_name: "",
             quantity: 1,
-            price: "",
+            //   price: "",
             total_amount: "",
           },
         ]);
@@ -139,23 +126,25 @@ export default function ProductsNew({ close }) {
       <DialogTitle id="responsive-dialog-title">Products Details</DialogTitle>
       <DialogContent sx={{ height: 600 }}>
         {rows.map((row, index) => (
-          <Stack key={index} spacing={2} direction="row" sx={{ padding: "10px" }}>
+          <Stack
+            key={index}
+            spacing={2}
+            direction="row"
+            sx={{ padding: "10px" }}
+          >
             <FormControl fullWidth>
               <InputLabel id={`select-label-${index}`}>Products</InputLabel>
               <Select
                 labelId={`select-label-${index}`}
                 id={`select-${index}`}
-                value={{  product_name: row.product_name }}
+                value={row.product_id}
                 label="Products"
                 onChange={(event) =>
-                  handleChange(index, "product_name", event.target.value)
+                  handleChange(index, "product_id", event.target.value)
                 }
               >
                 {products.map((product) => (
-                  <MenuItem
-                    key={product.product_id}
-                    value={{ product_id: product.product_id, product_name: product.product_name }}
-                  >
+                  <MenuItem key={product.product_id} value={product.product_id}>
                     {product.product_name}
                   </MenuItem>
                 ))}
@@ -172,7 +161,9 @@ export default function ProductsNew({ close }) {
               label="Qty"
               type="number"
               value={row.quantity}
-              onChange={(event) => handleQuantityChange(index, event.target.value)}
+              onChange={(event) =>
+                handleChange(index, "quantity", event.target.value)
+              }
               InputLabelProps={{
                 shrink: true,
               }}

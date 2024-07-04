@@ -15,18 +15,17 @@ import {
   Typography,
   IconButton,
 } from "@mui/material";
-import PrintIcon from '@mui/icons-material/Print';
+import PrintIcon from "@mui/icons-material/Print";
 import { Delete, PictureAsPdf } from "@mui/icons-material";
 import EditIcon from "@mui/icons-material/Edit";
 import axios from "axios";
 import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
-import CreditorsDetailsNew from "./dialogcreditorsdetails";  // Adjust the import path as necessary
+import CreditorsDetailsNew from "./dialogcreditorsdetails"; // Adjust the import path as necessary
 import CreditNew from "./dialogcredit";
 
 require("dotenv").config();
 
-const MediumDialog = ({ open, handleClose, data,refresh }) => {
+const MediumDialog = ({ open, handleClose, data, refresh }) => {
   const [creditHistory, setCreditHistory] = useState([]);
   const [creditData, setCreditData] = useState({});
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -39,50 +38,101 @@ const MediumDialog = ({ open, handleClose, data,refresh }) => {
         .get(
           `${process.env.NEXT_PUBLIC_API_URL}/creditHistory/GETAllCreditHistory?id=${idQuery}`
         )
-        .then((responce) => {
-          setCreditHistory(responce.data.message.CreditHistorys);
+        .then((response) => {
+          setCreditHistory(response.data.message.CreditHistorys);
         })
         .catch(() => alert(`Something Went Wrong at individual`));
     }
   }, [refresh]);
 
   const exportPDF = () => {
-    const actionElements = document.getElementsByClassName("action-buttons");
-    for (let element of actionElements) {
-      element.style.display = "none";
-    }
-    const input = document.getElementById("pdfContent");
-    html2canvas(input).then((canvas) => {
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF("p", "mm", "a4");
-      const imgWidth = 210;
-      const pageHeight = 295;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      let heightLeft = imgHeight;
-      let position = 0;
+    const personalInfo = {
+      name: data.cc_name,
+      contact: data.cc_contact_no,
+      email: data.cc_email,
+      address: data.cc_address,
+    };
 
-      pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
+    const creditHistories = creditHistory.map((history) => ({
+      date: history.date,
+      name: history.cc_id?.cc_name,
+      vehicleNo: history.vehicle_no,
+      fuel: history.fuel_type?.fuel_name,
+      fuelQuantity: history.fuel_quantity,
+      amount: history.amount,
+      amountType: history.amount_type,
+      staffName: history.emp_id?.emp_name,
+    }));
 
-      while (heightLeft >= 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
-      }
-      pdf.save("creditHistory.pdf");
-      for (let element of actionElements) {
-        element.style.display = "block";
-      }
+    const pdf = new jsPDF("p", "mm", "a4");
+
+    // Add header
+    pdf.setFontSize(18);
+    pdf.text("Credit History Report", 105, 15, { align: "center" });
+    pdf.setFontSize(12);
+    pdf.text("Generated on: " + new Date().toLocaleDateString(), 15, 25);
+
+    // Personal Information
+    pdf.setFontSize(14);
+    pdf.text("Personal Information", 15, 35);
+    pdf.setFontSize(12);
+    pdf.text(`Name: ${personalInfo.name}`, 15, 45);
+    pdf.text(`Contact: ${personalInfo.contact}`, 15, 55);
+    pdf.text(`Email: ${personalInfo.email}`, 15, 65);
+    pdf.text(`Address: ${personalInfo.address}`, 15, 75);
+
+    // Credit History
+    pdf.setFontSize(14);
+    pdf.text("Credit Information", 15, 85);
+
+    const tableHeaders = [
+      "Date",
+      "Name",
+      "Vehicle No.",
+      "Fuel",
+      "Fuel Quantity",
+      "Amount",
+      "Amount Type",
+      "Staff Name",
+    ];
+
+    const startY = 95;
+    const rowHeight = 10;
+    let currentY = startY;
+
+    // Draw table headers
+    pdf.setFontSize(12);
+    tableHeaders.forEach((header, i) => {
+      pdf.text(header, 15 + i * 25, currentY);
     });
+
+    // Draw table rows
+    creditHistories.forEach((history, rowIndex) => {
+      currentY += rowHeight;
+      if (currentY > 285) {
+        // Add new page if it exceeds page height
+        pdf.addPage();
+        currentY = 10;
+      }
+      pdf.text(history.date, 15, currentY);
+      pdf.text(history.name, 40, currentY);
+      pdf.text(history.vehicleNo, 65, currentY);
+      pdf.text(history.fuel, 90, currentY);
+      pdf.text(history.fuelQuantity.toString(), 115, currentY);
+      pdf.text(history.amount.toString(), 140, currentY);
+      pdf.text(history.amountType, 165, currentY);
+      pdf.text(history.staffName, 190, currentY);
+    });
+
+    pdf.save("creditHistory.pdf");
   };
 
   const handleEditClose = () => {
     setIsEditOpen(false);
   };
-  
+
   const handleEditCreditHistoryOpen = (history) => {
-    setCreditData(history)
+    setCreditData(history);
     setEditCreditHistory(true);
   };
   const handleEditCreditHistoryClose = () => {
@@ -184,18 +234,31 @@ const MediumDialog = ({ open, handleClose, data,refresh }) => {
               </TableHead>
               <TableBody>
                 {creditHistory.map((history) => (
-                  <TableRow key={history._id} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
+                  <TableRow
+                    key={history._id}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  >
                     <TableCell align="center">{history.date}</TableCell>
-                    <TableCell align="center">{history.cc_id?.cc_name}</TableCell>
+                    <TableCell align="center">
+                      {history.cc_id?.cc_name}
+                    </TableCell>
                     <TableCell align="center">{history.vehicle_no}</TableCell>
-                    <TableCell align="center">{history.fuel_type?.fuel_name}</TableCell>
-                    <TableCell align="center">{history.fuel_quantity}</TableCell>
+                    <TableCell align="center">
+                      {history.fuel_type?.fuel_name}
+                    </TableCell>
+                    <TableCell align="center">
+                      {history.fuel_quantity}
+                    </TableCell>
                     <TableCell align="center">{history.amount}</TableCell>
                     <TableCell align="center">{history.amount_type}</TableCell>
-                    <TableCell align="center">{history.emp_id?.emp_name}</TableCell>
+                    <TableCell align="center">
+                      {history.emp_id?.emp_name}
+                    </TableCell>
 
                     <TableCell align="center" className="action-buttons">
-                      <Button onClick={()=>handleEditCreditHistoryOpen(history)}>
+                      <Button
+                        onClick={() => handleEditCreditHistoryOpen(history)}
+                      >
                         <EditIcon sx={{ color: "#0d47a1" }} />
                       </Button>
                       <Button>
