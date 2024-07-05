@@ -9,7 +9,15 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { Box, Button, Tabs, Tab } from "@mui/material";
+import {
+  Box,
+  Button,
+  Tabs,
+  Tab,
+  InputAdornment,
+  IconButton,
+  TextField,
+} from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
@@ -28,6 +36,7 @@ import FullScreenDialog from "@/components/accounts/dialogfullscreen";
 import OpenInFullIcon from "@mui/icons-material/OpenInFull";
 import DoneAllIcon from "@mui/icons-material/DoneAll";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
+import SearchIcon from "@mui/icons-material/Search";
 
 export default function Page() {
   const [fuel, setFuel] = React.useState(false);
@@ -166,54 +175,100 @@ export default function Page() {
       </Box>
 
       {selectedTab === 0 && (
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead sx={{ fontStyle: "normal", background: "#e3f2fd" }}>
-              <TableRow>
-                <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                  Date
-                </TableCell>
-                <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                  Cash
-                </TableCell>
-                <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                  Bank
-                </TableCell>
-                <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                  HP Card
-                </TableCell>
-                <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                  Credit
-                </TableCell>
-                <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                  Net Amount
-                </TableCell>
-                <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                  Action
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              <TableRow
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
-                <TableCell component="th" scope="row" align="center">
-                  18-07-2001
-                </TableCell>
-                <TableCell align="center">10001</TableCell>
-                <TableCell align="center">1200</TableCell>
-                <TableCell align="center">6000</TableCell>
-                <TableCell align="center">7000</TableCell>
-                <TableCell align="center">23000</TableCell>
+  <>
+    <Box display="flex" justifyContent="flex-end" marginBottom="20px">
+      <TextField
+        variant="outlined"
+        placeholder="Search..."
+        sx={{
+          "& .MuiOutlinedInput-root": {
+            height: "36.5px", // Match the height of the Add Product button
+            padding: 0,
+            "& fieldset": {
+              borderColor: "#0d47a1",
+            },
+            "&:hover fieldset": {
+              borderColor: "#0d47a1",
+            },
+            "&.Mui-focused fieldset": {
+              borderColor: "#0d47a1",
+            },
+            "& input": {
+              padding: "0 14px",
+            },
+            "& .MuiInputAdornment-root": {
+              display: "flex",
+              alignItems: "center",
+              "& .MuiSvgIcon-root": {
+                color: "#0d47a1",
+              },
+            },
+          },
+          width: "250px", // Increase the width of the search field
+          marginRight:"20px"
+        }}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton>
+                <SearchIcon />
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
+        onChange={() => {
+          handleSearch(event.target.value);
+        }}
+      />
+    </Box>
+    <TableContainer component={Paper}>
+      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <TableHead sx={{ fontStyle: "normal", background: "#e3f2fd" }}>
+          <TableRow>
+            <TableCell align="center" sx={{ fontWeight: "bold" }}>
+              Date
+            </TableCell>
+            <TableCell align="center" sx={{ fontWeight: "bold" }}>
+              Cash
+            </TableCell>
+            <TableCell align="center" sx={{ fontWeight: "bold" }}>
+              Bank
+            </TableCell>
+            <TableCell align="center" sx={{ fontWeight: "bold" }}>
+              HP Card
+            </TableCell>
+            <TableCell align="center" sx={{ fontWeight: "bold" }}>
+              Credit
+            </TableCell>
+            <TableCell align="center" sx={{ fontWeight: "bold" }}>
+              Net Amount
+            </TableCell>
+            <TableCell align="center" sx={{ fontWeight: "bold" }}>
+              Action
+            </TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
+            <TableCell component="th" scope="row" align="center">
+              18-07-2001
+            </TableCell>
+            <TableCell align="center">10001</TableCell>
+            <TableCell align="center">1200</TableCell>
+            <TableCell align="center">6000</TableCell>
+            <TableCell align="center">7000</TableCell>
+            <TableCell align="center">23000</TableCell>
 
-                <TableCell align="center">
-                  <DoneAllIcon />
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </TableContainer>
-      )}
+            <TableCell align="center">
+              <DoneAllIcon />
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    </TableContainer>
+  </>
+)}
+
 
       {selectedTab === 1 && (
         <>
@@ -231,6 +286,51 @@ export default function Page() {
               paddingRight: "20px",
             }}
           >
+            <TextField
+              variant="outlined"
+              placeholder="Search..."
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  height: "36.5px", // Match the height of the Add Product button
+                  padding: 0,
+                  "& fieldset": {
+                    borderColor: "#0d47a1",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#0d47a1",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#0d47a1",
+                  },
+                  "& input": {
+                    padding: "0 14px",
+                  },
+                  "& .MuiInputAdornment-root": {
+                    display: "flex",
+                    alignItems: "center",
+                    "& .MuiSvgIcon-root": {
+                      color: "#0d47a1",
+                    },
+                  },
+                },
+                marginBottom: "20px",
+                marginLeft: "10px",
+                width: "250px", // Increase the width of the search field
+                marginRight: "10px",
+              }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton>
+                      <SearchIcon />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+              onChange={() => {
+                handleSearch(event.target.value);
+              }}
+            />
             <Button
               variant="outlined"
               onClick={handleClickOpenfuel}
@@ -311,6 +411,51 @@ export default function Page() {
               paddingRight: "20px",
             }}
           >
+            <TextField
+              variant="outlined"
+              placeholder="Search..."
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  height: "36.5px", // Match the height of the Add Product button
+                  padding: 0,
+                  "& fieldset": {
+                    borderColor: "#0d47a1",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#0d47a1",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#0d47a1",
+                  },
+                  "& input": {
+                    padding: "0 14px",
+                  },
+                  "& .MuiInputAdornment-root": {
+                    display: "flex",
+                    alignItems: "center",
+                    "& .MuiSvgIcon-root": {
+                      color: "#0d47a1",
+                    },
+                  },
+                },
+                marginBottom: "20px",
+                marginLeft: "10px",
+                width: "250px", // Increase the width of the search field
+                marginRight: "10px",
+              }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton>
+                      <SearchIcon />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+              onChange={() => {
+                handleSearch(event.target.value);
+              }}
+            />
             <Button
               variant="outlined"
               onClick={handleClickOpenproduct}
@@ -388,6 +533,51 @@ export default function Page() {
               paddingRight: "20px",
             }}
           >
+            <TextField
+              variant="outlined"
+              placeholder="Search..."
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  height: "36.5px", // Match the height of the Add Product button
+                  padding: 0,
+                  "& fieldset": {
+                    borderColor: "#0d47a1",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#0d47a1",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#0d47a1",
+                  },
+                  "& input": {
+                    padding: "0 14px",
+                  },
+                  "& .MuiInputAdornment-root": {
+                    display: "flex",
+                    alignItems: "center",
+                    "& .MuiSvgIcon-root": {
+                      color: "#0d47a1",
+                    },
+                  },
+                },
+                marginBottom: "20px",
+                marginLeft: "10px",
+                width: "250px", // Increase the width of the search field
+                marginRight: "10px",
+              }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton>
+                      <SearchIcon />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+              onChange={() => {
+                handleSearch(event.target.value);
+              }}
+            />
             <Button
               variant="outlined"
               onClick={handleClickOpenexpense}

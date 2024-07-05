@@ -14,12 +14,16 @@ import {
   TableBody,
   Typography,
   IconButton,
+  TextField,
+  InputAdornment,
+  Box,
 } from "@mui/material";
 import PrintIcon from "@mui/icons-material/Print";
 import { Delete, PictureAsPdf } from "@mui/icons-material";
 import EditIcon from "@mui/icons-material/Edit";
 import axios from "axios";
 import jsPDF from "jspdf";
+import SearchIcon from "@mui/icons-material/Search";
 import CreditorsDetailsNew from "./dialogcreditorsdetails"; // Adjust the import path as necessary
 import CreditNew from "./dialogcredit";
 
@@ -188,11 +192,56 @@ const MediumDialog = ({ open, handleClose, data, refresh }) => {
             </Table>
           </TableContainer>
 
-          <Typography
-            sx={{ fontWeight: "bold", marginTop: "20px", marginBottom: "10px" }}
-          >
-            Credit Information
-          </Typography>
+          <Box display="flex" justifyContent="space-between" alignItems="center" sx={{ marginTop: "20px", marginBottom: "10px" }}>
+            <Typography sx={{ fontWeight: "bold" }}>
+              Credit Information
+            </Typography>
+            <TextField
+              variant="outlined"
+              placeholder="Search..."
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  height: "36.5px",
+                  padding: 0,
+                  "& fieldset": {
+                    borderColor: "#0d47a1",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#0d47a1",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#0d47a1",
+                  },
+                  "& input": {
+                    padding: "0 14px",
+                  },
+                  "& .MuiInputAdornment-root": {
+                    display: "flex",
+                    alignItems: "center",
+                    "& .MuiSvgIcon-root": {
+                      color: "#0d47a1",
+                    },
+                  },
+                },
+                marginBottom: "20px",
+                marginLeft: "10px",
+                marginRight: "10px",
+                width: "250px", // Increase the width of the search field
+              }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton>
+                      <SearchIcon />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+              onChange={(event) => {
+                handleSearch(event.target.value);
+              }}
+            />
+          </Box>
 
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">

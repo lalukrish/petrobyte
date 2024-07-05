@@ -24,9 +24,7 @@ import axios from "axios";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import { Pagination } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
-import { Search } from "@mui/icons-material";
 require("dotenv").config();
 
 export default function DataTable() {
@@ -167,7 +165,7 @@ export default function DataTable() {
         placeholder="Search..."
         sx={{
           "& .MuiOutlinedInput-root": {
-            height: "42px",
+            height: "36.5px",
             padding: 0,
             "& fieldset": {
               borderColor: "#0d47a1",
@@ -215,7 +213,7 @@ export default function DataTable() {
           color: "#0d47a1",
           border: "1px solid #0d47a1",
           marginLeft: "10px",
-          height: "42px",
+          height: "36.5px",
           width: "160px", // Ensure the width matches the TextField
         }}
       >
