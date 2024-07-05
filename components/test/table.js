@@ -6,11 +6,16 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { Box, Button } from "@mui/material";
+import { Box, Button, IconButton, InputAdornment, TextField } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import TestNew from "./dialogtest";
 import axios from "axios";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 
 export default function TestTable() {
   const [open, setOpen] = useState(false);
@@ -65,17 +70,51 @@ export default function TestTable() {
 
   return (
     <Box>
-      <Button
-        variant="outlined"
-        sx={{
-          marginBottom: "20px",
-          color: "#0d47a1",
-          border: "1px solid #0d47a1",
-        }}
-        onClick={handleClickOpen}
-      >
-        Add Test Details
-      </Button>
+      <Box display="flex" justifyContent="space-between" alignItems="center" marginBottom="20px">
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DemoContainer components={['DatePicker']}>
+            <DatePicker
+              label="Search by date..."
+              sx={{ 
+                marginRight: "10px",
+                '.MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    borderColor: '#0d47a1',
+                  },
+                  '&:hover fieldset': {
+                    borderColor: '#0d47a1',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#0d47a1',
+                  },
+                },
+                '.MuiInputAdornment-root .MuiSvgIcon-root': {
+                  color: '#0d47a1',
+                },
+              }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <CalendarTodayIcon />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </DemoContainer>
+        </LocalizationProvider>
+        <Button
+          variant="outlined"
+          sx={{
+            color: "#0d47a1",
+            border: "1px solid #0d47a1",
+            height: '36.5px',
+            marginLeft: "10px"
+          }}
+          onClick={handleClickOpen}
+        >
+          Add Test Details
+        </Button>
+      </Box>
       {open ? (
         <TestNew
           close={handleClose}

@@ -3,6 +3,8 @@
 import {
   Box,
   Button,
+  IconButton,
+  InputAdornment,
   Paper,
   Table,
   TableBody,
@@ -10,6 +12,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TextField,
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
@@ -18,6 +21,8 @@ import EditIcon from "@mui/icons-material/Edit";
 import OpenInFullIcon from "@mui/icons-material/OpenInFull";
 import MediumDialog from "@/components/credits/dialogfullscreencredit";
 import CreditorsDetailsNew from "@/components/credits/dialogcreditorsdetails";
+import PersonSearchIcon from "@mui/icons-material/PersonSearch";
+
 import axios from "axios";
 require("dotenv").config();
 
@@ -75,6 +80,53 @@ export default function Page() {
         }}
       >
         <>
+          <TextField
+            variant="outlined"
+            placeholder="Search..."
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                height: "36.5px",
+                padding: 0,
+                "& fieldset": {
+                  borderColor: "#0d47a1",
+                },
+                "&:hover fieldset": {
+                  borderColor: "#0d47a1",
+                },
+                "&.Mui-focused fieldset": {
+                  borderColor: "#0d47a1",
+                },
+                "& input": {
+                  padding: "0 14px",
+                },
+                "& .MuiInputAdornment-root": {
+                  display: "flex",
+                  alignItems: "center",
+                  "& .MuiSvgIcon-root": {
+                    color: "#0d47a1",
+                  },
+                },
+              },
+              marginBottom: "20px",
+              marginLeft: "10px",
+              marginRight: "10px",
+              width: "250px", // Increase the width of the search field
+            }}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton>
+                    <PersonSearchIcon />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+            onChange={() => {
+              handleSearch(event.target.value);
+            }}
+          />
+        </>
+        <>
           {/* credit */}
           <Button
             variant="outlined"
@@ -82,6 +134,7 @@ export default function Page() {
               color: "#0d47a1",
               border: "1px solid #0d47a1",
               marginRight: "10px",
+              height: "36.5px",
             }}
             onClick={handleClickOpen}
           >
@@ -98,6 +151,7 @@ export default function Page() {
               color: "#0d47a1",
               border: "1px solid #0d47a1",
               marginRight: "10px",
+              height: "36.5px",
             }}
             onClick={handleClickOpenCreditors}
           >

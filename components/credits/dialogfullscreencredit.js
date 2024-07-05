@@ -14,14 +14,22 @@ import {
   TableBody,
   Typography,
   IconButton,
+  TextField,
+  InputAdornment,
+  Box,
 } from "@mui/material";
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import PrintIcon from "@mui/icons-material/Print";
 import { Delete, PictureAsPdf } from "@mui/icons-material";
 import EditIcon from "@mui/icons-material/Edit";
 import axios from "axios";
 import jsPDF from "jspdf";
+import SearchIcon from "@mui/icons-material/Search";
 import CreditorsDetailsNew from "./dialogcreditorsdetails"; // Adjust the import path as necessary
 import CreditNew from "./dialogcredit";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 require("dotenv").config();
 
@@ -188,11 +196,54 @@ const MediumDialog = ({ open, handleClose, data, refresh }) => {
             </Table>
           </TableContainer>
 
-          <Typography
-            sx={{ fontWeight: "bold", marginTop: "20px", marginBottom: "10px" }}
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            sx={{ marginTop: "20px", marginBottom: "10px" }}
           >
-            Credit Information
-          </Typography>
+            <Typography sx={{ fontWeight: "bold" }}>
+              Credit Information
+            </Typography>
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+              marginBottom="20px"
+            >
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DemoContainer components={["DatePicker"]}>
+                  <DatePicker
+                    label="Search by date..."
+                    sx={{
+                      marginRight: "10px",
+                      ".MuiOutlinedInput-root": {
+                        "& fieldset": {
+                          borderColor: "#0d47a1",
+                        },
+                        "&:hover fieldset": {
+                          borderColor: "#0d47a1",
+                        },
+                        "&.Mui-focused fieldset": {
+                          borderColor: "#0d47a1",
+                        },
+                      },
+                      ".MuiInputAdornment-root .MuiSvgIcon-root": {
+                        color: "#0d47a1",
+                      },
+                    }}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <CalendarTodayIcon />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </DemoContainer>
+              </LocalizationProvider>
+            </Box>
+          </Box>
 
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">

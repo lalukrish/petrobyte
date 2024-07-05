@@ -6,13 +6,15 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { Box, Button, Pagination, IconButton, Collapse } from "@mui/material";
+import { Box, Button, Pagination, IconButton, Collapse, InputAdornment, TextField } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import axios from "axios";
 import DispencerNew from "./dialogdispencer";
+import SearchIcon from '@mui/icons-material/Search';
+
 require("dotenv").config();
 
 export default function DispencerTable() {
@@ -88,6 +90,51 @@ export default function DispencerTable() {
 
   return (
     <Box>
+      <TextField
+        variant="outlined"
+        placeholder="Search..."
+        sx={{
+          "& .MuiOutlinedInput-root": {
+            height: "36.5px",
+            padding: 0,
+            "& fieldset": {
+              borderColor: "#0d47a1",
+            },
+            "&:hover fieldset": {
+              borderColor: "#0d47a1",
+            },
+            "&.Mui-focused fieldset": {
+              borderColor: "#0d47a1",
+            },
+            "& input": {
+              padding: "0 14px",
+            },
+            "& .MuiInputAdornment-root": {
+              display: "flex",
+              alignItems: "center",
+              "& .MuiSvgIcon-root": {
+                color: "#0d47a1",
+              },
+            },
+          },
+          marginBottom: "20px",
+          marginLeft: "10px",
+          marginRight:"10px",
+          width: "250px", // Increase the width of the search field
+        }}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton>
+                <SearchIcon  />
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
+        onChange={() => {
+          handleSearch(event.target.value);
+        }}
+      />
       <Button
         variant="outlined"
         sx={{

@@ -32,7 +32,7 @@ export default function ExpenseNew({ close, refresh, edit }) {
   const [amount, setAmount] = useState(edit ? edit.expence_amount : "");
   const [comment, setComment] = useState(edit ? edit.expence_comment : "");
   const handleClose3 = () => close();
-  const datePart = moment().format("DD-MM-YYYY");
+  const datePart = moment().format("DD/MM/YYYY");
 
   const type = ["Salary", "Maintainence", "Bills", "Others"];
   const empname = ["Aslam", "Lallu", "Adhi", "Abhi"];
@@ -80,10 +80,10 @@ export default function ExpenseNew({ close, refresh, edit }) {
 
   const handleUpdate = () => {
     let expenseData = {
-      _id: edit._id,
+      _id: edit?._id,
       date: datePart,
       expence_type: expenseType,
-      emp_id: edit.emp_id._id,
+      emp_id: employee ? employee : null,
       expence_amount: amount,
       expence_comment: comment,
     };
@@ -175,7 +175,7 @@ export default function ExpenseNew({ close, refresh, edit }) {
         <Button color="error" onClick={handleClose3}>
           Cancel
         </Button>
-        <Button color="success" onClick={edit ? handleUpdate : handleSave}>
+        <Button color="success" onClick={edit._id ? handleUpdate : handleSave}>
           Save
         </Button>
       </DialogActions>

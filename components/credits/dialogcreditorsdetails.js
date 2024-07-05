@@ -34,12 +34,12 @@ export default function CreditorsDetailsNew({ close, refresh, data }) {
     };
 
     const updateCreditor = {
-      id:data._id,
+      id:data?._id,
       cc_name: name,
       cc_contact_no: contact,
       cc_address: address,
       cc_email: email,
-      credit_amount: data.credit_amount,
+      credit_amount: data?.credit_amount,
       cc_status: "",
     };
 
