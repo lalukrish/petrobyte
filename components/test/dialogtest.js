@@ -29,7 +29,7 @@ export default function TestNew({ close, onDataUpdated, editTest }) {
   const [subDispencers, setSubDispencers] = React.useState([]);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
-  const datePart = moment().format("DD-MM-YYYY");
+  const datePart = moment().format("DD/MM/YYYY");
 
   React.useEffect(() => {
     const fetchDispensers = async () => {

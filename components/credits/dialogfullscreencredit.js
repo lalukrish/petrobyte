@@ -18,6 +18,7 @@ import {
   InputAdornment,
   Box,
 } from "@mui/material";
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import PrintIcon from "@mui/icons-material/Print";
 import { Delete, PictureAsPdf } from "@mui/icons-material";
 import EditIcon from "@mui/icons-material/Edit";
@@ -26,6 +27,9 @@ import jsPDF from "jspdf";
 import SearchIcon from "@mui/icons-material/Search";
 import CreditorsDetailsNew from "./dialogcreditorsdetails"; // Adjust the import path as necessary
 import CreditNew from "./dialogcredit";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 require("dotenv").config();
 
@@ -192,55 +196,53 @@ const MediumDialog = ({ open, handleClose, data, refresh }) => {
             </Table>
           </TableContainer>
 
-          <Box display="flex" justifyContent="space-between" alignItems="center" sx={{ marginTop: "20px", marginBottom: "10px" }}>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            sx={{ marginTop: "20px", marginBottom: "10px" }}
+          >
             <Typography sx={{ fontWeight: "bold" }}>
               Credit Information
             </Typography>
-            <TextField
-              variant="outlined"
-              placeholder="Search..."
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  height: "36.5px",
-                  padding: 0,
-                  "& fieldset": {
-                    borderColor: "#0d47a1",
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "#0d47a1",
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#0d47a1",
-                  },
-                  "& input": {
-                    padding: "0 14px",
-                  },
-                  "& .MuiInputAdornment-root": {
-                    display: "flex",
-                    alignItems: "center",
-                    "& .MuiSvgIcon-root": {
-                      color: "#0d47a1",
-                    },
-                  },
-                },
-                marginBottom: "20px",
-                marginLeft: "10px",
-                marginRight: "10px",
-                width: "250px", // Increase the width of the search field
-              }}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton>
-                      <SearchIcon />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-              onChange={(event) => {
-                handleSearch(event.target.value);
-              }}
-            />
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+              marginBottom="20px"
+            >
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DemoContainer components={["DatePicker"]}>
+                  <DatePicker
+                    label="Search by date..."
+                    sx={{
+                      marginRight: "10px",
+                      ".MuiOutlinedInput-root": {
+                        "& fieldset": {
+                          borderColor: "#0d47a1",
+                        },
+                        "&:hover fieldset": {
+                          borderColor: "#0d47a1",
+                        },
+                        "&.Mui-focused fieldset": {
+                          borderColor: "#0d47a1",
+                        },
+                      },
+                      ".MuiInputAdornment-root .MuiSvgIcon-root": {
+                        color: "#0d47a1",
+                      },
+                    }}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <CalendarTodayIcon />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </DemoContainer>
+              </LocalizationProvider>
+            </Box>
           </Box>
 
           <TableContainer component={Paper}>

@@ -74,7 +74,7 @@ export default function CreditNew({ close, refresh, data, currentAmount }) {
     fetchEmployee();
   }, []);
 
-  const datePart = moment().format("DD-MM-YYYY");
+  const datePart = moment().format("DD/MM/YYYY");
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
