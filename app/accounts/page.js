@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 require("dotenv").config();
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -28,6 +28,7 @@ import FullScreenDialog from "@/components/accounts/dialogfullscreen";
 import OpenInFullIcon from "@mui/icons-material/OpenInFull";
 import DoneAllIcon from "@mui/icons-material/DoneAll";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
+import EditProductAccount from "@/components/accounts/accountsProducts/editAccountProduct";
 
 export default function Page() {
   const [fuel, setFuel] = React.useState(false);
@@ -44,6 +45,8 @@ export default function Page() {
   const [expenceaccount, setExpenceAccount] = React.useState([]);
 
   const [refreshExpence, setRefreshExpence] = React.useState(false);
+
+  const [refreshProduct, setRefreshProduct] = React.useState(false);
 
   // useEffect(() => {
   //   axios
@@ -66,10 +69,11 @@ export default function Page() {
           process.env.NEXT_PUBLIC_API_URL
         }/productAccounts/GETAllProductAccount?page=${1}`
       )
-      .then((response) =>
-        setProductAccounts(response.data.message.fuelDetails)
-      );
-  }, []);
+      .then((response) => {
+        setProductAccounts(response.data.message.fuelDetails);
+        setRefreshProduct(false);
+      });
+  }, [refreshProduct]);
 
   useEffect(() => {
     axios
@@ -132,6 +136,29 @@ export default function Page() {
   const handleDialogClose = () => {
     setDialogOpen(false);
     // setDialogContent(null);
+  };
+
+  const [editProduct, setEditProduct] = React.useState({});
+  const [editProductOpen, setEditProductOpen] = React.useState(false);
+
+  // Function to handle opening the edit modal
+  const handleEditProduct = (productAccount) => {
+    setEditProduct(productAccount);
+    setEditProductOpen(true);
+  };
+
+  // Function to handle closing the edit modal
+  const handleEditProductClose = () => {
+    setEditProductOpen(false);
+    setEditProduct(null);
+  };
+
+  const handleDeleteProduct = (productAccount) => {
+    axios
+      .delete(
+        `${process.env.NEXT_PUBLIC_API_URL}/productAccounts/DELETEProductAccount?id=${productAccount?._id}`
+      )
+      .then((response) => setRefreshProduct(true));
   };
 
   return (
@@ -348,36 +375,58 @@ export default function Page() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {productaccounts?.map((productAccount) => (
-                  <TableRow
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-                    <TableCell align="center">{productAccount?.date}</TableCell>
-                    <TableCell align="center">
-                      {productAccount?.product_id?.product_name}
-                    </TableCell>
-                    <TableCell align="center">
-                      {productAccount?.product_id?.product_price}
-                    </TableCell>
-                    <TableCell align="center">
-                      {productAccount?.quantity}
-                    </TableCell>
-                    <TableCell align="center">
-                      {productAccount?.total_amount}
-                    </TableCell>
-                    <TableCell align="center">
-                      <Button>
-                        <EditIcon sx={{ color: "#0d47a1" }} />
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {productaccounts?.map((productAccount) => {
+                  // console.log("productAccount", productAccount);
+                  return (
+                    <TableRow
+                      key={productAccount?._id}
+                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    >
+                      <TableCell align="center">
+                        {productAccount?.date}
+                      </TableCell>
+                      <TableCell align="center">
+                        {productAccount?.product_id?.product_name || "N/A"}
+                      </TableCell>
+                      <TableCell align="center">
+                        {productAccount?.product_id?.product_price || "N/A"}
+                      </TableCell>
+                      <TableCell align="center">
+                        {productAccount?.quantity}
+                      </TableCell>
+                      <TableCell align="center">
+                        {productAccount?.total_amount}
+                      </TableCell>
+                      <TableCell align="center">
+                        <Button
+                          onClick={() => handleEditProduct(productAccount)}
+                        >
+                          <EditIcon sx={{ color: "#0d47a1" }} />
+                        </Button>
+                        <Button
+                          onClick={() => handleDeleteProduct(productAccount)}
+                          sx={{ color: "#ef5350" }}
+                        >
+                          <DeleteIcon />
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
               </TableBody>
             </Table>
           </TableContainer>
         </>
       )}
       {product ? <ProductsNew close={handleCloseproduct} /> : null}
+      {editProductOpen && (
+        <EditProductAccount
+          open={editProductOpen}
+          onClose={handleEditProductClose}
+          productAccount={editProduct}
+          refresh={() => setRefreshProduct(true)}
+        />
+      )}
 
       {selectedTab === 3 && (
         <>

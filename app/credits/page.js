@@ -30,15 +30,16 @@ export default function Page() {
   const [refreshCreditors, setRefreshCreditors] = useState(false);
 
   useEffect(() => {
-    axios      .get(`${process.env.NEXT_PUBLIC_API_URL}/creditcustomer/GETAllCC`)
+    axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/creditcustomer/GETAllCC`)
 
       .then((responce) => setCreditUsers(responce.data.message.CCs))
       .catch(() => alert(`Something went wrong, please try after some time`));
   }, [refreshCreditors]);
 
-  const handelRefresh=()=>{
-    setRefreshCreditors(!refreshCreditors)
-  }
+  const handelRefresh = () => {
+    setRefreshCreditors(!refreshCreditors);
+  };
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -55,7 +56,7 @@ export default function Page() {
   };
 
   const handleOpenMediumDialog = (creditUser) => {
-    setCreditUsersData(creditUser)
+    setCreditUsersData(creditUser);
     setOpenMediumDialog(true);
   };
 
@@ -84,7 +85,7 @@ export default function Page() {
             }}
             onClick={handleClickOpen}
           >
-             Credit / Debit
+            Credit / Debit
           </Button>
           {open && <CreditNew close={handleClose} />}
         </>
@@ -103,7 +104,10 @@ export default function Page() {
             Add Creditor
           </Button>
           {opencreditors && (
-            <CreditorsDetailsNew close={handleCloseCreditors} refresh={handelRefresh}/>
+            <CreditorsDetailsNew
+              close={handleCloseCreditors}
+              refresh={handelRefresh}
+            />
           )}
         </>
       </Box>
@@ -130,34 +134,35 @@ export default function Page() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {creditUsers.map((creditUser,index)=>(
-            <TableRow
-              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-            >
-              <TableCell align="center">{index + 1}</TableCell>
-              <TableCell align="center">{creditUser.cc_name}</TableCell>
-              <TableCell align="center">{creditUser.cc_contact_no}</TableCell>
-              <TableCell align="center">{creditUser.credit_amount}</TableCell>
-              <TableCell align="center">
-                <Button onClick={()=>handleOpenMediumDialog(creditUser)} >
-                  <OpenInFullIcon sx={{ color: "#0d47a1" }} />
-                </Button>
-                {/* <Button>
+            {creditUsers.map((creditUser, index) => (
+              <TableRow
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              >
+                <TableCell align="center">{index + 1}</TableCell>
+                <TableCell align="center">{creditUser.cc_name}</TableCell>
+                <TableCell align="center">{creditUser.cc_contact_no}</TableCell>
+                <TableCell align="center">{creditUser.credit_amount}</TableCell>
+                <TableCell align="center">
+                  <Button onClick={() => handleOpenMediumDialog(creditUser)}>
+                    <OpenInFullIcon sx={{ color: "#0d47a1" }} />
+                  </Button>
+                  {/* <Button>
                   <EditIcon sx={{ color: "#0d47a1" }} />
                 </Button> */}
-              </TableCell>
-            </TableRow>
+                </TableCell>
+              </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
-      {openMediumDialog && 
-      <MediumDialog
-        open={openMediumDialog}
-        handleClose={handleCloseMediumDialog}
-        data={creditUserData}
-        refresh={handelRefresh}
-      />}
+      {openMediumDialog && (
+        <MediumDialog
+          open={openMediumDialog}
+          handleClose={handleCloseMediumDialog}
+          data={creditUserData}
+          refresh={handelRefresh}
+        />
+      )}
     </Box>
   );
 }
