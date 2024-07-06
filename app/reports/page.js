@@ -1,3 +1,4 @@
+"use client"
 import * as React from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -10,6 +11,10 @@ import { Box, Button, IconButton, InputAdornment, TextField, Typography } from "
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SearchIcon from '@mui/icons-material/Search';
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 
 export default function ReportsTable() {
   // const [currentPage, setCurrentPage] = React.useState(1);
@@ -18,68 +23,87 @@ export default function ReportsTable() {
 
   return (
     <Box>
-      <TextField
-        variant="outlined"
-        placeholder="Search..."
-        sx={{
-          "& .MuiOutlinedInput-root": {
-            height: "36.5px", // Match the height of the Add Product button
-            padding: 0,
-            "& fieldset": {
-              borderColor: "#0d47a1",
-            },
-            "&:hover fieldset": {
-              borderColor: "#0d47a1",
-            },
-            "&.Mui-focused fieldset": {
-              borderColor: "#0d47a1",
-            },
-            "& input": {
-              padding: "0 14px",
-            },
-            "& .MuiInputAdornment-root": {
-              display: "flex",
-              alignItems: "center",
-              "& .MuiSvgIcon-root": {
-                color: "#0d47a1",
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        marginBottom="20px"
+      >
+        {/* <TextField
+          variant="outlined"
+          placeholder="Search..."
+          sx={{
+            "& .MuiOutlinedInput-root": {
+              height: "36.5px", // Match the height of the Add Product button
+              padding: 0,
+              "& fieldset": {
+                borderColor: "#0d47a1",
+              },
+              "&:hover fieldset": {
+                borderColor: "#0d47a1",
+              },
+              "&.Mui-focused fieldset": {
+                borderColor: "#0d47a1",
+              },
+              "& input": {
+                padding: "0 14px",
+              },
+              "& .MuiInputAdornment-root": {
+                display: "flex",
+                alignItems: "center",
+                "& .MuiSvgIcon-root": {
+                  color: "#0d47a1",
+                },
               },
             },
-          },
-          marginBottom: "20px",
-          marginLeft: "10px",
-          width: "250px", // Increase the width of the search field
-          marginRight: "10px",
-        }}
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position="end">
-              <IconButton>
-                <SearchIcon />
-              </IconButton>
-            </InputAdornment>
-          ),
-        }}
-        onChange={""}
-      />
-
-      {/* <Button
-        variant="outlined"
-        sx={{
-          marginBottom: "20px",
-          color: "#0d47a1",
-          border: "1px solid #0d47a1",
-        }}
-        onClick={handleClickOpen}
-      >
-        Add Product
-      </Button>
-      {open &&
-        <ProductNew
-          refresh={handleRefresh}
-          edit={editProduct}
-          close={handleClose}
-        />
-      } */}
+            marginLeft: "10px",
+            width: "250px", // Increase the width of the search field
+            marginRight: "10px",
+          }}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton>    
+                  <SearchIcon />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+          onChange={""}
+        /> */}
+        <Box flexGrow={1} />
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DemoContainer components={["DatePicker"]}>
+            <DatePicker
+              label="Search by date..."
+              sx={{
+                marginRight: "20px", // Add 20px margin to the right
+                ".MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "#0d47a1",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#0d47a1",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#0d47a1",
+                  },
+                },
+                ".MuiInputAdornment-root .MuiSvgIcon-root": {
+                  color: "#0d47a1",
+                },
+              }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <CalendarTodayIcon />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </DemoContainer>
+        </LocalizationProvider>
+      </Box>
       <Typography sx={{ fontWeight: "bold", marginBottom: "15px" }}>
         Reports History
       </Typography>
@@ -94,8 +118,8 @@ export default function ReportsTable() {
               <TableCell sx={{ fontWeight: "bold", borderBottom: "2px solid #ddd" }}>Credit</TableCell>
               <TableCell sx={{ fontWeight: "bold", borderBottom: "2px solid #ddd" }}>Product Sale Amnt</TableCell>
               <TableCell sx={{ fontWeight: "bold", borderBottom: "2px solid #ddd" }}>Expense Amnt</TableCell>
-              <TableCell sx={{ fontWeight: "bold", borderBottom: "2px solid #ddd" }}>Balance</TableCell>
               <TableCell align="center" sx={{ fontWeight: "bold", borderBottom: "2px solid #ddd" }}>Net Sale Amount</TableCell>
+              <TableCell sx={{ fontWeight: "bold", borderBottom: "2px solid #ddd" }}>Balance</TableCell>
               <TableCell align="center" sx={{ fontWeight: "bold", borderBottom: "2px solid #ddd" }}>Action</TableCell>
             </TableRow>
           </TableHead>

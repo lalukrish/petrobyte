@@ -22,6 +22,7 @@ import moment from "moment";
 require("dotenv").config();
 
 export default function CreditNew({ close, refresh, data, currentAmount }) {
+  console.log("currentAmount",currentAmount)
   const [ccName, setCcName] = React.useState(data ? data.cc_id?._id : "");
   const [vehicleNo, setVehicleNo] = React.useState(data ? data.vehicle_no : "");
   const [fuel, setFuel] = React.useState(data ? data.fuel_type?._id : "");
