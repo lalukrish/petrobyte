@@ -91,7 +91,7 @@ export default function CreditNew({ close, refresh, data, currentAmount }) {
   const handelSave = () => {
     let creditData = {
       date: datePart,
-      cc_id: ccName,
+      cc_id: ccName._id,
       vehicle_no: vehicleNo,
       fuel_type: fuel ? fuel : null,
       fuel_quantity: fuelQuantity,
@@ -110,7 +110,7 @@ export default function CreditNew({ close, refresh, data, currentAmount }) {
       .catch(() => alert(`Something wnet wrong, Please Try After Some Time`));
 
     if (amountType == "Credit") {
-      let totalUpdatedAmount = parseInt(currentAmount) + parseInt(amount);
+      let totalUpdatedAmount = parseInt(ccName.credit_amount) + parseInt(amount);
 
       let putCreditData = {
         id: ccName._id,
@@ -127,7 +127,7 @@ export default function CreditNew({ close, refresh, data, currentAmount }) {
     }
 
     if (amountType == "Debit") {
-      let totalUpdatedAmount = parseInt(currentAmount) - parseInt(amount);
+      let totalUpdatedAmount = parseInt(ccName.credit_amount) - parseInt(amount);
 
       let putCreditData = {
         id: ccName._id,
@@ -150,7 +150,7 @@ export default function CreditNew({ close, refresh, data, currentAmount }) {
     let updateData = {
       id: data._id,
       date: datePart,
-      cc_id: ccName,
+      cc_id: ccName._id,
       vehicle_no: vehicleNo,
       fuel_type: fuel ? fuel : null,
       fuel_quantity: fuelQuantity,
@@ -244,12 +244,12 @@ export default function CreditNew({ close, refresh, data, currentAmount }) {
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
-              value={ccName}
+              value={ccName._id}
               label="Name"
               onChange={(event) => setCcName(event.target.value)}
             >
               {ccLists.map((cc) => (
-                <MenuItem key={cc._id} value={cc._id}>
+                <MenuItem key={cc._id} value={cc}>
                   {cc.cc_name}
                 </MenuItem>
               ))}
