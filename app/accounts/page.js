@@ -75,7 +75,7 @@ export default function Page() {
         }/productAccounts/GETAllProductAccount?page=${1}`
       )
       .then((response) => {
-        setProductAccounts(response.data.message.fuelDetails);
+        setProductAccounts(response?.data?.message?.fuelDetails);
         setRefreshProduct(false);
       });
   }, [refreshProduct]);
@@ -138,7 +138,7 @@ export default function Page() {
         alert(response.data.message);
       });
   };
-// abhi
+  // abhi
   const getIconColor = (tabIndex) => {
     return selectedTab === tabIndex ? "#0d47a1" : "inherit";
   };

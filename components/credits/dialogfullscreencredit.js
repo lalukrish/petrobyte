@@ -18,7 +18,7 @@ import {
   InputAdornment,
   Box,
 } from "@mui/material";
-import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import PrintIcon from "@mui/icons-material/Print";
 import { Delete, PictureAsPdf } from "@mui/icons-material";
 import EditIcon from "@mui/icons-material/Edit";
@@ -348,7 +348,7 @@ const MediumDialog = ({ open, handleClose, data, refresh }) => {
           close={handleEditCreditHistoryClose}
           refresh={refresh} // You might want to adjust this based on your refresh logic
           data={creditData}
-          currentAmount={data.credit_amount}
+          currentAmount={data?.credit_amount}
         />
       )}
     </>

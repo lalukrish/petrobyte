@@ -24,7 +24,7 @@ import axios from "axios";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import { Pagination } from "@mui/material";
-import PersonSearchIcon from '@mui/icons-material/PersonSearch';
+import PersonSearchIcon from "@mui/icons-material/PersonSearch";
 require("dotenv").config();
 
 export default function DataTable() {
@@ -195,7 +195,7 @@ export default function DataTable() {
           endAdornment: (
             <InputAdornment position="end">
               <IconButton>
-                <PersonSearchIcon  />
+                <PersonSearchIcon />
               </IconButton>
             </InputAdornment>
           ),

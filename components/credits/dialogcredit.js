@@ -3,12 +3,10 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import {
-  Autocomplete,
   FormControl,
   InputLabel,
   MenuItem,
@@ -16,12 +14,13 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
-import { PetrobyteContext } from "@/context/context";
 import axios from "axios";
 import moment from "moment";
 require("dotenv").config();
 
-export default function CreditNew({ close, refresh, data, currentAmount }) {
+export default function CreditNew({ close, refresh, data }) {
+  console.log("currentamount", data);
+  const currentAmount = data?.credit_amount;
   const [ccName, setCcName] = React.useState(data ? data.cc_id?._id : "");
   const [vehicleNo, setVehicleNo] = React.useState(data ? data.vehicle_no : "");
   const [fuel, setFuel] = React.useState(data ? data.fuel_type?._id : "");
@@ -36,13 +35,22 @@ export default function CreditNew({ close, refresh, data, currentAmount }) {
   const [ccLists, setCcLists] = React.useState([]);
   const [fuelList, setFuelList] = React.useState([]);
   const [employeeList, setEmployeeList] = React.useState([]);
+  const [rates, setRates] = React.useState({});
 
   const fetchFuels = () => {
     axios
       .get(`${process.env.NEXT_PUBLIC_API_URL}/fuelPrice/GETAllFuel`)
       .then((response) => {
+        const updatedRates = response.data.message.reduce((acc, rate) => {
+          if (rate.fuel_name === "Diesel") {
+            acc.diesel = rate;
+          } else if (rate.fuel_name === "Petrol") {
+            acc.petrol = rate;
+          }
+          return acc;
+        }, {});
+        setRates(updatedRates);
         setFuelList(response.data.message);
-        // setOptionsLoaded(true);
       })
       .catch((err) => console.log(err.message));
   };
@@ -52,7 +60,6 @@ export default function CreditNew({ close, refresh, data, currentAmount }) {
       .get(`${process.env.NEXT_PUBLIC_API_URL}/creditcustomer/GETAllCC`)
       .then((response) => {
         setCcLists(response.data.message.CCs);
-        // setOptionsLoaded(true);
       })
       .catch((err) => console.log(err.message));
   };
@@ -62,26 +69,38 @@ export default function CreditNew({ close, refresh, data, currentAmount }) {
       .get(`${process.env.NEXT_PUBLIC_API_URL}/employee/GETAllEmployee`)
       .then((response) => {
         setEmployeeList(response.data.message.employees);
-        // setOptionsLoaded(true);
       })
       .catch((err) => console.log(err.message));
   };
 
   React.useEffect(() => {
-    console.log(data);
     fetchCCs();
     fetchFuels();
     fetchEmployee();
   }, []);
 
+  React.useEffect(() => {
+    if (fuel && fuelQuantity) {
+      const selectedFuel = fuelList.find((f) => f._id === fuel);
+      if (selectedFuel) {
+        setAmount(selectedFuel.fuel_price * fuelQuantity);
+      }
+    }
+  }, [fuel, fuelQuantity, fuelList]);
+
+  React.useEffect(() => {
+    if (amountType === "Debit") {
+      setVehicleNo("");
+      setFuel("");
+      setFuelQuantity("");
+      setAmount("");
+    }
+  }, [amountType]);
+
   const datePart = moment().format("DD/MM/YYYY");
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
-
-  //   const handleClickOpen = () => {
-  //     setOpen(true);
-  //   };
 
   const handleClose = () => {
     close();
@@ -105,14 +124,14 @@ export default function CreditNew({ close, refresh, data, currentAmount }) {
         `${process.env.NEXT_PUBLIC_API_URL}/creditHistory/POSTCreditHistory`,
         creditData
       )
-      .then((responce) => alert(responce.data.message))
-      .catch(() => alert(`Something wnet wrong, Please Try After Some Time`));
+      .then((response) => alert(response.data.message))
+      .catch(() => alert(`Something went wrong, Please Try After Some Time`));
 
-    if (amountType == "Credit") {
+    if (amountType === "Credit") {
       let totalUpdatedAmount = parseInt(currentAmount) + parseInt(amount);
-
+      console.log("hi", parseInt(totalUpdatedAmount));
       let putCreditData = {
-        id: ccName._id,
+        id: ccName,
         credit_amount: parseInt(totalUpdatedAmount),
       };
 
@@ -121,15 +140,15 @@ export default function CreditNew({ close, refresh, data, currentAmount }) {
           `${process.env.NEXT_PUBLIC_API_URL}/creditcustomer/updateCreditAmount`,
           putCreditData
         )
-        .then((responce) => alert(responce.data.message))
-        .catch(() => alert(`Something wnet wrong, Please Try After Some Time`));
+        .then((response) => alert(response.data.message))
+        .catch(() => alert(`Something went wrong, Please Try After Some Time`));
     }
 
-    if (amountType == "Debit") {
+    if (amountType === "Debit") {
       let totalUpdatedAmount = parseInt(currentAmount) - parseInt(amount);
 
       let putCreditData = {
-        id: ccName._id,
+        id: ccName,
         credit_amount: parseInt(totalUpdatedAmount),
       };
 
@@ -138,10 +157,10 @@ export default function CreditNew({ close, refresh, data, currentAmount }) {
           `${process.env.NEXT_PUBLIC_API_URL}/creditcustomer/updateCreditAmount`,
           putCreditData
         )
-        .then((responce) => alert(responce.data.message))
-        .catch(() => alert(`Something wnet wrong, Please Try After Some Time`));
+        .then((response) => alert(response.data.message))
+        .catch(() => alert(`Something went wrong, Please Try After Some Time`));
     }
-    refresh()
+    refresh();
     close();
   };
 
@@ -159,18 +178,15 @@ export default function CreditNew({ close, refresh, data, currentAmount }) {
       status: "",
     };
 
-    console.log("data-----",data)
-
     axios
       .put(
         `${process.env.NEXT_PUBLIC_API_URL}/creditHistory/PUTCreditHistory`,
         updateData
       )
-      .then((responce) => alert(responce.data.message))
+      .then((response) => alert(response.data.message))
       .catch(() => alert(`Something went wrong, At update CreditHistory`));
 
-    if (amountType == "Credit") {
-
+    if (amountType === "Credit") {
       let totalUpdatedAmount = data.amount;
 
       if (data.amount > amount) {
@@ -182,22 +198,21 @@ export default function CreditNew({ close, refresh, data, currentAmount }) {
         totalUpdatedAmount = parseInt(currentAmount) + parseInt(difference);
       }
 
-      console.log("amount to save---",totalUpdatedAmount)
       let putCreditData = {
         id: data.cc_id._id,
         credit_amount: parseInt(totalUpdatedAmount),
       };
-      console.log(putCreditData)
+
       axios
         .put(
           `${process.env.NEXT_PUBLIC_API_URL}/creditcustomer/updateCreditAmount`,
           putCreditData
         )
-        .then((responce) => alert(responce.data.message))
+        .then((response) => alert(response.data.message))
         .catch(() => alert(`Something went wrong, at update amount in credit`));
     }
 
-    if (amountType == "Debit") {
+    if (amountType === "Debit") {
       let totalUpdatedAmount = data.amount;
 
       if (data.amount > amount) {
@@ -219,17 +234,17 @@ export default function CreditNew({ close, refresh, data, currentAmount }) {
           `${process.env.NEXT_PUBLIC_API_URL}/creditcustomer/updateCreditAmount`,
           putCreditData
         )
-        .then((responce) => alert(responce.data.message))
+        .then((response) => alert(response.data.message))
         .catch(() => alert(`Something went wrong, at update amount in debit`));
     }
-    refresh()
+    refresh();
     close();
   };
 
   return (
     <Dialog
       fullScreen={fullScreen}
-      open={open}
+      open={true}
       onClose={handleClose}
       aria-labelledby="responsive-dialog-title"
     >
@@ -257,7 +272,7 @@ export default function CreditNew({ close, refresh, data, currentAmount }) {
           <FormControl fullWidth>
             <InputLabel id="demo-simple-select-label">Amount Type</InputLabel>
             <Select
-              disabled={!!data}
+              //disabled={!!data}
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               value={amountType}
@@ -269,7 +284,7 @@ export default function CreditNew({ close, refresh, data, currentAmount }) {
             </Select>
           </FormControl>
           <TextField
-          disabled={amountType=="Debit"}
+            disabled={amountType === "Debit"}
             autoFocus
             id="outlined-basic"
             label="Vehicle Number"
@@ -280,7 +295,7 @@ export default function CreditNew({ close, refresh, data, currentAmount }) {
           <FormControl fullWidth>
             <InputLabel id="demo-simple-select-label">Fuel</InputLabel>
             <Select
-            disabled={amountType=="Debit"}
+              disabled={amountType === "Debit"}
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               value={fuel}
@@ -295,7 +310,7 @@ export default function CreditNew({ close, refresh, data, currentAmount }) {
             </Select>
           </FormControl>
           <TextField
-            disabled={amountType=="Debit"}
+            disabled={amountType === "Debit"}
             id="outlined-basic"
             label="Fuel Quantity"
             variant="outlined"
@@ -309,7 +324,6 @@ export default function CreditNew({ close, refresh, data, currentAmount }) {
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
           />
-
           <FormControl fullWidth>
             <InputLabel id="demo-simple-select-label">Employee</InputLabel>
             <Select

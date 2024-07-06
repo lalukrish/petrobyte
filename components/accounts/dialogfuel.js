@@ -35,8 +35,10 @@ function getStyles(name, selectedFuelTypes, theme) {
   };
 }
 
-export default function FuelNew({ close }) {
+export default function FuelNew({ close, editTest }) {
   const [allEmployee, setAllEmployee] = useState([]);
+  const [dispencers, setDispencers] = useState([]);
+  const [subDispencers, setSubDispencers] = useState([]);
   const theme = useTheme();
   const handleClose = () => close();
   const date = moment().format("DD-MM-YYYY");
@@ -49,8 +51,6 @@ export default function FuelNew({ close }) {
   const [bank, setBank] = useState("");
   const [hpCard, setHpCard] = useState("");
   const [employee, setEmployee] = useState("");
-  const dispencers = ["A", "B", "C", "D"];
-  const fuelTypes = ["P1", "P2", "D1", "D2"];
   const todayStartOfTheDay = dayjs().startOf("day");
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
@@ -67,17 +67,49 @@ export default function FuelNew({ close }) {
   const fetchEmployee = () => {
     axios
       .get(`${process.env.NEXT_PUBLIC_API_URL}/employee/GETAllEmployee`)
-      .then((responce) => setAllEmployee(responce.data.message.employees));
+      .then((response) => setAllEmployee(response.data.message.employees));
   };
 
   useEffect(() => {
     fetchEmployee();
   }, []);
 
+  useEffect(() => {
+    const fetchDispensers = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/dispencer/GETAllDispencer`
+        );
+        setDispencers(response.data.message.allDispencers);
+      } catch (error) {
+        console.error("Error fetching dispensers:", error);
+      }
+    };
+
+    fetchDispensers();
+  }, []);
+
+  useEffect(() => {
+    if (dispencer) {
+      const fetchSubDispencers = async () => {
+        try {
+          const response = await axios.get(
+            `${process.env.NEXT_PUBLIC_API_URL}/dispencer/GETSubDispencer?name=${dispencer}`
+          );
+          setSubDispencers(response.data.message);
+        } catch (error) {
+          console.error("Error fetching sub dispensers:", error);
+        }
+      };
+
+      fetchSubDispencers();
+    }
+  }, [dispencer]);
+
   const handleSave = () => {
     const fuelDetails = fueltype.map((type) => ({
       date: date,
-      emp_id: "66580f1603b55eb1929232ca",
+      emp_id: employee,
       emp_from_time: fromtime,
       emp_to_time: totime,
       dispencer: dispencer,
@@ -86,10 +118,10 @@ export default function FuelNew({ close }) {
       fuel_end_reading: fuelData[type]?.end || "",
       fuel_qty: fuelData[type]?.qty || "",
       amount: fuelData[type]?.total || "",
-      cash: cash,
-      bank: bank,
-      hpCard: hpCard,
+      cash_inhand: cash,
+      cash_bank: bank,
     }));
+
     axios
       .post(
         `${process.env.NEXT_PUBLIC_API_URL}/fuelAccounts/POSTFuelAccount`,
@@ -139,15 +171,6 @@ export default function FuelNew({ close }) {
       <DialogTitle id="responsive-dialog-title">Add Fuel Details</DialogTitle>
       <DialogContent>
         <Stack spacing={2} sx={{ width: "100%", padding: "5px" }}>
-          {/* <Autocomplete
-            disablePortal
-            id="combo-box-demo"
-            options={employees}
-            sx={{ width: "100%" }}
-            renderInput={(params) => (
-              <TextField {...params} label="Name" fullWidth />
-            )}
-          /> */}
           <FormControl fullWidth>
             <InputLabel id="employee-label">Employee</InputLabel>
             <Select
@@ -207,8 +230,8 @@ export default function FuelNew({ close }) {
                     onChange={(event) => setdispencer(event.target.value)}
                   >
                     {dispencers.map((disp) => (
-                      <MenuItem key={disp} value={disp}>
-                        {disp}
+                      <MenuItem key={disp._id} value={disp.dispencer_name}>
+                        {disp.dispencer_name}
                       </MenuItem>
                     ))}
                   </Select>
@@ -242,13 +265,13 @@ export default function FuelNew({ close }) {
                     )}
                     MenuProps={MenuProps}
                   >
-                    {fuelTypes.map((name) => (
+                    {subDispencers.map((name) => (
                       <MenuItem
-                        key={name}
-                        value={name}
+                        key={name?._id}
+                        value={name?.sub_dispencer}
                         style={getStyles(name, fueltype, theme)}
                       >
-                        {name}
+                        {name?.sub_dispencer}
                       </MenuItem>
                     ))}
                   </Select>
