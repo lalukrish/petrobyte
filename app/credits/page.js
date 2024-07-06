@@ -140,13 +140,7 @@ export default function Page() {
           >
             Credit / Debit
           </Button>
-          {open && (
-            <CreditNew
-              close={handleClose}
-              refresh={handelRefresh}
-              data={creditUsers}
-            />
-          )}
+          {open && <CreditNew close={handleClose} refresh={handelRefresh} />}
         </>
 
         {/* creditors details */}

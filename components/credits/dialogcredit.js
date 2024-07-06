@@ -18,9 +18,8 @@ import axios from "axios";
 import moment from "moment";
 require("dotenv").config();
 
-export default function CreditNew({ close, refresh, data }) {
-  console.log("currentamount", data);
-  const currentAmount = data?.credit_amount;
+export default function CreditNew({ close, refresh, data, currentAmount }) {
+  console.log("currentAmount", currentAmount);
   const [ccName, setCcName] = React.useState(data ? data.cc_id?._id : "");
   const [vehicleNo, setVehicleNo] = React.useState(data ? data.vehicle_no : "");
   const [fuel, setFuel] = React.useState(data ? data.fuel_type?._id : "");
@@ -109,7 +108,7 @@ export default function CreditNew({ close, refresh, data }) {
   const handelSave = () => {
     let creditData = {
       date: datePart,
-      cc_id: ccName,
+      cc_id: ccName._id,
       vehicle_no: vehicleNo,
       fuel_type: fuel ? fuel : null,
       fuel_quantity: fuelQuantity,
@@ -127,9 +126,10 @@ export default function CreditNew({ close, refresh, data }) {
       .then((response) => alert(response.data.message))
       .catch(() => alert(`Something went wrong, Please Try After Some Time`));
 
-    if (amountType === "Credit") {
-      let totalUpdatedAmount = parseInt(currentAmount) + parseInt(amount);
-      console.log("hi", parseInt(totalUpdatedAmount));
+    if (amountType == "Credit") {
+      let totalUpdatedAmount =
+        parseInt(ccName.credit_amount) + parseInt(amount);
+
       let putCreditData = {
         id: ccName,
         credit_amount: parseInt(totalUpdatedAmount),
@@ -144,8 +144,9 @@ export default function CreditNew({ close, refresh, data }) {
         .catch(() => alert(`Something went wrong, Please Try After Some Time`));
     }
 
-    if (amountType === "Debit") {
-      let totalUpdatedAmount = parseInt(currentAmount) - parseInt(amount);
+    if (amountType == "Debit") {
+      let totalUpdatedAmount =
+        parseInt(ccName.credit_amount) - parseInt(amount);
 
       let putCreditData = {
         id: ccName,
@@ -168,7 +169,7 @@ export default function CreditNew({ close, refresh, data }) {
     let updateData = {
       id: data._id,
       date: datePart,
-      cc_id: ccName,
+      cc_id: ccName._id,
       vehicle_no: vehicleNo,
       fuel_type: fuel ? fuel : null,
       fuel_quantity: fuelQuantity,
@@ -258,12 +259,12 @@ export default function CreditNew({ close, refresh, data }) {
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
-              value={ccName}
+              value={ccName._id}
               label="Name"
               onChange={(event) => setCcName(event.target.value)}
             >
               {ccLists.map((cc) => (
-                <MenuItem key={cc._id} value={cc._id}>
+                <MenuItem key={cc._id} value={cc}>
                   {cc.cc_name}
                 </MenuItem>
               ))}
