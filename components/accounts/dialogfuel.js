@@ -7,17 +7,16 @@ import {
   Button,
   TextField,
   Stack,
-  Grid,
   Box,
   Typography,
   MenuItem,
   Select,
   FormControl,
   InputLabel,
-  OutlinedInput,
-  Chip,
-  Autocomplete,
+  IconButton,
+  Divider,
 } from "@mui/material";
+import { Add, Remove } from "@mui/icons-material";
 import { useTheme } from "@mui/material/styles";
 import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -26,43 +25,22 @@ import axios from "axios";
 import moment from "moment";
 require("dotenv").config();
 
-function getStyles(name, selectedFuelTypes, theme) {
-  return {
-    fontWeight:
-      selectedFuelTypes.indexOf(name) === -1
-        ? theme.typography.fontWeightRegular
-        : theme.typography.fontWeightMedium,
-  };
-}
-
 export default function FuelNew({ close, editTest }) {
   const [allEmployee, setAllEmployee] = useState([]);
   const [dispencers, setDispencers] = useState([]);
-  const [subDispencers, setSubDispencers] = useState([]);
+  const [selectedDispencers, setSelectedDispencers] = useState([{ name: "", subRows: [] }]);
   const theme = useTheme();
   const handleClose = () => close();
   const date = moment().format("DD-MM-YYYY");
   const [fromtime, setfromtime] = useState("");
   const [totime, settotime] = useState("");
-  const [dispencer, setdispencer] = useState("");
-  const [fueltype, setfueltype] = useState([]);
   const [fuelData, setFuelData] = useState({});
   const [cash, setCash] = useState("");
   const [bank, setBank] = useState("");
   const [hpCard, setHpCard] = useState("");
+  const [totalSaleAmount, setTotalSaleAmount] = useState("");
   const [employee, setEmployee] = useState("");
   const todayStartOfTheDay = dayjs().startOf("day");
-  const ITEM_HEIGHT = 48;
-  const ITEM_PADDING_TOP = 8;
-
-  const MenuProps = {
-    PaperProps: {
-      style: {
-        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-        width: 250,
-      },
-    },
-  };
 
   const fetchEmployee = () => {
     axios
@@ -89,38 +67,37 @@ export default function FuelNew({ close, editTest }) {
     fetchDispensers();
   }, []);
 
-  useEffect(() => {
-    if (dispencer) {
-      const fetchSubDispencers = async () => {
-        try {
-          const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_API_URL}/dispencer/GETSubDispencer?name=${dispencer}`
-          );
-          setSubDispencers(response.data.message);
-        } catch (error) {
-          console.error("Error fetching sub dispensers:", error);
-        }
-      };
-
-      fetchSubDispencers();
+  const fetchSubRows = async (dispencer) => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/dispencer/GETSubDispencer?name=${dispencer}`
+      );
+      return response.data.message;
+    } catch (error) {
+      console.error("Error fetching sub rows:", error);
+      return [];
     }
-  }, [dispencer]);
+  };
 
   const handleSave = () => {
-    const fuelDetails = fueltype.map((type) => ({
-      date: date,
-      emp_id: employee,
-      emp_from_time: fromtime,
-      emp_to_time: totime,
-      dispencer: dispencer,
-      fueltype: type,
-      fuel_start_reading: fuelData[type]?.start || "",
-      fuel_end_reading: fuelData[type]?.end || "",
-      fuel_qty: fuelData[type]?.qty || "",
-      amount: fuelData[type]?.total || "",
-      cash_inhand: cash,
-      cash_bank: bank,
-    }));
+    const fuelDetails = selectedDispencers.flatMap((dispencer) =>
+      (dispencer.subRows || []).map((type) => ({
+        date: date,
+        emp_id: employee,
+        emp_from_time: fromtime,
+        emp_to_time: totime,
+        dispencer: dispencer.name,
+        fueltype: type.sub_dispencer,
+        fuel_start_reading: fuelData[type.sub_dispencer]?.start || "",
+        fuel_end_reading: fuelData[type.sub_dispencer]?.end || "",
+        fuel_qty: fuelData[type.sub_dispencer]?.qty || "",
+        amount: fuelData[type.sub_dispencer]?.total || "",
+        cash_inhand: cash,
+        cash_bank: bank,
+        cash_hpcard: hpCard,
+        total_sale_amount: totalSaleAmount,
+      }))
+    );
 
     axios
       .post(
@@ -130,14 +107,6 @@ export default function FuelNew({ close, editTest }) {
       .then((response) => {
         alert(response.data.message);
       });
-  };
-
-  const handleFuelTypeChange = (event) => {
-    const {
-      target: { value },
-    } = event;
-    const newFuelTypes = typeof value === "string" ? value.split(",") : value;
-    setfueltype(newFuelTypes);
   };
 
   const handleFuelDataChange = (type, field, value) => {
@@ -150,14 +119,20 @@ export default function FuelNew({ close, editTest }) {
     }));
   };
 
-  const handleDeleteFuelType = (typeToDelete) => () => {
-    setfueltype((prevFuelTypes) =>
-      prevFuelTypes.filter((type) => type !== typeToDelete)
-    );
-    setFuelData((prevFuelData) => {
-      const { [typeToDelete]: _, ...rest } = prevFuelData;
-      return rest;
-    });
+  const handleAddDispencer = () => {
+    setSelectedDispencers([...selectedDispencers, { name: "", subRows: [] }]);
+  };
+
+  const handleDispencerChange = async (index, value) => {
+    const newSelectedDispencers = [...selectedDispencers];
+    newSelectedDispencers[index].name = value;
+    newSelectedDispencers[index].subRows = await fetchSubRows(value);
+    setSelectedDispencers(newSelectedDispencers);
+  };
+
+  const handleRemoveDispencer = (index) => {
+    const newSelectedDispencers = selectedDispencers.filter((_, i) => i !== index);
+    setSelectedDispencers(newSelectedDispencers);
   };
 
   return (
@@ -171,63 +146,17 @@ export default function FuelNew({ close, editTest }) {
       <DialogTitle id="responsive-dialog-title">Add Fuel Details</DialogTitle>
       <DialogContent>
         <Stack spacing={2} sx={{ width: "100%", padding: "5px" }}>
-          <FormControl fullWidth>
-            <InputLabel id="employee-label">Employee</InputLabel>
-            <Select
-              labelId="employee-label"
-              id="employee-select"
-              label="Employee"
-              value={employee}
-              onChange={(event) => setEmployee(event.target.value)}
-            >
-              {allEmployee.map((option, index) => (
-                <MenuItem key={index} value={option._id}>
-                  {option.emp_name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <Grid container spacing={2} sx={{ display: "flex" }}>
-              <Grid item xs={6}>
-                <TimePicker
-                  label="From"
-                  defaultValue={todayStartOfTheDay}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      onChange={(event) => setfromtime(event.target.value)}
-                      fullWidth
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TimePicker
-                  label="To"
-                  defaultValue={todayStartOfTheDay}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      onChange={(event) => settotime(event.target.value)}
-                      fullWidth
-                    />
-                  )}
-                />
-              </Grid>
-            </Grid>
-          </LocalizationProvider>
-          <Box>
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <FormControl fullWidth sx={{ height: "100%" }}>
-                  <InputLabel id="dispencer-label">Dispencer</InputLabel>
+          {selectedDispencers.map((dispencer, index) => (
+            <Box key={index} sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                <FormControl fullWidth>
+                  <InputLabel id={`dispencer-label-${index}`}>Dispencer</InputLabel>
                   <Select
-                    labelId="dispencer-label"
-                    id="dispencer-select"
-                    value={dispencer}
+                    labelId={`dispencer-label-${index}`}
+                    id={`dispencer-select-${index}`}
+                    value={dispencer.name}
                     label="Dispencer"
-                    onChange={(event) => setdispencer(event.target.value)}
+                    onChange={(event) => handleDispencerChange(index, event.target.value)}
                   >
                     {dispencers.map((disp) => (
                       <MenuItem key={disp._id} value={disp.dispencer_name}>
@@ -236,87 +165,58 @@ export default function FuelNew({ close, editTest }) {
                     ))}
                   </Select>
                 </FormControl>
-              </Grid>
-              <Grid item xs={6}>
-                <FormControl fullWidth sx={{ height: "100%" }}>
-                  <InputLabel id="fuel-type-label">Sub Name</InputLabel>
-                  <Select
-                    labelId="fuel-type-label"
-                    id="fuel-type-select"
-                    multiple
-                    value={fueltype}
-                    onChange={handleFuelTypeChange}
-                    input={
-                      <OutlinedInput
-                        id="select-multiple-chip"
-                        label="Fuel Type"
-                      />
+                {index === selectedDispencers.length - 1 && (
+                  <IconButton onClick={handleAddDispencer} color="primary">
+                    <Add />
+                  </IconButton>
+                )}
+                {selectedDispencers.length > 1 && (
+                  <IconButton onClick={() => handleRemoveDispencer(index)} color="error">
+                    <Remove />
+                  </IconButton>
+                )}
+              </Box>
+              {dispencer.subRows.map((type) => (
+                <Box
+                  key={type._id}
+                  sx={{ display: "flex", alignItems: "center", gap: 2, mt: 2 }}
+                >
+                  <Typography>{type.sub_dispencer}</Typography>
+                  <TextField
+                    label="Start Metering"
+                    fullWidth
+                    variant="outlined"
+                    onChange={(e) =>
+                      handleFuelDataChange(type.sub_dispencer, "start", e.target.value)
                     }
-                    renderValue={(selected) => (
-                      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                        {selected.map((value) => (
-                          <Chip
-                            key={value}
-                            label={value}
-                            onDelete={handleDeleteFuelType(value)}
-                          />
-                        ))}
-                      </Box>
-                    )}
-                    MenuProps={MenuProps}
-                  >
-                    {subDispencers.map((name) => (
-                      <MenuItem
-                        key={name?._id}
-                        value={name?.sub_dispencer}
-                        style={getStyles(name, fueltype, theme)}
-                      >
-                        {name?.sub_dispencer}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-            </Grid>
-          </Box>
-          {fueltype.map((type) => (
-            <Box
-              key={type}
-              sx={{ display: "flex", alignItems: "center", gap: 2, mt: 2 }}
-            >
-              <Typography>{type}</Typography>
-              <TextField
-                label="Start Metering"
-                fullWidth
-                variant="outlined"
-                onChange={(e) =>
-                  handleFuelDataChange(type, "start", e.target.value)
-                }
-              />
-              <TextField
-                label="End Metering"
-                fullWidth
-                variant="outlined"
-                onChange={(e) =>
-                  handleFuelDataChange(type, "end", e.target.value)
-                }
-              />
-              <TextField
-                label="Fuel Qty"
-                fullWidth
-                variant="outlined"
-                onChange={(e) =>
-                  handleFuelDataChange(type, "qty", e.target.value)
-                }
-              />
-              <TextField
-                label="Sale Amount"
-                fullWidth
-                variant="outlined"
-                onChange={(e) =>
-                  handleFuelDataChange(type, "total", e.target.value)
-                }
-              />
+                  />
+                  <TextField
+                    label="End Metering"
+                    fullWidth
+                    variant="outlined"
+                    onChange={(e) =>
+                      handleFuelDataChange(type.sub_dispencer, "end", e.target.value)
+                    }
+                  />
+                  <TextField
+                    label="Fuel Qty"
+                    fullWidth
+                    variant="outlined"
+                    onChange={(e) =>
+                      handleFuelDataChange(type.sub_dispencer, "qty", e.target.value)
+                    }
+                  />
+                  <TextField
+                    label="Sale Amount"
+                    fullWidth
+                    variant="outlined"
+                    onChange={(e) =>
+                      handleFuelDataChange(type.sub_dispencer, "total", e.target.value)
+                    }
+                  />
+                </Box>
+              ))}
+              <Divider sx={{ my: 1, borderWidth: 0.5, borderStyle: 'dashed' }} />
             </Box>
           ))}
           <Box sx={{ display: "flex", alignItems: "center", gap: 2, mt: 2 }}>
@@ -343,11 +243,12 @@ export default function FuelNew({ close, editTest }) {
             />
           </Box>
           <TextField
-            id=""
-            disabled
             label="Total Sale Amount"
             fullWidth
             variant="outlined"
+            value={totalSaleAmount}
+            onChange={(e) => setTotalSaleAmount(e.target.value)}
+            sx={{ mt: 2 }}
           />
         </Stack>
       </DialogContent>
