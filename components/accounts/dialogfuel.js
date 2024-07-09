@@ -32,40 +32,28 @@ export default function FuelNew({ close, editTest }) {
   const theme = useTheme();
   const handleClose = () => close();
   const date = moment().format("DD-MM-YYYY");
-  const [fromtime, setfromtime] = useState("");
-  const [totime, settotime] = useState("");
   const [fuelData, setFuelData] = useState({});
   const [cash, setCash] = useState("");
   const [bank, setBank] = useState("");
   const [hpCard, setHpCard] = useState("");
   const [totalSaleAmount, setTotalSaleAmount] = useState("");
-  const [employee, setEmployee] = useState("");
-  const todayStartOfTheDay = dayjs().startOf("day");
-
-  const fetchEmployee = () => {
-    axios
-      .get(`${process.env.NEXT_PUBLIC_API_URL}/employee/GETAllEmployee`)
-      .then((response) => setAllEmployee(response.data.message.employees));
-  };
 
   useEffect(() => {
-    fetchEmployee();
-  }, []);
-
-  useEffect(() => {
-    const fetchDispensers = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/dispencer/GETAllDispencer`
-        );
-        setDispencers(response.data.message.allDispencers);
-      } catch (error) {
-        console.error("Error fetching dispensers:", error);
-      }
-    };
+    
 
     fetchDispensers();
   }, []);
+
+  const fetchDispensers = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/dispencer/GETAllDispencer`
+      );
+      setDispencers(response.data.message.allDispencers);
+    } catch (error) {
+      console.error("Error fetching dispensers:", error);
+    }
+  };
 
   const fetchSubRows = async (dispencer) => {
     try {
@@ -83,19 +71,13 @@ export default function FuelNew({ close, editTest }) {
     const fuelDetails = selectedDispencers.flatMap((dispencer) =>
       (dispencer.subRows || []).map((type) => ({
         date: date,
-        emp_id: employee,
-        emp_from_time: fromtime,
-        emp_to_time: totime,
-        dispencer: dispencer.name,
-        fueltype: type.sub_dispencer,
+        dispencer_name: dispencer.name,
+        sub_dispencer_id: type.sub_dispencer,
         fuel_start_reading: fuelData[type.sub_dispencer]?.start || "",
         fuel_end_reading: fuelData[type.sub_dispencer]?.end || "",
         fuel_qty: fuelData[type.sub_dispencer]?.qty || "",
         amount: fuelData[type.sub_dispencer]?.total || "",
-        cash_inhand: cash,
-        cash_bank: bank,
-        cash_hpcard: hpCard,
-        total_sale_amount: totalSaleAmount,
+        fuel_price_selected:fuelprice,
       }))
     );
 
@@ -135,6 +117,11 @@ export default function FuelNew({ close, editTest }) {
     setSelectedDispencers(newSelectedDispencers);
   };
 
+  const getAvailableDispensers = (index) => {
+    const selectedNames = selectedDispencers.map((disp) => disp.name);
+    return dispencers.filter((disp) => !selectedNames.includes(disp.dispencer_name) || disp.dispencer_name === selectedDispencers[index].name);
+  };
+
   return (
     <Dialog
       maxWidth="md"
@@ -158,7 +145,7 @@ export default function FuelNew({ close, editTest }) {
                     label="Dispencer"
                     onChange={(event) => handleDispencerChange(index, event.target.value)}
                   >
-                    {dispencers.map((disp) => (
+                    {getAvailableDispensers(index).map((disp) => (
                       <MenuItem key={disp._id} value={disp.dispencer_name}>
                         {disp.dispencer_name}
                       </MenuItem>

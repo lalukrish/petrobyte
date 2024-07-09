@@ -387,12 +387,12 @@ export default function Page() {
                   <TableCell align="center" sx={{ fontWeight: "bold" }}>
                     Dispencer
                   </TableCell>
-                  <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                  {/* <TableCell align="center" sx={{ fontWeight: "bold" }}>
                     Petrol Sale Amount
                   </TableCell>
                   <TableCell align="center" sx={{ fontWeight: "bold" }}>
                     Diesel Sale amount
-                  </TableCell>
+                  </TableCell> */}
                   <TableCell align="center" sx={{ fontWeight: "bold" }}>
                     Net Amount
                   </TableCell>
