@@ -105,7 +105,7 @@ export default function CreditNew({ close, refresh, data, currentAmount }) {
     close();
   };
 
-  const handelSave = () => {
+  const handelSave = async () => {
     let creditData = {
       date: datePart,
       cc_id: ccName._id,
@@ -128,11 +128,11 @@ export default function CreditNew({ close, refresh, data, currentAmount }) {
 
     if (amountType == "Credit") {
       let totalUpdatedAmount =
-        parseInt(ccName.credit_amount) + parseInt(amount);
+        parseFloat(ccName.credit_amount) + parseFloat(amount);
 
       let putCreditData = {
         id: ccName,
-        credit_amount: parseInt(totalUpdatedAmount),
+        credit_amount: parseFloat(totalUpdatedAmount),
       };
 
       axios
@@ -140,17 +140,20 @@ export default function CreditNew({ close, refresh, data, currentAmount }) {
           `${process.env.NEXT_PUBLIC_API_URL}/creditcustomer/updateCreditAmount`,
           putCreditData
         )
-        .then((response) => alert(response.data.message))
+        .then((response) => {
+          alert(response.data.message);
+          refresh();
+        })
         .catch(() => alert(`Something went wrong, Please Try After Some Time`));
     }
 
     if (amountType == "Debit") {
       let totalUpdatedAmount =
-        parseInt(ccName.credit_amount) - parseInt(amount);
+        parseFloat(ccName.credit_amount) - parseFloat(amount);
 
       let putCreditData = {
         id: ccName,
-        credit_amount: parseInt(totalUpdatedAmount),
+        credit_amount: parseFloat(totalUpdatedAmount),
       };
 
       axios
@@ -158,10 +161,12 @@ export default function CreditNew({ close, refresh, data, currentAmount }) {
           `${process.env.NEXT_PUBLIC_API_URL}/creditcustomer/updateCreditAmount`,
           putCreditData
         )
-        .then((response) => alert(response.data.message))
+        .then((response) => {
+          alert(response.data.message);
+          refresh();
+        })
         .catch(() => alert(`Something went wrong, Please Try After Some Time`));
     }
-    refresh();
     close();
   };
 
@@ -191,17 +196,17 @@ export default function CreditNew({ close, refresh, data, currentAmount }) {
       let totalUpdatedAmount = data.amount;
 
       if (data.amount > amount) {
-        let difference = parseInt(data.amount) - parseInt(amount);
-        totalUpdatedAmount = parseInt(currentAmount) - parseInt(difference);
+        let difference = parseFloat(data.amount) - parseFloat(amount);
+        totalUpdatedAmount = parseFloat(currentAmount) - parseFloat(difference);
       }
       if (data.amount < amount) {
-        let difference = parseInt(amount) - parseInt(data.amount);
-        totalUpdatedAmount = parseInt(currentAmount) + parseInt(difference);
+        let difference = parseFloat(amount) - parseFloat(data.amount);
+        totalUpdatedAmount = parseFloat(currentAmount) + parseFloat(difference);
       }
 
       let putCreditData = {
         id: data.cc_id._id,
-        credit_amount: parseInt(totalUpdatedAmount),
+        credit_amount: parseFloat(totalUpdatedAmount),
       };
 
       axios
@@ -217,17 +222,17 @@ export default function CreditNew({ close, refresh, data, currentAmount }) {
       let totalUpdatedAmount = data.amount;
 
       if (data.amount > amount) {
-        let difference = parseInt(data.amount) - parseInt(amount);
-        totalUpdatedAmount = parseInt(currentAmount) + parseInt(difference);
+        let difference = parseFloat(data.amount) - parseFloat(amount);
+        totalUpdatedAmount = parseFloat(currentAmount) + parseFloat(difference);
       }
       if (data.amount < amount) {
-        let difference = parseInt(amount) - parseInt(data.amount);
-        totalUpdatedAmount = parseInt(currentAmount) - parseInt(difference);
+        let difference = parseFloat(amount) - parseFloat(data.amount);
+        totalUpdatedAmount = parseFloat(currentAmount) - parseFloat(difference);
       }
 
       let putCreditData = {
         id: data.cc_id._id,
-        credit_amount: parseInt(totalUpdatedAmount),
+        credit_amount: parseFloat(totalUpdatedAmount),
       };
 
       axios

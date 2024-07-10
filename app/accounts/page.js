@@ -64,7 +64,7 @@ export default function Page() {
       .get(
         `${process.env.NEXT_PUBLIC_API_URL}/fuelAccounts/GETFuelAccountOverview`
       )
-      .then((response) => setAccountoverview(response.data));
+      .then((response) => setAccountoverview(response.data.message));
   }, []);
 
   useEffect(() => {
