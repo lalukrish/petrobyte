@@ -20,7 +20,7 @@ import {
   TableRow,
 } from "@mui/material";
 import axios from "axios";
-require('dotenv').config()
+require("dotenv").config();
 
 export default function FullScreenDialog({ open, handleClose, content }) {
   const [fuel, setFuel] = React.useState(false);
@@ -30,10 +30,12 @@ export default function FullScreenDialog({ open, handleClose, content }) {
 
   useEffect(() => {
     axios
-      .get(`${process.env.NEXT_PUBLIC_API_URL}/fuelAccounts/GETFUelAccountbydate?date=${content.date}&dispencer=${content.dispencer}`)
+      .get(
+        `${process.env.NEXT_PUBLIC_API_URL}/fuelAccounts/GETFUelAccountbydate?date=${content.date}&dispencer=${content.dispencer}`
+      )
       .then((response) => {
-        setfuelAccounts(response.data.message);
-        console.log("datas", response.data.message);
+        setfuelAccounts(response.data.message.fuelDetails);
+        console.log("datas", response.data.message.fuelDetails);
       });
   }, [content.date, content.dispencer]);
 
@@ -51,12 +53,7 @@ export default function FullScreenDialog({ open, handleClose, content }) {
   };
 
   return (
-    <Dialog
-      open={open}
-      onClose={handlefullClose}
-      maxWidth="lg"
-      fullWidth
-    >
+    <Dialog open={open} onClose={handlefullClose} maxWidth="lg" fullWidth>
       {edit && <FuelUpdate clse={handledialogeditclose} data={editdetails} />}
       <DialogTitle sx={{ fontWeight: "bold", color: "#0d47a1" }}>
         Fuel Details
@@ -75,63 +72,115 @@ export default function FullScreenDialog({ open, handleClose, content }) {
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead sx={{ fontStyle: "normal", background: "#e3f2fd" }}>
               <TableRow>
-                <TableCell align="center" colSpan={5} sx={{ fontWeight: "bold" }}>
+                <TableCell
+                  align="center"
+                  colSpan={5}
+                  sx={{ fontWeight: "bold" }}
+                >
                   Staff
                 </TableCell>
-                <TableCell align="center" colSpan={5} sx={{ fontWeight: "bold" }}>
+                <TableCell
+                  align="center"
+                  colSpan={5}
+                  sx={{ fontWeight: "bold" }}
+                >
                   Fuel Details
                 </TableCell>
-                <TableCell align="center" colSpan={1} sx={{ fontWeight: "bold" }}>
+                <TableCell
+                  align="center"
+                  colSpan={1}
+                  sx={{ fontWeight: "bold" }}
+                >
                   Actions
                 </TableCell>
               </TableRow>
               <TableRow>
-                <TableCell align="center" sx={{ fontWeight: "bold" }}>Date</TableCell>
-                <TableCell align="center" sx={{ fontWeight: "bold" }}>Name</TableCell>
-                <TableCell align="center" sx={{ fontWeight: "bold" }}>From</TableCell>
-                <TableCell align="center" sx={{ fontWeight: "bold" }}>To</TableCell>
-                <TableCell align="center" sx={{ fontWeight: "bold" }}>Dispencer</TableCell>
-                <TableCell align="center" sx={{ fontWeight: "bold" }}>Sub</TableCell>
-                <TableCell align="center" sx={{ fontWeight: "bold" }}>SM</TableCell>
-                <TableCell align="center" sx={{ fontWeight: "bold" }}>EM</TableCell>
-                <TableCell align="center" sx={{ fontWeight: "bold" }}>Qty in Lts</TableCell>
-                <TableCell align="center" sx={{ fontWeight: "bold" }}>Sale Amount</TableCell>
-                <TableCell align="center" sx={{ fontWeight: "bold" }}>Actions</TableCell>
+                <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                  Date
+                </TableCell>
+                {/* <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                  Name
+                </TableCell>
+                <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                  From
+                </TableCell>
+                <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                  To
+                </TableCell> */}
+                <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                  Dispencer
+                </TableCell>
+                <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                  Sub
+                </TableCell>
+                <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                  SM
+                </TableCell>
+                <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                  EM
+                </TableCell>
+                <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                  Qty in Lts
+                </TableCell>
+                <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                  Sale Amount
+                </TableCell>
+                <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                  Actions
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {fuelAccounts.map((fuelAccount) => (
-                <TableRow key={fuelAccount._id}>
-                  <TableCell align="center">{fuelAccount.date}</TableCell>
-                  <TableCell align="center">{fuelAccount.emp_id?.emp_name}</TableCell>
-                  <TableCell align="center">{fuelAccount.emp_from_time}</TableCell>
-                  <TableCell align="center">{fuelAccount.emp_to_time}</TableCell>
-                  <TableCell align="center">{fuelAccount.dispencer}</TableCell>
-                  <TableCell align="center">{fuelAccount.fueltype}</TableCell>
-                  <TableCell align="center">{fuelAccount.fuel_start_reading}</TableCell>
-                  <TableCell align="center">{fuelAccount.fuel_end_reading}</TableCell>
-                  <TableCell align="center">{fuelAccount.fuel_qty}</TableCell>
-                  <TableCell align="center">{fuelAccount.amount}</TableCell>
-                  <TableCell align="center">
-                    <EditIcon
-                      onClick={() => handledialogeditopen(fuelAccount)}
-                      sx={{
-                        color: "#0d47a1",
-                        "&:hover:not(.Mui-disabled)": {
-                          cursor: "pointer",
-                        },
-                      }}
-                    />
-                  </TableCell>
-                </TableRow>
-              ))}
+              {fuelAccounts &&
+                fuelAccounts?.map((fuelAccount) => {
+                  console.log("fuelAccount", fuelAccount);
+                  return (
+                    <TableRow key={fuelAccount._id}>
+                      <TableCell align="center">{fuelAccount.date}</TableCell>
+                      {/* <TableCell align="center">
+                        {fuelAccount.emp_id?.emp_name}
+                      </TableCell>
+                      <TableCell align="center">
+                        {fuelAccount.emp_from_time}
+                      </TableCell>
+                      <TableCell align="center">
+                        {fuelAccount.emp_to_time}
+                      </TableCell> */}
+                      <TableCell align="center">
+                        {fuelAccount.dispencer_name}
+                      </TableCell>
+                      <TableCell align="center">
+                        {fuelAccount.sub_dispencer_id?.sub_dispencer}
+                      </TableCell>
+                      <TableCell align="center">
+                        {fuelAccount.fuel_start_reading}
+                      </TableCell>
+                      <TableCell align="center">
+                        {fuelAccount.fuel_end_reading}
+                      </TableCell>
+                      <TableCell align="center">
+                        {fuelAccount.fuel_qty}
+                      </TableCell>
+                      <TableCell align="center">{fuelAccount.amount}</TableCell>
+                      <TableCell align="center">
+                        <EditIcon
+                          onClick={() => handledialogeditopen(fuelAccount)}
+                          sx={{
+                            color: "#0d47a1",
+                            "&:hover:not(.Mui-disabled)": {
+                              cursor: "pointer",
+                            },
+                          }}
+                        />
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
             </TableBody>
           </Table>
         </TableContainer>
       </DialogContent>
-      <DialogActions>
-        {/* Optional footer actions */}
-      </DialogActions>
+      <DialogActions>{/* Optional footer actions */}</DialogActions>
     </Dialog>
   );
 }

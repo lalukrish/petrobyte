@@ -24,14 +24,15 @@ import dayjs from "dayjs";
 import axios from "axios";
 import moment from "moment";
 require("dotenv").config();
-
 export default function FuelNew({ close, editTest }) {
   const [allEmployee, setAllEmployee] = useState([]);
   const [dispencers, setDispencers] = useState([]);
-  const [selectedDispencers, setSelectedDispencers] = useState([{ name: "", subRows: [] }]);
+  const [selectedDispencers, setSelectedDispencers] = useState([
+    { name: "", subRows: [] },
+  ]);
   const theme = useTheme();
   const handleClose = () => close();
-  const date = moment().format("DD-MM-YYYY");
+  const date = moment().format("DD/MM/YYYY");
   const [fuelData, setFuelData] = useState({});
   const [cash, setCash] = useState("");
   const [bank, setBank] = useState("");
@@ -39,8 +40,6 @@ export default function FuelNew({ close, editTest }) {
   const [totalSaleAmount, setTotalSaleAmount] = useState("");
 
   useEffect(() => {
-    
-
     fetchDispensers();
   }, []);
 
@@ -72,15 +71,15 @@ export default function FuelNew({ close, editTest }) {
       (dispencer.subRows || []).map((type) => ({
         date: date,
         dispencer_name: dispencer.name,
-        sub_dispencer_id: type.sub_dispencer,
-        fuel_start_reading: fuelData[type.sub_dispencer]?.start || "",
-        fuel_end_reading: fuelData[type.sub_dispencer]?.end || "",
-        fuel_qty: fuelData[type.sub_dispencer]?.qty || "",
-        amount: fuelData[type.sub_dispencer]?.total || "",
-        fuel_price_selected:fuelprice,
+        sub_dispencer_id: type.sub_dispencer_id._id,
+        fuel_start_reading: fuelData[type.sub_dispencer_id._id]?.start || "",
+        fuel_end_reading: fuelData[type.sub_dispencer_id._id]?.end || "",
+        fuel_qty: fuelData[type.sub_dispencer_id._id]?.qty || "",
+        amount: fuelData[type.sub_dispencer_id._id]?.total || "",
+        fuel_price_selected: type.sub_dispencer_id.fuel_id?.fuel_price,
       }))
     );
-
+    console.log("fuelDetails", fuelDetails);
     axios
       .post(
         `${process.env.NEXT_PUBLIC_API_URL}/fuelAccounts/POSTFuelAccount`,
@@ -88,6 +87,29 @@ export default function FuelNew({ close, editTest }) {
       )
       .then((response) => {
         alert(response.data.message);
+      })
+      .catch((error) => {
+        console.error("Error posting fuel details:", error);
+      });
+
+    const cashDetails = {
+      date: date,
+      total_amount: totalSaleAmount,
+      cash_inhand: cash,
+      cash_bank: bank,
+      cash_other: hpCard,
+    };
+
+    axios
+      .post(
+        `${process.env.NEXT_PUBLIC_API_URL}/cashManagement/POSTCashDetails`,
+        cashDetails
+      )
+      .then((response) => {
+        alert(response.data.message);
+      })
+      .catch((error) => {
+        console.error("Error posting cash details:", error);
       });
   };
 
@@ -109,17 +131,24 @@ export default function FuelNew({ close, editTest }) {
     const newSelectedDispencers = [...selectedDispencers];
     newSelectedDispencers[index].name = value;
     newSelectedDispencers[index].subRows = await fetchSubRows(value);
+    console.log("newSelectedDispencers", newSelectedDispencers);
     setSelectedDispencers(newSelectedDispencers);
   };
 
   const handleRemoveDispencer = (index) => {
-    const newSelectedDispencers = selectedDispencers.filter((_, i) => i !== index);
+    const newSelectedDispencers = selectedDispencers.filter(
+      (_, i) => i !== index
+    );
     setSelectedDispencers(newSelectedDispencers);
   };
 
   const getAvailableDispensers = (index) => {
     const selectedNames = selectedDispencers.map((disp) => disp.name);
-    return dispencers.filter((disp) => !selectedNames.includes(disp.dispencer_name) || disp.dispencer_name === selectedDispencers[index].name);
+    return dispencers.filter(
+      (disp) =>
+        !selectedNames.includes(disp.dispencer_name) ||
+        disp.dispencer_name === selectedDispencers[index].name
+    );
   };
 
   return (
@@ -134,16 +163,23 @@ export default function FuelNew({ close, editTest }) {
       <DialogContent>
         <Stack spacing={2} sx={{ width: "100%", padding: "5px" }}>
           {selectedDispencers.map((dispencer, index) => (
-            <Box key={index} sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            <Box
+              key={index}
+              sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+            >
               <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
                 <FormControl fullWidth>
-                  <InputLabel id={`dispencer-label-${index}`}>Dispencer</InputLabel>
+                  <InputLabel id={`dispencer-label-${index}`}>
+                    Dispencer
+                  </InputLabel>
                   <Select
                     labelId={`dispencer-label-${index}`}
                     id={`dispencer-select-${index}`}
                     value={dispencer.name}
                     label="Dispencer"
-                    onChange={(event) => handleDispencerChange(index, event.target.value)}
+                    onChange={(event) =>
+                      handleDispencerChange(index, event.target.value)
+                    }
                   >
                     {getAvailableDispensers(index).map((disp) => (
                       <MenuItem key={disp._id} value={disp.dispencer_name}>
@@ -158,7 +194,10 @@ export default function FuelNew({ close, editTest }) {
                   </IconButton>
                 )}
                 {selectedDispencers.length > 1 && (
-                  <IconButton onClick={() => handleRemoveDispencer(index)} color="error">
+                  <IconButton
+                    onClick={() => handleRemoveDispencer(index)}
+                    color="error"
+                  >
                     <Remove />
                   </IconButton>
                 )}
@@ -168,13 +207,17 @@ export default function FuelNew({ close, editTest }) {
                   key={type._id}
                   sx={{ display: "flex", alignItems: "center", gap: 2, mt: 2 }}
                 >
-                  <Typography>{type.sub_dispencer}</Typography>
+                  <Typography>{type.sub_dispencer_id.sub_dispencer}</Typography>
                   <TextField
                     label="Start Metering"
                     fullWidth
                     variant="outlined"
                     onChange={(e) =>
-                      handleFuelDataChange(type.sub_dispencer, "start", e.target.value)
+                      handleFuelDataChange(
+                        type.sub_dispencer_id._id,
+                        "start",
+                        e.target.value
+                      )
                     }
                   />
                   <TextField
@@ -182,7 +225,11 @@ export default function FuelNew({ close, editTest }) {
                     fullWidth
                     variant="outlined"
                     onChange={(e) =>
-                      handleFuelDataChange(type.sub_dispencer, "end", e.target.value)
+                      handleFuelDataChange(
+                        type.sub_dispencer_id._id,
+                        "end",
+                        e.target.value
+                      )
                     }
                   />
                   <TextField
@@ -190,7 +237,11 @@ export default function FuelNew({ close, editTest }) {
                     fullWidth
                     variant="outlined"
                     onChange={(e) =>
-                      handleFuelDataChange(type.sub_dispencer, "qty", e.target.value)
+                      handleFuelDataChange(
+                        type.sub_dispencer_id._id,
+                        "qty",
+                        e.target.value
+                      )
                     }
                   />
                   <TextField
@@ -198,14 +249,25 @@ export default function FuelNew({ close, editTest }) {
                     fullWidth
                     variant="outlined"
                     onChange={(e) =>
-                      handleFuelDataChange(type.sub_dispencer, "total", e.target.value)
+                      handleFuelDataChange(
+                        type.sub_dispencer_id._id,
+                        "total",
+                        e.target.value
+                      )
                     }
                   />
                 </Box>
               ))}
-              <Divider sx={{ my: 1, borderWidth: 0.5, borderStyle: 'dashed' }} />
+              <Divider
+                sx={{ my: 1, borderWidth: 0.5, borderStyle: "dashed" }}
+              />
             </Box>
           ))}
+          {/* <Divider
+                sx={{ my: 1, borderWidth: 0.5, borderStyle: "dashed" }}
+              />
+            </Box>
+          ))} */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 2, mt: 2 }}>
             <TextField
               label="Cash"

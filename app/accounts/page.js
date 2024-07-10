@@ -409,18 +409,18 @@ export default function Page() {
                     <TableCell component="th" scope="row" align="center">
                       {accnt.date}
                     </TableCell>
-                    <TableCell align="center">{accnt.dispencer}</TableCell>
-                    <TableCell align="center">
+                    <TableCell align="center">{accnt.dispencer_name}</TableCell>
+                    {/* <TableCell align="center">
                       {accnt.petrolSaleAmount}
                     </TableCell>
                     <TableCell align="center">
                       {accnt.deiselSaleAmount}
-                    </TableCell>
-                    <TableCell align="center">{accnt.netAmount}</TableCell>
+                    </TableCell> */}
+                    <TableCell align="center">{accnt.total_amount}</TableCell>
                     <TableCell align="center">
                       <Button
                         onClick={() =>
-                          handleDialogOpen(accnt.date, accnt.dispencer)
+                          handleDialogOpen(accnt.date, accnt.dispencer_name)
                         }
                       >
                         <OpenInFullIcon sx={{ color: "#0d47a1" }} />
