@@ -19,14 +19,14 @@ export default function ProductsTable() {
   const [products, setProduct] = React.useState([]);
   const [editProduct, setEditProduct] = React.useState({});
   const [refreshProduct, setrefreshProduct] = React.useState(false);
-
+  const [search, setSearch] = React.useState("");
   const [currentPage, setCurrentPage] = React.useState(1);
   const [totalPages, setTotalPages] = React.useState(1);
   const limit = 10;
 
   React.useEffect(() => {
     axios
-      .get(`${process.env.NEXT_PUBLIC_API_URL}/product/GETAllProduct`, {
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/product/GETAllProduct?name=${search}`, {
         params: {
           page: currentPage,
           limit: limit,
@@ -36,7 +36,7 @@ export default function ProductsTable() {
         setProduct(response.data.message.products);
         setTotalPages(Math.ceil(response.data.message.count / limit));
       });
-  }, [refreshProduct, currentPage]);
+  }, [refreshProduct, currentPage,search]);
 
   const handleRefresh = () => {
     setrefreshProduct(!refreshProduct);
@@ -68,6 +68,11 @@ export default function ProductsTable() {
 
   const handlePageChange = (event, value) => {
     setCurrentPage(value);
+  };
+  const handleSearch = (value) => {
+    // Handle the search functionality here
+    console.log("Search clicked", value);
+    setSearch(value);
   };
 
   return (
@@ -113,7 +118,7 @@ export default function ProductsTable() {
       </InputAdornment>
     ),
   }}
-  onChange={() => {
+  onChange={(event) => {
     handleSearch(event.target.value);
   }}
 />

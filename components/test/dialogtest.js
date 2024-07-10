@@ -156,8 +156,8 @@ export default function TestNew({ close, onDataUpdated, editTest }) {
               disabled={!subDispencers.length}
             >
               {subDispencers.map((subDispencer) => (
-                <MenuItem key={subDispencer._id} value={subDispencer._id}>
-                  {subDispencer.sub_dispencer}
+                <MenuItem key={subDispencer.sub_dispencer_id._id} value={subDispencer.sub_dispencer_id._id}>
+                  {subDispencer.sub_dispencer_id.sub_dispencer}
                 </MenuItem>
               ))}
             </Select>

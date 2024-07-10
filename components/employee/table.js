@@ -201,7 +201,7 @@ export default function DataTable() {
             </InputAdornment>
           ),
         }}
-        onChange={() => {
+        onChange={(event) => {
           handleSearch(event.target.value);
         }}
       />
