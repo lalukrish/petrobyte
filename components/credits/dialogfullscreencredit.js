@@ -30,6 +30,7 @@ import CreditNew from "./dialogcredit";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
 
 require("dotenv").config();
 
@@ -38,20 +39,27 @@ const MediumDialog = ({ open, handleClose, data, refresh }) => {
   const [creditData, setCreditData] = useState({});
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editCreditHistory, setEditCreditHistory] = useState(false);
+  const [search, setSearch] = React.useState("");
 
   useEffect(() => {
     if (data?._id) {
       let idQuery = data._id.replace(/['"]/g, "");
       axios
         .get(
-          `${process.env.NEXT_PUBLIC_API_URL}/creditHistory/GETAllCreditHistory?id=${idQuery}`
+          `${process.env.NEXT_PUBLIC_API_URL}/creditHistory/GETAllCreditHistory?id=${idQuery}&date=${search}`
         )
         .then((response) => {
           setCreditHistory(response.data.message.CreditHistorys);
         })
         .catch(() => alert(`Something Went Wrong at individual`));
     }
-  }, [refresh]);
+  }, [refresh, search]);
+
+  const handleSearch = (value) => {
+    // Handle the search functionality here
+    console.log("Search clicked", value);
+    setSearch(value);
+  };
 
   const exportPDF = () => {
     const personalInfo = {
@@ -232,12 +240,16 @@ const MediumDialog = ({ open, handleClose, data, refresh }) => {
                         color: "#0d47a1",
                       },
                     }}
+                    format="DD/MM/YYYY"
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">
                           <CalendarTodayIcon />
                         </InputAdornment>
                       ),
+                    }}
+                    onChange={(date) => {
+                      handleSearch(dayjs(date).format("DD/MM/YYYY"));
                     }}
                   />
                 </DemoContainer>
