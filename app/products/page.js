@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Button } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import React, { useEffect } from "react";
 import ProductsTable from "@/components/products/tableproducts";
 import ProductNew from "@/components/products/dialogproduct";
@@ -16,6 +16,9 @@ export default function page() {
   
   
   return (
+    <>
+    <Typography sx={{ fontWeight: "bold" }}>Products & Pricing</Typography>
+    
     <Box
       sx={{
         height: "100vh",
@@ -37,5 +40,6 @@ export default function page() {
 
       <ProductsTable/>
     </Box>
+    </>
   );
 }

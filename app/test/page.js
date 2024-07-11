@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Button } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import React, { useEffect } from "react";
 import TestTable from "@/components/test/table";
 
@@ -15,7 +15,10 @@ export default function page() {
   
   
   return (
+    <>
+    <Typography sx={{ fontWeight: "bold" }}>Test & Details</Typography>
     <Box
+    
       sx={{
         height: "100vh",
         backgroundRepeat: "no-repeat",
@@ -30,5 +33,6 @@ export default function page() {
 
       
     </Box>
+    </>
   );
 }

@@ -285,7 +285,6 @@ const MediumDialog = ({ open, handleClose, data, refresh }) => {
                   <TableCell align="center" sx={{ fontWeight: "bold" }}>
                     Staff Name
                   </TableCell>
-
                   <TableCell
                     align="center"
                     sx={{ fontWeight: "bold" }}
@@ -317,7 +316,6 @@ const MediumDialog = ({ open, handleClose, data, refresh }) => {
                     <TableCell align="center">
                       {history.emp_id?.emp_name}
                     </TableCell>
-
                     <TableCell align="center" className="action-buttons">
                       <Button
                         onClick={() => handleEditCreditHistoryOpen(history)}
@@ -338,12 +336,24 @@ const MediumDialog = ({ open, handleClose, data, refresh }) => {
           </TableContainer>
         </DialogContent>
         <DialogActions>
-          <IconButton onClick={exportPDF} color="primary">
-            <PictureAsPdf />
-          </IconButton>
-          <Button onClick={handleClose} color="error">
-            Close
-          </Button>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            width="100%"
+          >
+            <Typography sx={{ fontWeight: "bold", marginLeft: "20px" }}>
+              Credit to be Paid:{}
+            </Typography>
+            <Box>
+              <IconButton onClick={exportPDF} color="primary">
+                <PictureAsPdf />
+              </IconButton>
+              <Button onClick={handleClose} color="error">
+                Close
+              </Button>
+            </Box>
+          </Box>
         </DialogActions>
       </Dialog>
 

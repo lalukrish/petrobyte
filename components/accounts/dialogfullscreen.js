@@ -72,16 +72,16 @@ export default function FullScreenDialog({ open, handleClose, content }) {
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead sx={{ fontStyle: "normal", background: "#e3f2fd" }}>
               <TableRow>
-                <TableCell
+                {/* <TableCell
                   align="center"
-                  colSpan={5}
+                  colSpan={3} // Adjusted to match the number of Staff columns
                   sx={{ fontWeight: "bold" }}
                 >
                   Staff
-                </TableCell>
+                </TableCell> */}
                 <TableCell
                   align="center"
-                  colSpan={5}
+                  colSpan={7} // Adjusted to match the number of Fuel Details columns
                   sx={{ fontWeight: "bold" }}
                 >
                   Fuel Details
@@ -94,21 +94,14 @@ export default function FullScreenDialog({ open, handleClose, content }) {
                   Actions
                 </TableCell>
               </TableRow>
-              <TableRow>
+              <TableRow sx={{ background: "#e3f2fd" }}>
+                {" "}
+                {/* Adjust color if needed */}
                 <TableCell align="center" sx={{ fontWeight: "bold" }}>
                   Date
                 </TableCell>
-                {/* <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                  Name
-                </TableCell>
                 <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                  From
-                </TableCell>
-                <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                  To
-                </TableCell> */}
-                <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                  Dispencer
+                  Dispenser
                 </TableCell>
                 <TableCell align="center" sx={{ fontWeight: "bold" }}>
                   Sub
@@ -126,10 +119,11 @@ export default function FullScreenDialog({ open, handleClose, content }) {
                   Sale Amount
                 </TableCell>
                 <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                  Actions
+                  
                 </TableCell>
               </TableRow>
             </TableHead>
+
             <TableBody>
               {fuelAccounts &&
                 fuelAccounts?.map((fuelAccount) => {

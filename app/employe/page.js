@@ -3,7 +3,7 @@
 import StaffNew from "@/components/employee/dialog";
 import BasicTable from "@/components/employee/table";
 import { PetrobyteContext } from "@/context/context";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import axios from "axios";
 require('dotenv').config()
 
@@ -25,6 +25,8 @@ export default function page() {
   };
   
   return (
+    <>
+    <Typography sx={{ fontWeight: "bold" }}>Staffs & Details</Typography>
     <Box
       sx={{
         height: "100vh",
@@ -39,5 +41,6 @@ export default function page() {
 
       <BasicTable />
     </Box>
+    </>
   );
 }

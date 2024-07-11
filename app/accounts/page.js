@@ -19,6 +19,7 @@ import {
   IconButton,
   TextField,
 } from "@mui/material";
+import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import EditIcon from "@mui/icons-material/Edit";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import LocalGasStationIcon from "@mui/icons-material/LocalGasStation";
@@ -34,6 +35,10 @@ import DoneAllIcon from "@mui/icons-material/DoneAll";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 import EditProductAccount from "@/components/accounts/accountsProducts/editAccountProduct";
 import SearchIcon from "@mui/icons-material/Search";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import dayjs from "dayjs";
 
 export default function Page() {
   const [fuel, setFuel] = React.useState(false);
@@ -42,7 +47,7 @@ export default function Page() {
   const [editExpence, setEditExpence] = React.useState({});
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [dialogContent, setDialogContent] = React.useState({});
-
+  const [search, setSearch] = React.useState("");
   const [selectedTab, setSelectedTab] = React.useState(0);
   // const [fuelAccounts, setfuelAccounts] = React.useState([]);
   const [accountoverview, setAccountoverview] = React.useState([]);
@@ -62,33 +67,33 @@ export default function Page() {
   useEffect(() => {
     axios
       .get(
-        `${process.env.NEXT_PUBLIC_API_URL}/fuelAccounts/GETFuelAccountOverview`
+        `${process.env.NEXT_PUBLIC_API_URL}/fuelAccounts/GETFuelAccountOverview?date=${search}`
       )
       .then((response) => setAccountoverview(response.data.message));
-  }, []);
+  }, [search]);
 
   useEffect(() => {
     axios
       .get(
         `${
           process.env.NEXT_PUBLIC_API_URL
-        }/productAccounts/GETAllProductAccount?page=${1}`
+        }/productAccounts/GETAllProductAccount?page=${1}&date=${search}`
       )
       .then((response) => {
         setProductAccounts(response?.data?.message?.fuelDetails);
         setRefreshProduct(false);
       });
-  }, [refreshProduct]);
+  }, [refreshProduct,search]);
 
   useEffect(() => {
     axios
       .get(
-        `${process.env.NEXT_PUBLIC_API_URL}/expenceaccount/GETAllExpenceAccount`
+        `${process.env.NEXT_PUBLIC_API_URL}/expenceaccount/GETAllExpenceAccount?&date=${search}`
       )
       .then((response) =>
         setExpenceAccount(response.data.message.expenceDetails)
       );
-  }, [refreshExpence]);
+  }, [refreshExpence,search]);
   const handleRefeshExpence = () => {
     setEditExpence({});
     setRefreshExpence(!refreshExpence);
@@ -179,6 +184,12 @@ export default function Page() {
       .then((response) => setRefreshProduct(true));
   };
 
+  const handleSearch = (value) => {
+    // Handle the search functionality here
+    console.log("Search clicked", value);
+    setSearch(value);
+  };
+
   return (
     <>
       <Box sx={{ display: "flex", gap: 2, paddingBottom: "20px" }}>
@@ -212,50 +223,47 @@ export default function Page() {
 
       {selectedTab === 0 && (
         <>
-          <Box display="flex" justifyContent="flex-end" marginBottom="20px">
-            <TextField
-              variant="outlined"
-              placeholder="Search..."
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  height: "36.5px", // Match the height of the Add Product button
-                  padding: 0,
-                  "& fieldset": {
-                    borderColor: "#0d47a1",
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "#0d47a1",
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#0d47a1",
-                  },
-                  "& input": {
-                    padding: "0 14px",
-                  },
-                  "& .MuiInputAdornment-root": {
-                    display: "flex",
-                    alignItems: "center",
-                    "& .MuiSvgIcon-root": {
+          <Box
+            display="flex"
+            justifyContent="flex-end"
+            marginBottom="20px"
+            marginRight="20px"
+          >
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DemoContainer components={["DatePicker"]}>
+                <DatePicker
+                  label="Search by date..."
+                  sx={{
+                    marginRight: "10px",
+                    ".MuiOutlinedInput-root": {
+                      "& fieldset": {
+                        borderColor: "#0d47a1",
+                      },
+                      "&:hover fieldset": {
+                        borderColor: "#0d47a1",
+                      },
+                      "&.Mui-focused fieldset": {
+                        borderColor: "#0d47a1",
+                      },
+                    },
+                    ".MuiInputAdornment-root .MuiSvgIcon-root": {
                       color: "#0d47a1",
                     },
-                  },
-                },
-                width: "250px", // Increase the width of the search field
-                marginRight: "20px",
-              }}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton>
-                      <SearchIcon />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-              onChange={() => {
-                handleSearch(event.target.value);
-              }}
-            />
+                  }}
+                  format="DD/MM/YYYY"
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <CalendarTodayIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                  onChange={(date) => {
+                    handleSearch(dayjs(date).format("DD/MM/YYYY"));
+                  }}
+                />
+              </DemoContainer>
+            </LocalizationProvider>
           </Box>
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -319,64 +327,60 @@ export default function Page() {
           <Box
             sx={{
               display: "flex",
-              justifyContent: "flex-end",
+              justifyContent: "space-between",
+              alignItems: "center",
               paddingRight: "20px",
+              marginBottom: "20px",
             }}
           >
-            <TextField
-              variant="outlined"
-              placeholder="Search..."
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  height: "36.5px", // Match the height of the Add Product button
-                  padding: 0,
-                  "& fieldset": {
-                    borderColor: "#0d47a1",
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "#0d47a1",
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#0d47a1",
-                  },
-                  "& input": {
-                    padding: "0 14px",
-                  },
-                  "& .MuiInputAdornment-root": {
-                    display: "flex",
-                    alignItems: "center",
-                    "& .MuiSvgIcon-root": {
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DemoContainer components={["DatePicker"]}>
+                <DatePicker
+                  label="Search by date..."
+                  sx={{
+                    marginRight: "10px",
+                    ".MuiOutlinedInput-root": {
+                      "& fieldset": {
+                        borderColor: "#0d47a1",
+                      },
+                      "&:hover fieldset": {
+                        borderColor: "#0d47a1",
+                      },
+                      "&.Mui-focused fieldset": {
+                        borderColor: "#0d47a1",
+                      },
+                    },
+                    ".MuiInputAdornment-root .MuiSvgIcon-root": {
                       color: "#0d47a1",
                     },
-                  },
-                },
-                marginBottom: "20px",
-                marginLeft: "10px",
-                width: "250px", // Increase the width of the search field
-                marginRight: "10px",
-              }}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton>
-                      <SearchIcon />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-              onChange={() => {
-                handleSearch(event.target.value);
-              }}
-            />
+                  }}
+                  format="DD/MM/YYYY"
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <CalendarTodayIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                  onChange={(date) => {
+                    handleSearch(dayjs(date).format("DD/MM/YYYY"));
+                  }}
+                />
+              </DemoContainer>
+            </LocalizationProvider>
             <Button
               variant="outlined"
               onClick={handleClickOpenfuel}
-              style={{ marginBottom: "20px" }}
-              sx={{ color: "#0d47a1", border: "1px solid #0d47a1" }}
+              sx={{
+                color: "#0d47a1",
+                border: "1px solid #0d47a1",
+                marginBottom: "0px",
+              }}
             >
               Add Fuel Details
             </Button>
           </Box>
+
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead sx={{ fontStyle: "normal", background: "#e3f2fd" }}>
@@ -444,60 +448,52 @@ export default function Page() {
           <Box
             sx={{
               display: "flex",
-              justifyContent: "flex-end",
+              justifyContent: "space-between",
+              alignItems: "center",
               paddingRight: "20px",
+              marginBottom: "20px",
             }}
           >
-            <TextField
-              variant="outlined"
-              placeholder="Search..."
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  height: "36.5px", // Match the height of the Add Product button
-                  padding: 0,
-                  "& fieldset": {
-                    borderColor: "#0d47a1",
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "#0d47a1",
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#0d47a1",
-                  },
-                  "& input": {
-                    padding: "0 14px",
-                  },
-                  "& .MuiInputAdornment-root": {
-                    display: "flex",
-                    alignItems: "center",
-                    "& .MuiSvgIcon-root": {
+             <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DemoContainer components={["DatePicker"]}>
+                <DatePicker
+                  label="Search by date..."
+                  sx={{
+                    marginRight: "10px",
+                    ".MuiOutlinedInput-root": {
+                      "& fieldset": {
+                        borderColor: "#0d47a1",
+                      },
+                      "&:hover fieldset": {
+                        borderColor: "#0d47a1",
+                      },
+                      "&.Mui-focused fieldset": {
+                        borderColor: "#0d47a1",
+                      },
+                    },
+                    ".MuiInputAdornment-root .MuiSvgIcon-root": {
                       color: "#0d47a1",
                     },
-                  },
-                },
-                marginBottom: "20px",
-                marginLeft: "10px",
-                width: "250px", // Increase the width of the search field
-                marginRight: "10px",
-              }}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton>
-                      <SearchIcon />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-              onChange={() => {
-                handleSearch(event.target.value);
-              }}
-            />
+                  }}
+                  format="DD/MM/YYYY"
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <CalendarTodayIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                  onChange={(date) => {
+                    handleSearch(dayjs(date).format("DD/MM/YYYY"));
+                  }}
+                />
+              </DemoContainer>
+            </LocalizationProvider>
             <Button
               variant="outlined"
               onClick={handleClickOpenproduct}
               style={{
-                marginBottom: "20px",
+                
                 color: "#0d47a1",
                 border: "1px solid #0d47a1",
               }}
@@ -588,60 +584,52 @@ export default function Page() {
           <Box
             sx={{
               display: "flex",
-              justifyContent: "flex-end",
+              justifyContent: "space-between",
+              alignItems: "center",
               paddingRight: "20px",
+              marginBottom: "20px",
             }}
           >
-            <TextField
-              variant="outlined"
-              placeholder="Search..."
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  height: "36.5px", // Match the height of the Add Product button
-                  padding: 0,
-                  "& fieldset": {
-                    borderColor: "#0d47a1",
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "#0d47a1",
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#0d47a1",
-                  },
-                  "& input": {
-                    padding: "0 14px",
-                  },
-                  "& .MuiInputAdornment-root": {
-                    display: "flex",
-                    alignItems: "center",
-                    "& .MuiSvgIcon-root": {
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DemoContainer components={["DatePicker"]}>
+                <DatePicker
+                  label="Search by date..."
+                  sx={{
+                    marginRight: "10px",
+                    ".MuiOutlinedInput-root": {
+                      "& fieldset": {
+                        borderColor: "#0d47a1",
+                      },
+                      "&:hover fieldset": {
+                        borderColor: "#0d47a1",
+                      },
+                      "&.Mui-focused fieldset": {
+                        borderColor: "#0d47a1",
+                      },
+                    },
+                    ".MuiInputAdornment-root .MuiSvgIcon-root": {
                       color: "#0d47a1",
                     },
-                  },
-                },
-                marginBottom: "20px",
-                marginLeft: "10px",
-                width: "250px", // Increase the width of the search field
-                marginRight: "10px",
-              }}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton>
-                      <SearchIcon />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-              onChange={() => {
-                handleSearch(event.target.value);
-              }}
-            />
+                  }}
+                  format="DD/MM/YYYY"
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <CalendarTodayIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                  onChange={(date) => {
+                    handleSearch(dayjs(date).format("DD/MM/YYYY"));
+                  }}
+                />
+              </DemoContainer>
+            </LocalizationProvider>
             <Button
               variant="outlined"
               onClick={handleClickOpenexpense}
               style={{
-                marginBottom: "20px",
+                
                 color: "#0d47a1",
                 border: "1px solid #0d47a1",
               }}
