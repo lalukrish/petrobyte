@@ -6,23 +6,22 @@ import {
   DialogActions,
   Button,
   TextField,
-  Autocomplete,
   Stack,
   Grid,
   Box,
   Typography,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
-import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import dayjs from "dayjs";
 import axios from "axios";
 require('dotenv').config()
 
-
-export default function FuelUpdate({ clse,data }) {
+export default function FuelUpdate({ clse, data }) {
     useEffect(() => {
     }, [])
-    
+
   const handleClose = () => clse();
 
   const handleUpdate = () => {
@@ -33,9 +32,10 @@ export default function FuelUpdate({ clse,data }) {
       emp_from_time: fromtime,
       emp_to_time: totime,
       dispencer: dispencer,
-      fueltype: fuelpetrol,
+      sub_dispencer: subdispencer,
       fuel_start_reading: startpetrol,
       fuel_end_reading: endpetrol,
+      qty: qty,
       amount: totalpetrol,
     };
 
@@ -44,24 +44,17 @@ export default function FuelUpdate({ clse,data }) {
       .then((response) => {
         alert(response.data.message);
       });
-    // close()
-    // setRefreshEmployee(!refreshEmployee)
   };
 
-  const employees = ["John Doe", "Jane Smith", "Alice Johnson"];
-  const dispencer = ["D1", "D2", "D3", "D4"];
-  const fuel = ["Petrol", "Diesel"];
-  const start = [];
-  const end = [];
-
-  const todayStartOfTheDay = dayjs().startOf("day"); // Example date
+ 
+  const dispencerOptions = ["D1", "D2", "D3", "D4"];
+  const subdispencerOptions = ["SD1", "SD2", "SD3"];
+  
 
   return (
     <Dialog
-      //   sx={{ justifyContent: "center", alignItems: "center" }}
-      maxWidth="md"
+      maxWidth="sm"
       fullWidth
-      // fullScreen={fullScreen}
       open={open}
       onClose={handleClose}
       aria-labelledby="responsive-dialog-title"
@@ -69,72 +62,71 @@ export default function FuelUpdate({ clse,data }) {
       <DialogTitle id="responsive-dialog-title">Add Fuel Details</DialogTitle>
       <DialogContent>
         <Stack spacing={2} sx={{ width: "100%", padding: "5px" }}>
-          
-          <Autocomplete
-          value={data.emp_id.emp_name}
-            disablePortal
-            id="combo-box-demo"
-            options={employees}
-            sx={{ width: "100%" }}
-            renderInput={(params) => (
-              <TextField {...params} label="Name" fullWidth />
-            )}
-          />
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <Grid container spacing={2} sx={{ display: "flex" }}>
-              <Grid item xl={6}>
-                <TimePicker
-                  label="From"
-                  
-                  renderInput={(params) => <TextField value={data.emp_from_time} {...params} fullWidth />}
-                />
-              </Grid>
-              <Grid item xl={6}>
-                <TimePicker
-                  label="To"
-                  
-                  renderInput={(params) => <TextField value={data.emp_to_time} {...params} fullWidth />}
-                />
-              </Grid>
-            </Grid>
-          </LocalizationProvider>
-          <Autocomplete
-            disablePortal
-            value={data.dispencer}
-            id="combo-box-demo"
-            options={dispencer}
-            sx={{ width: "100%" }}
-            renderInput={(params) => (
-              <TextField {...params} label="Dispencer" fullWidth />
-            )}
-          />
-          {/* <Autocomplete
-            disablePortal
-            id="combo-box-demo"
-            options={fuel}
-            sx={{ width: "100%" }}
-            renderInput={(params) => (
-              <TextField {...params} label="Fuel" fullWidth />
-            )}
-          /> */}
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <Typography>{data.fueltype}</Typography>
-            <TextField
+          <FormControl fullWidth>
+            <InputLabel id="dispenser-label">Dispenser</InputLabel>
+            <Select
+              labelId="dispenser-label"
+              id="dispenser-select"
+              value={data.dispencer}
+              label="Dispenser"
+              onChange={(e) => setDispenser(e.target.value)}
+            >
+              {dispencerOptions.map((option) => (
+                <MenuItem key={option} value={option}>
+                  {option}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl fullWidth>
+            <InputLabel id="sub-dispenser-label">Sub-Dispenser</InputLabel>
+            <Select
+              labelId="sub-dispenser-label"
+              id="sub-dispenser-select"
+              value={data.sub_dispencer}
+              label="Sub-Dispenser"
+              onChange={(e) => setSubDispenser(e.target.value)}
+            >
+              {subdispencerOptions.map((option) => (
+                <MenuItem key={option} value={option}>
+                  {option}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <TextField
             value={data.fuel_start_reading}
-              id="start-metering"
-              label="Start Metering"
-              fullWidth
-              variant="outlined"
-            />
-            <TextField
+            id="start-metering"
+            label="Start Metering"
+            fullWidth
+            variant="outlined"
+            onChange={(e) => setStartReading(e.target.value)}
+          />
+          <TextField
             value={data.fuel_end_reading}
-              id="end-metering"
-              label="End Metering"
-              fullWidth
-              variant="outlined"
-            />
-            <TextField id="" label="Sale Amount" value={data.amount} fullWidth variant="outlined" />
-          </Box>
+            id="end-metering"
+            label="End Metering"
+            fullWidth
+            variant="outlined"
+            onChange={(e) => setEndReading(e.target.value)}
+          />
+          <TextField
+            value={data.fuel_end_reading-data.fuel_start_reading}
+            id="qty"
+            label="Quantity"
+            fullWidth
+            variant="outlined"
+            onChange={(e) => setQty(e.target.value)}
+            disabled
+          />
+          <TextField
+            value={data.amount}
+            id="sale-amount"
+            label="Sale Amount"
+            fullWidth
+            variant="outlined"
+            onChange={(e) => setAmount(e.target.value)}
+          />
         </Stack>
       </DialogContent>
       <DialogActions>

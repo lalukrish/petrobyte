@@ -53,6 +53,8 @@ export default function Page() {
   const [accountoverview, setAccountoverview] = React.useState([]);
   const [productaccounts, setProductAccounts] = React.useState([]);
   const [expenceaccount, setExpenceAccount] = React.useState([]);
+  // const [refreshReport, setRefreshReport] = React.useState(false);
+
 
   const [refreshExpence, setRefreshExpence] = React.useState(false);
 
@@ -62,9 +64,9 @@ export default function Page() {
   
   useEffect(() => {
     axios
-      .get(`${process.env.NEXT_PUBLIC_API_URL}/accountReport/GETAccount`)
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/accountReport/GETAccount?date=${search}`)
       .then((response) => setReportAccounts(response.data.message));
-  }, []);
+  }, [search]);
 
 
 
@@ -104,6 +106,10 @@ export default function Page() {
     setEditExpence({});
     setRefreshExpence(!refreshExpence);
   };
+
+  // const handleRefeshReport = () => {
+  //   setRefreshReport(!refreshReport);
+  // };
 
   const handleEditExpence = (editData) => {
     setEditExpence(editData);
@@ -324,11 +330,11 @@ export default function Page() {
                   <TableCell align="center">{reportAccount.total_fuel_amount}</TableCell>
                   <TableCell align="center">{reportAccount.total_product_amount}</TableCell>
                   <TableCell align="center">{reportAccount.total_expence_amount}</TableCell>
-                  <TableCell align="center" sx={{background:"#fff9c4"}}>{(reportAccount.total_fuel_amount+reportAccount.total_product_amount)-reportAccount.total_expence_amount}</TableCell>
+                  <TableCell align="center" sx={{color:"#29b6f6"}}>{(reportAccount.total_fuel_amount+reportAccount.total_product_amount)-reportAccount.total_expence_amount}</TableCell>
                   <TableCell align="center">{reportAccount.total_cash_inhand}</TableCell>
                   <TableCell align="center">{reportAccount.total_cash_bank}</TableCell>
                   <TableCell align="center">{reportAccount.total_cash_other}</TableCell>
-                  <TableCell align="center">{reportAccount.total_credit_amount}</TableCell>
+                  <TableCell align="center" sx={{color:"#f44336"}}>{reportAccount.total_credit_amount}</TableCell>
                   <TableCell align="center">200</TableCell>
 
 
