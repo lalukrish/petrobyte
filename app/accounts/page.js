@@ -49,7 +49,7 @@ export default function Page() {
   const [dialogContent, setDialogContent] = React.useState({});
   const [search, setSearch] = React.useState("");
   const [selectedTab, setSelectedTab] = React.useState(0);
-  // const [fuelAccounts, setfuelAccounts] = React.useState([]);
+  const [reportAccounts, setReportAccounts] = React.useState([]);
   const [accountoverview, setAccountoverview] = React.useState([]);
   const [productaccounts, setProductAccounts] = React.useState([]);
   const [expenceaccount, setExpenceAccount] = React.useState([]);
@@ -58,11 +58,17 @@ export default function Page() {
 
   const [refreshProduct, setRefreshProduct] = React.useState(false);
 
-  // useEffect(() => {
-  //   axios
-  //     .get(`${process.env.NEXT_PUBLIC_API_URL}/fuelAccounts/GETAllFuelAccount`)
-  //     .then((response) => setfuelAccounts(response.data.message));
-  // }, []);
+  
+  
+  useEffect(() => {
+    axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/accountReport/GETAccount`)
+      .then((response) => setReportAccounts(response.data.message));
+  }, []);
+
+
+
+
 
   useEffect(() => {
     axios
@@ -81,7 +87,6 @@ export default function Page() {
       )
       .then((response) => {
         setProductAccounts(response?.data?.message?.fuelDetails);
-        setRefreshProduct(false);
       });
   }, [refreshProduct,search]);
 
@@ -94,6 +99,7 @@ export default function Page() {
         setExpenceAccount(response.data.message.expenceDetails)
       );
   }, [refreshExpence,search]);
+  
   const handleRefeshExpence = () => {
     setEditExpence({});
     setRefreshExpence(!refreshExpence);
@@ -181,7 +187,7 @@ export default function Page() {
       .delete(
         `${process.env.NEXT_PUBLIC_API_URL}/productAccounts/DELETEProductAccount?id=${productAccount?._id}`
       )
-      .then((response) => setRefreshProduct(true));
+      .then((response) => setRefreshProduct(!refreshProduct));
   };
 
   const handleSearch = (value) => {
@@ -189,6 +195,11 @@ export default function Page() {
     console.log("Search clicked", value);
     setSearch(value);
   };
+
+
+
+
+
 
   return (
     <>
@@ -273,42 +284,57 @@ export default function Page() {
                     Date
                   </TableCell>
                   <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                    Cash
+                    Fuel Sale 
+                    Amnt
                   </TableCell>
                   <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                    Bank
+                    Product Sale Amnt
                   </TableCell>
                   <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                    HP Card
+                    Expense Amnt
+                  </TableCell>
+                  <TableCell align="center" sx={{ fontWeight: "bold",background:"#fff9c4" }} >
+                    Net Amount
+                  </TableCell>
+                  <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                    in Cash
+                  </TableCell>
+                  <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                    in Bank
+                  </TableCell>
+                  <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                    Others
                   </TableCell>
                   <TableCell align="center" sx={{ fontWeight: "bold" }}>
                     Credit
                   </TableCell>
                   <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                    Net Amount
-                  </TableCell>
-                  <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                    Action
+                    Debit
                   </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
+                {reportAccounts.map ((reportAccount) =>(
                 <TableRow
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
                   <TableCell component="th" scope="row" align="center">
-                    18-07-2001
+                    {reportAccount.date}
                   </TableCell>
-                  <TableCell align="center">10001</TableCell>
-                  <TableCell align="center">1200</TableCell>
-                  <TableCell align="center">6000</TableCell>
-                  <TableCell align="center">7000</TableCell>
-                  <TableCell align="center">23000</TableCell>
+                  <TableCell align="center">{reportAccount.total_fuel_amount}</TableCell>
+                  <TableCell align="center">{reportAccount.total_product_amount}</TableCell>
+                  <TableCell align="center">{reportAccount.total_expence_amount}</TableCell>
+                  <TableCell align="center" sx={{background:"#fff9c4"}}>{(reportAccount.total_fuel_amount+reportAccount.total_product_amount)-reportAccount.total_expence_amount}</TableCell>
+                  <TableCell align="center">{reportAccount.total_cash_inhand}</TableCell>
+                  <TableCell align="center">{reportAccount.total_cash_bank}</TableCell>
+                  <TableCell align="center">{reportAccount.total_cash_other}</TableCell>
+                  <TableCell align="center">{reportAccount.total_credit_amount}</TableCell>
+                  <TableCell align="center">200</TableCell>
 
-                  <TableCell align="center">
-                    <DoneAllIcon />
-                  </TableCell>
+
+                  
                 </TableRow>
+                ))}
               </TableBody>
             </Table>
           </TableContainer>
@@ -569,13 +595,13 @@ export default function Page() {
           </TableContainer>
         </>
       )}
-      {product ? <ProductsNew close={handleCloseproduct} /> : null}
+      {product ? <ProductsNew close={handleCloseproduct} refresh={() => setRefreshProduct(!refreshProduct)}/> : null}
       {editProductOpen && (
         <EditProductAccount
           open={editProductOpen}
           onClose={handleEditProductClose}
           productAccount={editProduct}
-          refresh={() => setRefreshProduct(true)}
+          refresh={() => setRefreshProduct(!refreshProduct)}
         />
       )}
 

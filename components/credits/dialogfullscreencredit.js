@@ -342,8 +342,8 @@ const MediumDialog = ({ open, handleClose, data, refresh }) => {
             alignItems="center"
             width="100%"
           >
-            <Typography sx={{ fontWeight: "bold", marginLeft: "20px" }}>
-              Credit to be Paid:{}
+            <Typography sx={{ fontWeight: "inherit", marginLeft: "20px", color:"#0d47a1" }}>
+              Credit to be Paid:<b>  {data.credit_amount}</b>
             </Typography>
             <Box>
               <IconButton onClick={exportPDF} color="primary">

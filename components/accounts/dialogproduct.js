@@ -17,8 +17,8 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import axios from "axios";
 import moment from "moment";
 
-export default function ProductsNew({ close }) {
-  const todayDate = moment().format("DD-MM-YYYY");
+export default function ProductsNew({ close,refresh }) {
+  const todayDate = moment().format("DD/MM/YYYY");
 
   const handleClose2 = () => close();
 
@@ -107,6 +107,7 @@ export default function ProductsNew({ close }) {
             total_amount: "",
           },
         ]);
+        refresh()
         close();
       })
       .catch((error) => {

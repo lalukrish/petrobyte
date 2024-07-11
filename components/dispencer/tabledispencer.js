@@ -90,7 +90,7 @@ export default function DispencerTable() {
 
   return (
     <Box>
-      <TextField
+      {/* <TextField
         variant="outlined"
         placeholder="Search..."
         sx={{
@@ -134,7 +134,7 @@ export default function DispencerTable() {
         onChange={() => {
           handleSearch(event.target.value);
         }}
-      />
+      /> */}
       <Button
         variant="outlined"
         sx={{
