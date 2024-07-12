@@ -156,6 +156,7 @@ export default function DataTable() {
 
   const handleClose = () => {
     setOpen(false);
+    setEditingEmployee(null);
   };
 
   const fetchAllEmployee = (page = 1, limit = 10) => {
