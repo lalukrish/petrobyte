@@ -335,7 +335,7 @@ export default function Page() {
                   <TableCell align="center">{reportAccount.total_cash_bank}</TableCell>
                   <TableCell align="center">{reportAccount.total_cash_other}</TableCell>
                   <TableCell align="center" sx={{color:"#f44336"}}>{reportAccount.total_credit_amount}</TableCell>
-                  <TableCell align="center">200</TableCell>
+                  <TableCell align="center">{reportAccount.total_debit_amount}</TableCell>
 
 
                   

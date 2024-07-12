@@ -59,48 +59,35 @@ export default function FuelUpdate({ clse, data }) {
       onClose={handleClose}
       aria-labelledby="responsive-dialog-title"
     >
-      <DialogTitle id="responsive-dialog-title">Add Fuel Details</DialogTitle>
+      <DialogTitle id="responsive-dialog-title">Edit Fuel Details</DialogTitle>
       <DialogContent>
         <Stack spacing={2} sx={{ width: "100%", padding: "5px" }}>
-          <FormControl fullWidth>
-            <InputLabel id="dispenser-label">Dispenser</InputLabel>
-            <Select
-              labelId="dispenser-label"
-              id="dispenser-select"
-              value={data.dispencer}
-              label="Dispenser"
-              onChange={(e) => setDispenser(e.target.value)}
-            >
-              {dispencerOptions.map((option) => (
-                <MenuItem key={option} value={option}>
-                  {option}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <FormControl fullWidth>
-            <InputLabel id="sub-dispenser-label">Sub-Dispenser</InputLabel>
-            <Select
-              labelId="sub-dispenser-label"
-              id="sub-dispenser-select"
-              value={data.sub_dispencer}
-              label="Sub-Dispenser"
-              onChange={(e) => setSubDispenser(e.target.value)}
-            >
-              {subdispencerOptions.map((option) => (
-                <MenuItem key={option} value={option}>
-                  {option}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+        <TextField
+            value={data.dispencer_name}
+            id="disp"
+            label="Dispenser"
+            fullWidth
+            variant="outlined"
+            disabled
+            
+          />
+          <TextField
+            value={data.sub_dispencer_id.sub_dispencer}
+            id="subdisp"
+            label="Sub Dipsenser"
+            fullWidth
+            variant="outlined"
+            disabled
+           
+          />
           <TextField
             value={data.fuel_start_reading}
             id="start-metering"
             label="Start Metering"
             fullWidth
             variant="outlined"
-            onChange={(e) => setStartReading(e.target.value)}
+            
+            disabled
           />
           <TextField
             value={data.fuel_end_reading}
@@ -126,6 +113,7 @@ export default function FuelUpdate({ clse, data }) {
             fullWidth
             variant="outlined"
             onChange={(e) => setAmount(e.target.value)}
+            disabled
           />
         </Stack>
       </DialogContent>
