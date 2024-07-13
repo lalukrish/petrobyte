@@ -25,18 +25,14 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import { Pagination } from "@mui/material";
 import PersonSearchIcon from "@mui/icons-material/PersonSearch";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 require("dotenv").config();
 
 export default function DataTable() {
   const [employee, setEmployee] = React.useState([]);
   const [refreshEmployee, setRefreshEmployee] = React.useState(false);
   const isFirstRender = React.useRef(true); // Ref to track initial render
-
-  const [name, setName] = React.useState("");
-  const [phone, setPhone] = React.useState("");
-  const [age, setAge] = React.useState("");
-  const [address, setAddress] = React.useState("");
-  const [email, setEmail] = React.useState("");
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
@@ -45,14 +41,89 @@ export default function DataTable() {
   const [editingEmployee, setEditingEmployee] = React.useState(null); // State for editing employee
   const [editOpen, setEditOpen] = React.useState(false); // State for edit dialog
 
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const [totalPages, setTotalPages] = React.useState(1);
+  const [search, setSearch] = React.useState("");
+
+  const validationSchema = Yup.object({
+    emp_name: Yup.string()
+      .required("Name is required")
+      .test(
+        "is-not-empty",
+        "Name is required",
+        (value) => value && value.trim() !== ""
+      ),
+
+    emp_email: Yup.string()
+      .email("Invalid email format")
+      .test(
+        "is-not-empty",
+        "Invalid email format",
+        (value) => value && value.trim() !== ""
+      ),
+
+    emp_contact_no: Yup.string() // Validate as string first
+      .required("Phone is required")
+      .matches(/^[0-9]+$/, "Must be only digits")
+      .test("is-valid-number", "Invalid phone number", (value) => {
+        if (!value) return true; // Allow empty if not required
+        return !isNaN(parseFloat(value)) && isFinite(value); // Check if valid number
+      }),
+
+    emp_address: Yup.string()
+      .required("Address is required")
+      .test(
+        "is-not-empty",
+        "Address is required",
+        (value) => value && value.trim() !== ""
+      ),
+
+    emp_age: Yup.string()
+      .required("Age is required")
+      .matches(/^[0-9]+$/, "Must be only digits")
+      .test("is-valid-number", "Invalid phone number", (value) => {
+        if (!value) return true; // Allow empty if not required
+        return !isNaN(parseFloat(value)) && isFinite(value); // Check if valid number
+      }),
+  });
+
+  const formik = useFormik({
+    initialValues: {
+      emp_name: "",
+      emp_email: "",
+      emp_contact_no: "",
+      emp_address: "",
+      emp_age: "",
+    },
+    validationSchema: validationSchema,
+    onSubmit: (values) => {
+      const add = {
+        emp_name: values.emp_name,
+        emp_email: values.emp_email,
+        emp_contact_no: values.emp_contact_no,
+        emp_address: values.emp_address,
+        emp_age: values.emp_age,
+      };
+
+      axios
+        .post(`${process.env.NEXT_PUBLIC_API_URL}/employee/POSTEmployee`, add)
+        .then((response) => {
+          alert(response.data.message);
+          setRefreshEmployee(!refreshEmployee);
+        })
+        .catch((error) => {
+          console.error("Save request failed:", error);
+        });
+
+      handleClose();
+    },
+  });
+
   const handleEdit = (row) => {
     setEditingEmployee(row); // Set the row to be edited
     setEditOpen(true); // Open the edit dialog
   };
-  const [currentPage, setCurrentPage] = React.useState(1);
 
-  const [totalPages, setTotalPages] = React.useState(1);
-  const [search, setSearch] = React.useState("");
   const handleSaveEdit = () => {
     console.log("editingEmployee", editingEmployee.emp_name);
     if (editingEmployee) {
@@ -85,28 +156,7 @@ export default function DataTable() {
 
   const handleClose = () => {
     setOpen(false);
-  };
-
-  const handleSave = () => {
-    const add = {
-      emp_name: name,
-      emp_email: email,
-      emp_contact_no: phone,
-      emp_address: address,
-      emp_age: age,
-    };
-
-    axios
-      .post(`${process.env.NEXT_PUBLIC_API_URL}/employee/POSTEmployee`, add)
-      .then((response) => {
-        alert(response.data.message);
-        setRefreshEmployee(!refreshEmployee);
-      })
-      .catch((error) => {
-        console.error("Save request failed:", error);
-      });
-
-    handleClose();
+    setEditingEmployee(null);
   };
 
   const fetchAllEmployee = (page = 1, limit = 10) => {
@@ -160,7 +210,6 @@ export default function DataTable() {
 
   return (
     <Box>
-      {/* abhi */}
       <TextField
         variant="outlined"
         placeholder="Search..."
@@ -190,7 +239,7 @@ export default function DataTable() {
           },
           marginBottom: "20px",
           marginLeft: "10px",
-          width: "250px", // Increase the width of the search field
+          width: "250px",
         }}
         InputProps={{
           endAdornment: (
@@ -205,7 +254,6 @@ export default function DataTable() {
           handleSearch(event.target.value);
         }}
       />
-{/* abhi */}
       <Button
         variant="outlined"
         onClick={handleClickOpen}
@@ -215,7 +263,7 @@ export default function DataTable() {
           border: "1px solid #0d47a1",
           marginLeft: "10px",
           height: "36.5px",
-          width: "160px", // Ensure the width matches the TextField
+          width: "160px",
         }}
       >
         Add Employee
@@ -231,44 +279,94 @@ export default function DataTable() {
             Add New Employee
           </DialogTitle>
           <DialogContent>
-            <Stack spacing={2} sx={{ width: "400px", padding: "5px" }}>
-              <TextField
-                autoFocus
-                placeholder="Name"
-                variant="outlined"
-                label="Name"
-                onChange={(event) => setName(event.target.value)}
-              />
-              <TextField
-                placeholder="Phone"
-                variant="outlined"
-                label="Phone"
-                onChange={(event) => setPhone(event.target.value)}
-              />
-              <TextField
-                placeholder="Age"
-                variant="outlined"
-                label="Age"
-                onChange={(event) => setAge(event.target.value)}
-              />
-              <TextField
-                placeholder="Address"
-                variant="outlined"
-                label="Address"
-                onChange={(event) => setAddress(event.target.value)}
-              />
-              <TextField
-                placeholder="Email"
-                variant="outlined"
-                label="Email"
-                onChange={(event) => setEmail(event.target.value)}
-              />
-            </Stack>
+            <form onSubmit={formik.handleSubmit}>
+              <Stack spacing={2} sx={{ width: "400px", padding: "5px" }}>
+                <TextField
+                  autoFocus
+                  placeholder="Name"
+                  variant="outlined"
+                  //label="Name"
+                  name="emp_name"
+                  value={formik.values.emp_name}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  error={
+                    formik.touched.emp_name && Boolean(formik.errors.emp_name)
+                  }
+                  helperText={formik.touched.emp_name && formik.errors.emp_name}
+                />
+                <TextField
+                  placeholder="Phone"
+                  variant="outlined"
+                  //label="Phone"
+                  name="emp_contact_no"
+                  value={formik.values.emp_contact_no}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  error={
+                    formik.touched.emp_contact_no &&
+                    Boolean(formik.errors.emp_contact_no)
+                  }
+                  helperText={
+                    formik.touched.emp_contact_no &&
+                    formik.errors.emp_contact_no
+                  }
+                />
+                <TextField
+                  placeholder="Age"
+                  variant="outlined"
+                  // label="Age"
+                  name="emp_age"
+                  value={formik.values.emp_age}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  error={
+                    formik.touched.emp_age && Boolean(formik.errors.emp_age)
+                  }
+                  helperText={formik.touched.emp_age && formik.errors.emp_age}
+                />
+                <TextField
+                  placeholder="Address"
+                  variant="outlined"
+                  // label="Address"
+                  name="emp_address"
+                  value={formik.values.emp_address}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  error={
+                    formik.touched.emp_address &&
+                    Boolean(formik.errors.emp_address)
+                  }
+                  helperText={
+                    formik.touched.emp_address && formik.errors.emp_address
+                  }
+                />
+                <TextField
+                  placeholder="Email"
+                  variant="outlined"
+                  //label="Email"
+                  name="emp_email"
+                  value={formik.values.emp_email}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  error={
+                    formik.touched.emp_email && Boolean(formik.errors.emp_email)
+                  }
+                  helperText={
+                    formik.touched.emp_email && formik.errors.emp_email
+                  }
+                />
+              </Stack>
+              <DialogActions>
+                <Button onClick={handleClose} variant="outlined" color="error">
+                  Cancel
+                </Button>
+                <Button type="submit" variant="outlined" color="success">
+                  Save
+                </Button>
+              </DialogActions>
+            </form>
           </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
-            <Button onClick={handleSave}>Save</Button>
-          </DialogActions>
         </Dialog>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -302,7 +400,7 @@ export default function DataTable() {
                     {row.emp_name}
                   </TableCell>
                   <TableCell align="center">{row.emp_email}</TableCell>
-                  <TableCell align="center">{row.emp_contact_no}</TableCell>
+                  <TableCell align="center">+91{row.emp_contact_no}</TableCell>
                   <TableCell align="center">{row.emp_address}</TableCell>
                   <TableCell align="center">{row.emp_age}</TableCell>
                   <TableCell align="center">
@@ -335,7 +433,10 @@ export default function DataTable() {
         >
           <DialogTitle id="responsive-dialog-title">Edit Employee</DialogTitle>
           <DialogContent>
-            <Stack spacing={2} sx={{ width: "400px", padding: "5px" }}>
+            <Stack
+              spacing={2}
+              sx={{ width: "400px", height: "350px", padding: "5px" }}
+            >
               <TextField
                 value={editingEmployee ? editingEmployee.emp_name : ""}
                 variant="outlined"
@@ -363,11 +464,22 @@ export default function DataTable() {
               />
             </Stack>
           </DialogContent>
-          <DialogActions>
-            <Button color="error" onClick={() => setEditOpen(false)}>
+          <DialogActions
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              mt: 0,
+              mb: 4,
+            }}
+          >
+            <Button
+              color="error"
+              variant="outlined"
+              onClick={() => setEditOpen(false)}
+            >
               Cancel
             </Button>
-            <Button color="success" onClick={handleSaveEdit}>
+            <Button color="success" variant="outlined" onClick={handleSaveEdit}>
               Save Changes
             </Button>
           </DialogActions>
