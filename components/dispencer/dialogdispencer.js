@@ -177,7 +177,7 @@ export default function DispencerNew({ close, refreshDispencer, edit }) {
                 onChange={(event) => handleFieldChange(index, event)}
                 sx={{ width: "45%" }}
               />
-              {index === fields.length - 1 ? (
+              {index === fields.length - 1 && fields.length < 4 ? (
                 <IconButton
                   onClick={handleAddFields}
                   sx={{
