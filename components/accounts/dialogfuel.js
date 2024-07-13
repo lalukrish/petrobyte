@@ -119,9 +119,11 @@ export default function FuelNew({ close, editTest }) {
       [type]: {
         ...prev[type],
         [field]: value,
+
       },
     }));
   };
+
 
   const handleAddDispencer = () => {
     setSelectedDispencers([...selectedDispencers, { name: "", subRows: [] }]);
@@ -211,7 +213,9 @@ export default function FuelNew({ close, editTest }) {
                   <TextField
                     label="Start Metering"
                     fullWidth
+                    value={type.live_reading}
                     variant="outlined"
+                    disabled
                     onChange={(e) =>
                       handleFuelDataChange(
                         type.sub_dispencer_id._id,
@@ -236,8 +240,10 @@ export default function FuelNew({ close, editTest }) {
                     label="Fuel Qty"
                     fullWidth
                     variant="outlined"
+                    value={parseFloat(fuelData.end)-parseFloat(type.live_reading)}
                     onChange={(e) =>
                       handleFuelDataChange(
+
                         type.sub_dispencer_id._id,
                         "qty",
                         e.target.value
