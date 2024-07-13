@@ -18,12 +18,10 @@ import {
 } from "@mui/material";
 import { Add, Remove } from "@mui/icons-material";
 import { useTheme } from "@mui/material/styles";
-import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import dayjs from "dayjs";
 import axios from "axios";
 import moment from "moment";
 require("dotenv").config();
+
 export default function FuelNew({ close, editTest }) {
   const [allEmployee, setAllEmployee] = useState([]);
   const [dispencers, setDispencers] = useState([]);
@@ -59,7 +57,24 @@ export default function FuelNew({ close, editTest }) {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/dispencer/GETSubDispencer?name=${dispencer}`
       );
-      return response.data.message;
+
+      const subRows = response.data.message;
+
+      // Initialize fuel data with live readings and fuel prices
+      const initialFuelData = subRows.reduce((acc, row) => {
+        acc[row.sub_dispencer_id._id] = {
+          start: row.live_reading,
+          fuelPrice: row.sub_dispencer_id.fuel_id.fuel_price,
+        };
+        return acc;
+      }, {});
+
+      setFuelData((prev) => ({
+        ...prev,
+        ...initialFuelData,
+      }));
+
+      return subRows;
     } catch (error) {
       console.error("Error fetching sub rows:", error);
       return [];
@@ -114,16 +129,28 @@ export default function FuelNew({ close, editTest }) {
   };
 
   const handleFuelDataChange = (type, field, value) => {
-    setFuelData((prev) => ({
-      ...prev,
-      [type]: {
-        ...prev[type],
-        [field]: value,
+    setFuelData((prev) => {
+      const updatedData = {
+        ...prev,
+        [type]: {
+          ...prev[type],
+          [field]: value,
+        },
+      };
 
-      },
-    }));
+      if (field === "end") {
+        const startReading = parseFloat(updatedData[type].start || 0);
+        const endReading = parseFloat(value);
+        const qty = endReading - startReading;
+        const fuelPrice = updatedData[type].fuelPrice || 0;
+
+        updatedData[type].qty = qty;
+        updatedData[type].total = qty * fuelPrice;
+      }
+
+      return updatedData;
+    });
   };
-
 
   const handleAddDispencer = () => {
     setSelectedDispencers([...selectedDispencers, { name: "", subRows: [] }]);
@@ -133,7 +160,6 @@ export default function FuelNew({ close, editTest }) {
     const newSelectedDispencers = [...selectedDispencers];
     newSelectedDispencers[index].name = value;
     newSelectedDispencers[index].subRows = await fetchSubRows(value);
-    console.log("newSelectedDispencers", newSelectedDispencers);
     setSelectedDispencers(newSelectedDispencers);
   };
 
@@ -241,42 +267,23 @@ export default function FuelNew({ close, editTest }) {
                     fullWidth
                     variant="outlined"
                     disabled
-                    value={parseFloat(fuelData.end)-parseFloat(type.live_reading)}
-                    onChange={(e) =>
-                      handleFuelDataChange(
-
-                        type.sub_dispencer_id._id,
-                        "qty",
-                        e.target.value
-                      )
-                    }
+                    value={fuelData[type.sub_dispencer_id._id]?.qty || ""}
                   />
                   <TextField
                     label="Sale Amount"
                     fullWidth
                     variant="outlined"
                     disabled
-                    onChange={(e) =>
-                      handleFuelDataChange(
-                        type.sub_dispencer_id._id,
-                        "total",
-                        e.target.value
-                      )
-                    }
+                    value={fuelData[type.sub_dispencer_id._id]?.total || ""}
                   />
                 </Box>
               ))}
               <Divider
-                sx={{ my: 1, borderWidth: 0.5, borderStyle: "dashed" }}
+                sx={{ my: 1, borderWidth: "1px", borderColor: "primary.main" }}
               />
             </Box>
           ))}
-          {/* <Divider
-                sx={{ my: 1, borderWidth: 0.5, borderStyle: "dashed" }}
-              />
-            </Box>
-          ))} */}
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2, mt: 2 }}>
+          <Box sx={{ display: "flex", gap: 2 }}>
             <TextField
               label="Cash"
               fullWidth
