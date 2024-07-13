@@ -240,6 +240,7 @@ export default function FuelNew({ close, editTest }) {
                     label="Fuel Qty"
                     fullWidth
                     variant="outlined"
+                    disabled
                     value={parseFloat(fuelData.end)-parseFloat(type.live_reading)}
                     onChange={(e) =>
                       handleFuelDataChange(
@@ -254,6 +255,7 @@ export default function FuelNew({ close, editTest }) {
                     label="Sale Amount"
                     fullWidth
                     variant="outlined"
+                    disabled
                     onChange={(e) =>
                       handleFuelDataChange(
                         type.sub_dispencer_id._id,
