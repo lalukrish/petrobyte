@@ -62,8 +62,10 @@ export default function DispencerNew({ close, refreshDispencer, edit }) {
   };
 
   const handleRemoveField = (index) => {
-    const updatedFields = fields.filter((_, i) => i !== index);
-    setFields(updatedFields);
+    if (fields.length > 1) {
+      const updatedFields = fields.filter((_, i) => i !== index);
+      setFields(updatedFields);
+    }
   };
 
   const handleFieldChange = (index, event) => {
@@ -177,6 +179,13 @@ export default function DispencerNew({ close, refreshDispencer, edit }) {
                 onChange={(event) => handleFieldChange(index, event)}
                 sx={{ width: "45%" }}
               />
+              <IconButton
+                onClick={() => handleRemoveField(index)}
+                sx={{ width: "10%", color: "red" }}
+                disabled={fields.length === 1}
+              >
+                <RemoveIcon />
+              </IconButton>
               {index === fields.length - 1 && fields.length < 4 ? (
                 <IconButton
                   onClick={handleAddFields}
@@ -188,14 +197,7 @@ export default function DispencerNew({ close, refreshDispencer, edit }) {
                 >
                   <AddIcon />
                 </IconButton>
-              ) : (
-                <IconButton
-                  onClick={() => handleRemoveField(index)}
-                  sx={{ width: "10%", color: "red" }}
-                >
-                  <RemoveIcon />
-                </IconButton>
-              )}
+              ) : null}
             </Stack>
           ))}
         </Stack>
