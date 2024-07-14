@@ -17,6 +17,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import TestNew from "./dialogtest";
 import axios from "axios";
 import DeleteIcon from "@mui/icons-material/Delete";
+import ClearIcon from "@mui/icons-material/Clear";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -28,12 +29,12 @@ export default function TestTable() {
   const [open, setOpen] = useState(false);
   const [editTest, setEditTest] = useState(null);
   const [testData, setTestData] = useState([]);
-  const [search, setSearch] = React.useState("");
+  const [search, setSearch] = useState(null);
 
   const fetchTestData = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/test/GETAllTest?date=${search}`
+        `${process.env.NEXT_PUBLIC_API_URL}/test/GETAllTest?date=${search || ''}`
       );
       console.log("testdata", response.data.message.test);
       setTestData(response.data.message.test);
@@ -46,10 +47,13 @@ export default function TestTable() {
     fetchTestData();
   }, [search]);
 
-  const handleSearch = (value) => {
-    // Handle the search functionality here
-    console.log("Search clicked", value);
-    setSearch(value);
+  const handleSearch = (date) => {
+    const formattedDate = date ? dayjs(date).format("DD/MM/YYYY") : null;
+    setSearch(formattedDate);
+  };
+
+  const handleClearSearch = () => {
+    setSearch(null);
   };
 
   const handleClickOpen = () => {
@@ -94,6 +98,7 @@ export default function TestTable() {
           <DemoContainer components={["DatePicker"]}>
             <DatePicker
               label="Search by date..."
+              value={search ? dayjs(search, "DD/MM/YYYY") : null}
               sx={{
                 marginRight: "10px",
                 ".MuiOutlinedInput-root": {
@@ -115,13 +120,18 @@ export default function TestTable() {
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
+                    <IconButton
+                      onClick={handleClearSearch}
+                      edge="end"
+                      sx={{ visibility: search ? "visible" : "hidden" }}
+                    >
+                      <ClearIcon />
+                    </IconButton>
                     <CalendarTodayIcon />
                   </InputAdornment>
                 ),
               }}
-              onChange={(date) => {
-                handleSearch(dayjs(date).format("DD/MM/YYYY"));
-              }}
+              onChange={(date) => handleSearch(date)}
             />
           </DemoContainer>
         </LocalizationProvider>
@@ -196,3 +206,4 @@ export default function TestTable() {
     </Box>
   );
 }
+
