@@ -26,10 +26,13 @@ require("dotenv").config();
 export default function FullScreenDialog({ open, handleClose, content }) {
   const [fuel, setFuel] = React.useState(false);
   const [edit, setEdit] = React.useState(false);
+  const [cashdetails, setCashDetails] = React.useState([]);
   const [editdetails, setEditdetails] = React.useState(false);
   const [fuelAccounts, setfuelAccounts] = React.useState([]);
   const [cashEdit, setCashEdit] = React.useState(false); // State to manage Cash Edit Dialog
   const [cashEditDetails, setCashEditDetails] = React.useState({}); // State to manage Cash Edit Details
+
+  
   
   useEffect(() => {
     axios
@@ -47,7 +50,7 @@ export default function FullScreenDialog({ open, handleClose, content }) {
         `${process.env.NEXT_PUBLIC_API_URL}/cashManagement/GETCashDetails?date=${content.date}`
       )
       .then((response) => {
-        console.log("response", response.data.message);
+        setCashDetails(response.data.message);
       })
       .catch((response) => {
         console.log("error", response.data);
@@ -225,18 +228,22 @@ export default function FullScreenDialog({ open, handleClose, content }) {
               </TableRow>
             </TableHead>
             <TableBody>
+              {cashdetails?.map((item)=>(
+
+              
               <TableRow>
-                <TableCell align="center">18/07/2001</TableCell>
-                <TableCell align="center">1</TableCell>
-                <TableCell align="center">1</TableCell>
-                <TableCell align="center">1</TableCell>
-                <TableCell align="center">1</TableCell>
+                <TableCell align="center">{item?.date}</TableCell>
+                <TableCell align="center">{item?.cash_inhand}</TableCell>
+                <TableCell align="center">{item?.cash_bank}</TableCell>
+                <TableCell align="center">{item?.cash_other}</TableCell>
+                <TableCell align="center">{item?.total_amount}</TableCell>
                 <TableCell align="center" className="action-buttons">
-                  <Button onClick={() => handleCashEditOpen({ date: "18/07/2001", cash: 1, bank: 1, hpCard: 1, totalSaleAmount: 1 })}>
+                  <Button onClick={() => handleCashEditOpen(item)}>
                     <EditIcon sx={{ color: "#0d47a1" }} />
                   </Button>
                 </TableCell>
               </TableRow>
+              ))}
             </TableBody>
           </Table>
         </TableContainer>
