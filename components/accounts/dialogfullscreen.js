@@ -9,6 +9,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import FuelNew from "./dialogfuel";
 import EditIcon from "@mui/icons-material/Edit";
 import FuelUpdate from "./dialogeditfuel";
+import CashDetailsUpdate from "./dialogcashdetailsupdate"; // Import the new component
 import {
   Box,
   Paper,
@@ -27,7 +28,9 @@ export default function FullScreenDialog({ open, handleClose, content }) {
   const [edit, setEdit] = React.useState(false);
   const [editdetails, setEditdetails] = React.useState(false);
   const [fuelAccounts, setfuelAccounts] = React.useState([]);
-
+  const [cashEdit, setCashEdit] = React.useState(false); // State to manage Cash Edit Dialog
+  const [cashEditDetails, setCashEditDetails] = React.useState({}); // State to manage Cash Edit Details
+  
   useEffect(() => {
     axios
       .get(
@@ -35,9 +38,21 @@ export default function FullScreenDialog({ open, handleClose, content }) {
       )
       .then((response) => {
         setfuelAccounts(response.data.message.fuelDetails);
-        console.log("datas", response.data.message.fuelDetails);
       });
   }, [content.date, content.dispencer]);
+
+  useEffect(() => {
+    axios
+      .get(
+        `${process.env.NEXT_PUBLIC_API_URL}/cashManagement/GETCashDetails?date=${content.date}`
+      )
+      .then((response) => {
+        console.log("response", response.data.message);
+      })
+      .catch((response) => {
+        console.log("error", response.data);
+      });
+  });
 
   const handlefullClose = () => {
     handleClose();
@@ -52,9 +67,31 @@ export default function FullScreenDialog({ open, handleClose, content }) {
     setEdit(false);
   };
 
+  const handleCashEditOpen = (data) => {
+    setCashEditDetails(data);
+    setCashEdit(true);
+  };
+
+  const handleCashEditClose = () => {
+    setCashEdit(false);
+  };
+
+  const handleCashEditSave = (updatedData) => {
+    console.log("Updated Cash Details:", updatedData);
+    // Add logic to save updatedData
+  };
+
   return (
     <Dialog open={open} onClose={handlefullClose} maxWidth="lg" fullWidth>
       {edit && <FuelUpdate clse={handledialogeditclose} data={editdetails} />}
+      {cashEdit && (
+        <CashDetailsUpdate
+          open={cashEdit}
+          onClose={handleCashEditClose}
+          data={cashEditDetails}
+          onSave={handleCashEditSave}
+        />
+      )}
       <DialogTitle sx={{ fontWeight: "bold", color: "#0d47a1" }}>
         Fuel Details
         <IconButton
@@ -68,7 +105,7 @@ export default function FullScreenDialog({ open, handleClose, content }) {
         </IconButton>
       </DialogTitle>
       <DialogContent>
-        <Box sx={{ maxHeight: 400, overflow: 'auto' }}>
+        <Box sx={{ maxHeight: 400, overflow: "auto" }}>
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead sx={{ fontStyle: "normal", background: "#e3f2fd" }}>
@@ -157,8 +194,8 @@ export default function FullScreenDialog({ open, handleClose, content }) {
             </Table>
           </TableContainer>
         </Box>
-        
-        <br/>
+
+        <br />
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead sx={{ background: "#b2dfdb" }}>
@@ -195,7 +232,7 @@ export default function FullScreenDialog({ open, handleClose, content }) {
                 <TableCell align="center">1</TableCell>
                 <TableCell align="center">1</TableCell>
                 <TableCell align="center" className="action-buttons">
-                  <Button >
+                  <Button onClick={() => handleCashEditOpen({ date: "18/07/2001", cash: 1, bank: 1, hpCard: 1, totalSaleAmount: 1 })}>
                     <EditIcon sx={{ color: "#0d47a1" }} />
                   </Button>
                 </TableCell>

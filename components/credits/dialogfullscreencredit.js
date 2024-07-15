@@ -24,6 +24,7 @@ import { Delete, PictureAsPdf } from "@mui/icons-material";
 import EditIcon from "@mui/icons-material/Edit";
 import axios from "axios";
 import jsPDF from "jspdf";
+import ClearIcon from "@mui/icons-material/Clear";
 import SearchIcon from "@mui/icons-material/Search";
 import CreditorsDetailsNew from "./dialogcreditorsdetails"; // Adjust the import path as necessary
 import CreditNew from "./dialogcredit";
@@ -39,14 +40,14 @@ const MediumDialog = ({ open, handleClose, data, refresh }) => {
   const [creditData, setCreditData] = useState({});
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editCreditHistory, setEditCreditHistory] = useState(false);
-  const [search, setSearch] = React.useState("");
+  const [search, setSearch] = useState(null);
 
   useEffect(() => {
     if (data?._id) {
       let idQuery = data._id.replace(/['"]/g, "");
       axios
         .get(
-          `${process.env.NEXT_PUBLIC_API_URL}/creditHistory/GETAllCreditHistory?id=${idQuery}&date=${search}`
+          `${process.env.NEXT_PUBLIC_API_URL}/creditHistory/GETAllCreditHistory?id=${idQuery}&date=${search || ''}`
         )
         .then((response) => {
           setCreditHistory(response.data.message.CreditHistorys);
@@ -59,6 +60,15 @@ const MediumDialog = ({ open, handleClose, data, refresh }) => {
     // Handle the search functionality here
     console.log("Search clicked", value);
     setSearch(value);
+  };
+
+  // const handleSearch = (date) => {
+  //   const formattedDate = date ? dayjs(date).format("DD/MM/YYYY") : null;
+  //   setSearch(formattedDate);
+  // };
+
+  const handleClearSearch = () => {
+    setSearch(null);
   };
 
   const exportPDF = () => {
@@ -144,139 +154,124 @@ const MediumDialog = ({ open, handleClose, data, refresh }) => {
   };
   //pdf credit history end here....
 
+  //abhi extended pdf
+  const generateBillPDF = (history) => {
+    const pdf = new jsPDF("p", "mm", "a4");
 
-//abhi extended pdf
-const generateBillPDF = (history) => {
-  const pdf = new jsPDF("p", "mm", "a4");
+    // Logo
+    const logoBase64 = "data:image/jpeg;base64, ..."; // Add your base64 logo data here
+    pdf.addImage(logoBase64, "JPEG", 15, 10, 30, 30);
 
-  // Logo
-  const logoBase64 = "data:image/jpeg;base64, ..."; // Add your base64 logo data here
-  pdf.addImage(logoBase64, "JPEG", 15, 10, 30, 30);
+    // Header Background
+    pdf.setFillColor(0, 0, 0); // Black background
+    pdf.rect(0, 0, 210, 40, "F"); // Full width, height enough to cover the header area
 
-  // Header Background
-  pdf.setFillColor(0, 0, 0); // Black background
-  pdf.rect(0, 0, 210, 40, 'F'); // Full width, height enough to cover the header area
+    // Header
+    pdf.setFontSize(23);
+    pdf.setTextColor(255, 255, 255); // White text
+    pdf.setFont("helvetica", "bold");
+    pdf.text("Indian Oil", 105, 25, { align: "center" });
 
-  // Header
-  pdf.setFontSize(23);
-  pdf.setTextColor(255, 255, 255); // White text
-  pdf.setFont("helvetica", "bold");
-  pdf.text("Indian Oil", 105, 25, { align: "center" });
+    // Reset text color for sub-header and other sections
+    pdf.setTextColor(0, 0, 0);
 
-  // Reset text color for sub-header and other sections
-  pdf.setTextColor(0, 0, 0);
+    // Divider between header and sub-header
+    pdf.setDrawColor(180, 180, 180); // Light gray color
+    pdf.setLineWidth(0.3);
+    // pdf.line(15, 40, 195, 40); // Horizontal line
 
-  // Divider between header and sub-header
-  pdf.setDrawColor(180, 180, 180); // Light gray color
-  pdf.setLineWidth(0.3);
-  // pdf.line(15, 40, 195, 40); // Horizontal line
+    // Free row space before sub-header
+    pdf.text(" ", 15, 45);
 
-  // Free row space before sub-header
-  pdf.text(" ", 15, 45);
+    // Sub-Header
+    pdf.setFontSize(14);
+    pdf.setFont("helvetica", "normal");
+    pdf.text("Thanks for fueling up with us!", 105, 50, { align: "center" });
 
-  // Sub-Header
-  pdf.setFontSize(14);
-  pdf.setFont("helvetica", "normal");
-  pdf.text("Thanks for fueling up with us!", 105, 50, { align: "center" });
+    // Divider between sub-header and fields
+    pdf.line(15, 60, 195, 60); // Horizontal line
 
-  // Divider between sub-header and fields
-  pdf.line(15, 60, 195, 60); // Horizontal line
+    // Free row space before fields
+    pdf.text(" ", 15, 65);
 
-  // Free row space before fields
-  pdf.text(" ", 15, 65);
+    // Fields
+    pdf.setFontSize(12);
+    pdf.setTextColor(180, 180, 180); // Set color to off-white (light gray)
+    pdf.text("Date", 15, 70);
+    pdf.text("Name", 75, 70);
+    pdf.text("Address", 135, 70);
 
-  // Fields
-  pdf.setFontSize(12);
-  pdf.setTextColor(180, 180, 180); // Set color to off-white (light gray)
-  pdf.text("Date", 15, 70);
-  pdf.text("Name", 75, 70);
-  pdf.text("Address", 135, 70);
+    // Field Values
+    pdf.setTextColor(0, 0, 0); // Reset color to black for field values
+    pdf.setFontSize(10);
+    pdf.text(String(history.date), 15, 75); // Ensure values are converted to strings
+    pdf.text(String(history.cc_id?.cc_name), 75, 75);
+    pdf.text(String(history.cc_id?.cc_address), 135, 75);
 
-  // Field Values
-  pdf.setTextColor(0, 0, 0); // Reset color to black for field values
-  pdf.setFontSize(10);
-  pdf.text(String(history.date), 15, 75); // Ensure values are converted to strings
-  pdf.text(String(history.cc_id?.cc_name), 75, 75);
-  pdf.text(String(history.cc_id?.cc_address), 135, 75);
+    // Divider between fields and body
+    pdf.line(15, 85, 195, 85); // Horizontal line
 
-  // Divider between fields and body
-  pdf.line(15, 85, 195, 85); // Horizontal line
+    // Free row space before body
+    pdf.text(" ", 15, 90);
 
-  // Free row space before body
-  pdf.text(" ", 15, 90);
+    // Body Field Names
+    pdf.setFontSize(12);
+    pdf.setTextColor(180, 180, 180); // Set color to off-white (light gray)
+    pdf.text("Bill No.", 15, 95);
+    pdf.text("Vehicle No.", 75, 95);
+    pdf.text("Fuel", 135, 95);
+    pdf.text("Fuel Quantity", 15, 115);
+    pdf.text("Amount", 75, 115);
+    pdf.text("Amount Type", 135, 115);
 
-  // Body Field Names
-  pdf.setFontSize(12);
-  pdf.setTextColor(180, 180, 180); // Set color to off-white (light gray)
-  pdf.text("Bill No.", 15, 95);
-  pdf.text("Vehicle No.", 75, 95);
-  pdf.text("Fuel", 135, 95);
-  pdf.text("Fuel Quantity", 15, 115);
-  pdf.text("Amount", 75, 115);
-  pdf.text("Amount Type", 135, 115);
+    // Body Field Values
+    pdf.setTextColor(0, 0, 0); // Reset color to black for field values
+    pdf.setFontSize(10);
+    pdf.text("7288273783181", 15, 100); // Ensure values are converted to strings
+    pdf.text(String(history.vehicle_no), 75, 100);
+    pdf.text(String(history.fuel_type?.fuel_name), 135, 100);
+    pdf.text(String(history.fuel_quantity), 15, 120);
+    pdf.text(String(history.amount), 75, 120);
+    pdf.text(String(history.amount_type), 135, 120);
 
-  // Body Field Values
-  pdf.setTextColor(0, 0, 0); // Reset color to black for field values
-  pdf.setFontSize(10);
-  pdf.text("7288273783181", 15, 100); // Ensure values are converted to strings
-  pdf.text(String(history.vehicle_no), 75, 100);
-  pdf.text(String(history.fuel_type?.fuel_name), 135, 100);
-  pdf.text(String(history.fuel_quantity), 15, 120);
-  pdf.text(String(history.amount), 75, 120);
-  pdf.text(String(history.amount_type), 135, 120);
+    // Staff name at the right bottom of the body section
+    pdf.text(`Staff Name: ${String(history.emp_id?.emp_name)}`, 135, 140);
 
-  // Staff name at the right bottom of the body section
-  pdf.text(`Staff Name: ${String(history.emp_id?.emp_name)}`, 135, 140);
+    // Divider between body and footer
+    pdf.line(15, 150, 195, 150); // Horizontal line
 
-  // Divider between body and footer
-  pdf.line(15, 150, 195, 150); // Horizontal line
+    // Free row space before footer
+    pdf.text(" ", 15, 155);
 
-  // Free row space before footer
-  pdf.text(" ", 15, 155);
+    // Footer Fields
+    pdf.setFontSize(12);
+    pdf.setTextColor(180, 180, 180); // Set color to off-white (light gray)
+    pdf.text("Fuel Station:", 15, 165);
+    pdf.text("Tel:", 75, 165);
+    pdf.text("Mail:", 135, 165);
 
-  // Footer Fields
-  pdf.setFontSize(12);
-  pdf.setTextColor(180, 180, 180); // Set color to off-white (light gray)
-  pdf.text("Fuel Station:", 15, 165);
-  pdf.text("Tel:", 75, 165);
-  pdf.text("Mail:", 135, 165);
+    // Footer Values
+    pdf.setTextColor(0, 0, 0); // Reset color to black for field values
+    pdf.setFontSize(12);
+    pdf.text("Swami's Oils", 40, 165);
+    pdf.text("0485 2777809", 83, 165);
+    pdf.text("info@swamisoils.com", 145, 165);
 
-  // Footer Values
-  pdf.setTextColor(0, 0, 0); // Reset color to black for field values
-  pdf.setFontSize(12);
-  pdf.text("Swami's Oils", 40, 165);
-  pdf.text("0485 2777809", 83, 165);
-  pdf.text("info@swamisoils.com", 145, 165);
+    // Divider after first footer with a gap
+    pdf.line(15, 175, 195, 175); // Horizontal line
 
-  // Divider after first footer with a gap
-  pdf.line(15, 175, 195, 175); // Horizontal line
+    // Free row space before second footer
+    pdf.text(" ", 15, 180);
 
-  // Free row space before second footer
-  pdf.text(" ", 15, 180);
+    // Second Footer
+    pdf.setFontSize(14);
+    pdf.text("Footer 1", 15, 190);
+    pdf.text("Footer 2", 15, 200);
 
-  // Second Footer
-  pdf.setFontSize(14);
-  pdf.text("Footer 1", 15, 190);
-  pdf.text("Footer 2", 15, 200);
-
-  pdf.save("bill.pdf");
-};
-
-
-
-
-
-
-
-
-
-
-
-
-
+    pdf.save("bill.pdf");
+  };
 
   //extended pdf ends here
-  
 
   const handleEditClose = () => {
     setIsEditOpen(false);
@@ -358,6 +353,7 @@ const generateBillPDF = (history) => {
                 <DemoContainer components={["DatePicker"]}>
                   <DatePicker
                     label="Search by date..."
+                    value={search ? dayjs(search, "DD/MM/YYYY") : null}
                     sx={{
                       marginRight: "10px",
                       ".MuiOutlinedInput-root": {
@@ -389,6 +385,12 @@ const generateBillPDF = (history) => {
                   />
                 </DemoContainer>
               </LocalizationProvider>
+              <IconButton
+                sx={{ marginLeft: "15px" }}
+                onClick={handleClearSearch}
+              >
+                <ClearIcon />
+              </IconButton>
             </Box>
           </Box>
 
@@ -458,7 +460,10 @@ const generateBillPDF = (history) => {
                         <EditIcon sx={{ color: "#0d47a1" }} />
                       </Button>
                       <Button>
-                        <PrintIcon onClick={() => generateBillPDF(history)} sx={{ color: "#039be5" }} />
+                        <PrintIcon
+                          onClick={() => generateBillPDF(history)}
+                          sx={{ color: "#039be5" }}
+                        />
                       </Button>
                       <Button>
                         <Delete sx={{ color: "#ef5350" }} />
@@ -477,8 +482,14 @@ const generateBillPDF = (history) => {
             alignItems="center"
             width="100%"
           >
-            <Typography sx={{ fontWeight: "inherit", marginLeft: "20px", color:"#0d47a1" }}>
-              Credit to be Paid:<b>  {data.credit_amount}</b>
+            <Typography
+              sx={{
+                fontWeight: "inherit",
+                marginLeft: "20px",
+                color: "#0d47a1",
+              }}
+            >
+              Credit to be Paid:<b> {data.credit_amount}</b>
             </Typography>
             <Box>
               <IconButton onClick={exportPDF} color="primary">

@@ -88,66 +88,65 @@ export default function TestTable() {
 
   return (
     <Box>
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        marginBottom="20px"
-      >
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DemoContainer components={["DatePicker"]}>
-            <DatePicker
-              label="Search by date..."
-              value={search ? dayjs(search, "DD/MM/YYYY") : null}
-              sx={{
-                marginRight: "10px",
-                ".MuiOutlinedInput-root": {
-                  "& fieldset": {
-                    borderColor: "#0d47a1",
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "#0d47a1",
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#0d47a1",
-                  },
-                },
-                ".MuiInputAdornment-root .MuiSvgIcon-root": {
-                  color: "#0d47a1",
-                },
-              }}
-              format="DD/MM/YYYY"
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={handleClearSearch}
-                      edge="end"
-                      sx={{ visibility: search ? "visible" : "hidden" }}
-                    >
-                      <ClearIcon />
-                    </IconButton>
-                    <CalendarTodayIcon />
-                  </InputAdornment>
-                ),
-              }}
-              onChange={(date) => handleSearch(date)}
-            />
-          </DemoContainer>
-        </LocalizationProvider>
-        <Button
-          variant="outlined"
+     <Box
+  display="flex"
+  justifyContent="space-between"
+  alignItems="center"
+  marginBottom="20px"
+>
+  <Box display="flex" alignItems="center">
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <DemoContainer components={["DatePicker"]}>
+        <DatePicker
+          label="Search by date..."
+          value={search ? dayjs(search, "DD/MM/YYYY") : null}
           sx={{
-            color: "#0d47a1",
-            border: "1px solid #0d47a1",
-            height: "36.5px",
-            marginLeft: "10px",
+            marginRight: "10px",
+            ".MuiOutlinedInput-root": {
+              "& fieldset": {
+                borderColor: "#0d47a1",
+              },
+              "&:hover fieldset": {
+                borderColor: "#0d47a1",
+              },
+              "&.Mui-focused fieldset": {
+                borderColor: "#0d47a1",
+              },
+            },
+            ".MuiInputAdornment-root .MuiSvgIcon-root": {
+              color: "#0d47a1",
+            },
           }}
-          onClick={handleClickOpen}
-        >
-          Add Test Details
-        </Button>
-      </Box>
+          format="DD/MM/YYYY"
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <CalendarTodayIcon />
+              </InputAdornment>
+            ),
+          }}
+          onChange={(date) => handleSearch(date)}
+        />
+      </DemoContainer>
+    </LocalizationProvider>
+    <IconButton sx={{ marginLeft: "15px" }} onClick={handleClearSearch}>
+      <ClearIcon />
+    </IconButton>
+  </Box>
+  <Button
+    variant="outlined"
+    sx={{
+      color: "#0d47a1",
+      border: "1px solid #0d47a1",
+      height: "36.5px",
+      marginLeft: "10px",
+    }}
+    onClick={handleClickOpen}
+  >
+    Add Test Details
+  </Button>
+</Box>
+
       {open ? (
         <TestNew
           close={handleClose}
@@ -191,9 +190,9 @@ export default function TestTable() {
                 </TableCell>
                 <TableCell align="center">{test?.fuel_quantity}</TableCell>
                 <TableCell align="center">
-                  <Button onClick={() => handleClickOpenEdit(test)}>
+                  {/* <Button onClick={() => handleClickOpenEdit(test)}>
                     <EditIcon sx={{ color: "#0d47a1" }} />
-                  </Button>
+                  </Button> */}
                   <Button onClick={() => handleDelete(test._id)}>
                     <DeleteIcon sx={{ color: "#d32f2f" }} />
                   </Button>
