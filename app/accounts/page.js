@@ -35,7 +35,11 @@ import DoneAllIcon from "@mui/icons-material/DoneAll";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 import EditProductAccount from "@/components/accounts/accountsProducts/editAccountProduct";
 import SearchIcon from "@mui/icons-material/Search";
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import {
+  ClearIcon,
+  DatePicker,
+  LocalizationProvider,
+} from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import dayjs from "dayjs";
@@ -47,7 +51,7 @@ export default function Page() {
   const [editExpence, setEditExpence] = React.useState({});
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [dialogContent, setDialogContent] = React.useState({});
-  const [search, setSearch] = React.useState("");
+  const [search, setSearch] = useState(null);
   const [selectedTab, setSelectedTab] = React.useState(0);
   const [reportAccounts, setReportAccounts] = React.useState([]);
   const [accountoverview, setAccountoverview] = React.useState([]);
@@ -55,27 +59,26 @@ export default function Page() {
   const [expenceaccount, setExpenceAccount] = React.useState([]);
   // const [refreshReport, setRefreshReport] = React.useState(false);
 
-
   const [refreshExpence, setRefreshExpence] = React.useState(false);
 
   const [refreshProduct, setRefreshProduct] = React.useState(false);
 
-  
-  
   useEffect(() => {
     axios
-      .get(`${process.env.NEXT_PUBLIC_API_URL}/accountReport/GETAccount?date=${search}`)
+      .get(
+        `${process.env.NEXT_PUBLIC_API_URL}/accountReport/GETAccount?date=${
+          search || ""
+        }`
+      )
       .then((response) => setReportAccounts(response.data.message));
   }, [search]);
-
-
-
-
 
   useEffect(() => {
     axios
       .get(
-        `${process.env.NEXT_PUBLIC_API_URL}/fuelAccounts/GETFuelAccountOverview?date=${search}`
+        `${
+          process.env.NEXT_PUBLIC_API_URL
+        }/fuelAccounts/GETFuelAccountOverview?date=${search || ""}`
       )
       .then((response) => setAccountoverview(response.data.message));
   }, [search]);
@@ -85,23 +88,25 @@ export default function Page() {
       .get(
         `${
           process.env.NEXT_PUBLIC_API_URL
-        }/productAccounts/GETAllProductAccount?page=${1}&date=${search}`
+        }/productAccounts/GETAllProductAccount?page=${1}&date=${search || ""}`
       )
       .then((response) => {
         setProductAccounts(response?.data?.message?.fuelDetails);
       });
-  }, [refreshProduct,search]);
+  }, [refreshProduct, search]);
 
   useEffect(() => {
     axios
       .get(
-        `${process.env.NEXT_PUBLIC_API_URL}/expenceaccount/GETAllExpenceAccount?&date=${search}`
+        `${
+          process.env.NEXT_PUBLIC_API_URL
+        }/expenceaccount/GETAllExpenceAccount?&date=${search || ""}`
       )
       .then((response) =>
         setExpenceAccount(response.data.message.expenceDetails)
       );
-  }, [refreshExpence,search]);
-  
+  }, [refreshExpence, search]);
+
   const handleRefeshExpence = () => {
     setEditExpence({});
     setRefreshExpence(!refreshExpence);
@@ -110,6 +115,10 @@ export default function Page() {
   // const handleRefeshReport = () => {
   //   setRefreshReport(!refreshReport);
   // };
+
+  const handleClearSearch = () => {
+    setSearch(null);
+  };
 
   const handleEditExpence = (editData) => {
     setEditExpence(editData);
@@ -202,11 +211,6 @@ export default function Page() {
     setSearch(value);
   };
 
-
-
-
-
-
   return (
     <>
       <Box sx={{ display: "flex", gap: 2, paddingBottom: "20px" }}>
@@ -250,6 +254,7 @@ export default function Page() {
               <DemoContainer components={["DatePicker"]}>
                 <DatePicker
                   label="Search by date..."
+                  value={search ? dayjs(search, "DD/MM/YYYY") : null}
                   sx={{
                     marginRight: "10px",
                     ".MuiOutlinedInput-root": {
@@ -281,6 +286,9 @@ export default function Page() {
                 />
               </DemoContainer>
             </LocalizationProvider>
+            <IconButton sx={{ marginLeft: "15px" }} onClick={handleClearSearch}>
+              <ClearIcon />
+            </IconButton>
           </Box>
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -290,8 +298,7 @@ export default function Page() {
                     Date
                   </TableCell>
                   <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                    Fuel Sale 
-                    Amnt
+                    Fuel Sale Amnt
                   </TableCell>
                   <TableCell align="center" sx={{ fontWeight: "bold" }}>
                     Product Sale Amnt
@@ -299,7 +306,10 @@ export default function Page() {
                   <TableCell align="center" sx={{ fontWeight: "bold" }}>
                     Expense Amnt
                   </TableCell>
-                  <TableCell align="center" sx={{ fontWeight: "bold",background:"#fff9c4" }} >
+                  <TableCell
+                    align="center"
+                    sx={{ fontWeight: "bold", background: "#fff9c4" }}
+                  >
                     Net Amount
                   </TableCell>
                   <TableCell align="center" sx={{ fontWeight: "bold" }}>
@@ -320,26 +330,43 @@ export default function Page() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {reportAccounts.map ((reportAccount) =>(
-                <TableRow
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  <TableCell component="th" scope="row" align="center">
-                    {reportAccount.date}
-                  </TableCell>
-                  <TableCell align="center">{reportAccount.total_fuel_amount}</TableCell>
-                  <TableCell align="center">{reportAccount.total_product_amount}</TableCell>
-                  <TableCell align="center">{reportAccount.total_expence_amount}</TableCell>
-                  <TableCell align="center" sx={{color:"#29b6f6"}}>{(reportAccount.total_fuel_amount+reportAccount.total_product_amount)-reportAccount.total_expence_amount}</TableCell>
-                  <TableCell align="center">{reportAccount.total_cash_inhand}</TableCell>
-                  <TableCell align="center">{reportAccount.total_cash_bank}</TableCell>
-                  <TableCell align="center">{reportAccount.total_cash_other}</TableCell>
-                  <TableCell align="center" sx={{color:"#f44336"}}>{reportAccount.total_credit_amount}</TableCell>
-                  <TableCell align="center">{reportAccount.total_debit_amount}</TableCell>
-
-
-                  
-                </TableRow>
+                {reportAccounts.map((reportAccount) => (
+                  <TableRow
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  >
+                    <TableCell component="th" scope="row" align="center">
+                      {reportAccount.date}
+                    </TableCell>
+                    <TableCell align="center">
+                      {reportAccount.total_fuel_amount}
+                    </TableCell>
+                    <TableCell align="center">
+                      {reportAccount.total_product_amount}
+                    </TableCell>
+                    <TableCell align="center">
+                      {reportAccount.total_expence_amount}
+                    </TableCell>
+                    <TableCell align="center" sx={{ color: "#29b6f6" }}>
+                      {reportAccount.total_fuel_amount +
+                        reportAccount.total_product_amount -
+                        reportAccount.total_expence_amount}
+                    </TableCell>
+                    <TableCell align="center">
+                      {reportAccount.total_cash_inhand}
+                    </TableCell>
+                    <TableCell align="center">
+                      {reportAccount.total_cash_bank}
+                    </TableCell>
+                    <TableCell align="center">
+                      {reportAccount.total_cash_other}
+                    </TableCell>
+                    <TableCell align="center" sx={{ color: "#f44336" }}>
+                      {reportAccount.total_credit_amount}
+                    </TableCell>
+                    <TableCell align="center">
+                      {reportAccount.total_debit_amount}
+                    </TableCell>
+                  </TableRow>
                 ))}
               </TableBody>
             </Table>
@@ -369,6 +396,7 @@ export default function Page() {
               <DemoContainer components={["DatePicker"]}>
                 <DatePicker
                   label="Search by date..."
+                  value={search ? dayjs(search, "DD/MM/YYYY") : null}
                   sx={{
                     marginRight: "10px",
                     ".MuiOutlinedInput-root": {
@@ -400,6 +428,12 @@ export default function Page() {
                 />
               </DemoContainer>
             </LocalizationProvider>
+            <IconButton
+              onClick={handleClearSearch}
+              sx={{ marginRight: "700px" }}
+            >
+              <ClearIcon />
+            </IconButton>
             <Button
               variant="outlined"
               onClick={handleClickOpenfuel}
@@ -486,10 +520,11 @@ export default function Page() {
               marginBottom: "20px",
             }}
           >
-             <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={["DatePicker"]}>
                 <DatePicker
                   label="Search by date..."
+                  value={search ? dayjs(search, "DD/MM/YYYY") : null}
                   sx={{
                     marginRight: "10px",
                     ".MuiOutlinedInput-root": {
@@ -521,11 +556,16 @@ export default function Page() {
                 />
               </DemoContainer>
             </LocalizationProvider>
+            <IconButton
+              onClick={handleClearSearch}
+              sx={{ marginRight: "660px" }}
+            >
+              <ClearIcon />
+            </IconButton>
             <Button
               variant="outlined"
               onClick={handleClickOpenproduct}
               style={{
-                
                 color: "#0d47a1",
                 border: "1px solid #0d47a1",
               }}
@@ -601,7 +641,12 @@ export default function Page() {
           </TableContainer>
         </>
       )}
-      {product ? <ProductsNew close={handleCloseproduct} refresh={() => setRefreshProduct(!refreshProduct)}/> : null}
+      {product ? (
+        <ProductsNew
+          close={handleCloseproduct}
+          refresh={() => setRefreshProduct(!refreshProduct)}
+        />
+      ) : null}
       {editProductOpen && (
         <EditProductAccount
           open={editProductOpen}
@@ -626,6 +671,7 @@ export default function Page() {
               <DemoContainer components={["DatePicker"]}>
                 <DatePicker
                   label="Search by date..."
+                  value={search ? dayjs(search, "DD/MM/YYYY") : null}
                   sx={{
                     marginRight: "10px",
                     ".MuiOutlinedInput-root": {
@@ -657,11 +703,16 @@ export default function Page() {
                 />
               </DemoContainer>
             </LocalizationProvider>
+            <IconButton
+              onClick={handleClearSearch}
+              sx={{ marginRight: "660px" }}
+            >
+              <ClearIcon />
+            </IconButton>
             <Button
               variant="outlined"
               onClick={handleClickOpenexpense}
               style={{
-                
                 color: "#0d47a1",
                 border: "1px solid #0d47a1",
               }}

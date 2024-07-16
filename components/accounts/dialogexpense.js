@@ -109,7 +109,7 @@ export default function ExpenseNew({ close, refresh, edit }) {
 
   return (
     <Dialog
-      maxWidth="md"
+      maxWidth="sm"
       fullWidth
       open={true}
       onClose={handleClose3}

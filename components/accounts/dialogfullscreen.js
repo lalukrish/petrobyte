@@ -55,7 +55,7 @@ export default function FullScreenDialog({ open, handleClose, content }) {
       .catch((response) => {
         console.log("error", response.data);
       });
-  });
+  },[]);
 
   const handlefullClose = () => {
     handleClose();
