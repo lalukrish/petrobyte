@@ -31,11 +31,13 @@ import axios from "axios";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import FullScreenDialog from "@/components/accounts/dialogfullscreen";
 import OpenInFullIcon from "@mui/icons-material/OpenInFull";
-import DoneAllIcon from "@mui/icons-material/DoneAll";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 import EditProductAccount from "@/components/accounts/accountsProducts/editAccountProduct";
-import SearchIcon from "@mui/icons-material/Search";
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import {
+  ClearIcon,
+  DatePicker,
+  LocalizationProvider,
+} from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import dayjs from "dayjs";
@@ -47,7 +49,7 @@ export default function Page() {
   const [editExpence, setEditExpence] = React.useState({});
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [dialogContent, setDialogContent] = React.useState({});
-  const [search, setSearch] = React.useState("");
+  const [search, setSearch] = useState(null);
   const [selectedTab, setSelectedTab] = React.useState(0);
   const [reportAccounts, setReportAccounts] = React.useState([]);
   const [accountoverview, setAccountoverview] = React.useState([]);
@@ -70,7 +72,9 @@ export default function Page() {
   useEffect(() => {
     axios
       .get(
-        `${process.env.NEXT_PUBLIC_API_URL}/fuelAccounts/GETFuelAccountOverview?date=${search}`
+        `${
+          process.env.NEXT_PUBLIC_API_URL
+        }/fuelAccounts/GETFuelAccountOverview?date=${search || ""}`
       )
       .then((response) => setAccountoverview(response.data.message));
   }, [search]);
@@ -80,7 +84,7 @@ export default function Page() {
       .get(
         `${
           process.env.NEXT_PUBLIC_API_URL
-        }/productAccounts/GETAllProductAccount?page=${1}&date=${search}`
+        }/productAccounts/GETAllProductAccount?page=${1}&date=${search || ""}`
       )
       .then((response) => {
         setProductAccounts(response?.data?.message?.fuelDetails);
@@ -90,7 +94,9 @@ export default function Page() {
   useEffect(() => {
     axios
       .get(
-        `${process.env.NEXT_PUBLIC_API_URL}/expenceaccount/GETAllExpenceAccount?&date=${search}`
+        `${
+          process.env.NEXT_PUBLIC_API_URL
+        }/expenceaccount/GETAllExpenceAccount?&date=${search || ""}`
       )
       .then((response) =>
         setExpenceAccount(response.data.message.expenceDetails)
@@ -105,6 +111,10 @@ export default function Page() {
   // const handleRefeshReport = () => {
   //   setRefreshReport(!refreshReport);
   // };
+
+  const handleClearSearch = () => {
+    setSearch(null);
+  };
 
   const handleEditExpence = (editData) => {
     setEditExpence(editData);
@@ -240,6 +250,7 @@ export default function Page() {
               <DemoContainer components={["DatePicker"]}>
                 <DatePicker
                   label="Search by date..."
+                  value={search ? dayjs(search, "DD/MM/YYYY") : null}
                   sx={{
                     marginRight: "10px",
                     ".MuiOutlinedInput-root": {
@@ -271,6 +282,9 @@ export default function Page() {
                 />
               </DemoContainer>
             </LocalizationProvider>
+            <IconButton sx={{ marginLeft: "15px" }} onClick={handleClearSearch}>
+              <ClearIcon />
+            </IconButton>
           </Box>
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -378,6 +392,7 @@ export default function Page() {
               <DemoContainer components={["DatePicker"]}>
                 <DatePicker
                   label="Search by date..."
+                  value={search ? dayjs(search, "DD/MM/YYYY") : null}
                   sx={{
                     marginRight: "10px",
                     ".MuiOutlinedInput-root": {
@@ -409,6 +424,12 @@ export default function Page() {
                 />
               </DemoContainer>
             </LocalizationProvider>
+            <IconButton
+              onClick={handleClearSearch}
+              sx={{ marginRight: "700px" }}
+            >
+              <ClearIcon />
+            </IconButton>
             <Button
               variant="outlined"
               onClick={handleClickOpenfuel}
@@ -499,6 +520,7 @@ export default function Page() {
               <DemoContainer components={["DatePicker"]}>
                 <DatePicker
                   label="Search by date..."
+                  value={search ? dayjs(search, "DD/MM/YYYY") : null}
                   sx={{
                     marginRight: "10px",
                     ".MuiOutlinedInput-root": {
@@ -530,6 +552,12 @@ export default function Page() {
                 />
               </DemoContainer>
             </LocalizationProvider>
+            <IconButton
+              onClick={handleClearSearch}
+              sx={{ marginRight: "660px" }}
+            >
+              <ClearIcon />
+            </IconButton>
             <Button
               variant="outlined"
               onClick={handleClickOpenproduct}
@@ -639,6 +667,7 @@ export default function Page() {
               <DemoContainer components={["DatePicker"]}>
                 <DatePicker
                   label="Search by date..."
+                  value={search ? dayjs(search, "DD/MM/YYYY") : null}
                   sx={{
                     marginRight: "10px",
                     ".MuiOutlinedInput-root": {
@@ -670,6 +699,12 @@ export default function Page() {
                 />
               </DemoContainer>
             </LocalizationProvider>
+            <IconButton
+              onClick={handleClearSearch}
+              sx={{ marginRight: "660px" }}
+            >
+              <ClearIcon />
+            </IconButton>
             <Button
               variant="outlined"
               onClick={handleClickOpenexpense}

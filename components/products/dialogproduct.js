@@ -17,21 +17,28 @@ export default function ProductNew({ refresh, edit, close }) {
   const [price, setPrice] = React.useState(edit ? edit.product_price : "");
 
   const saveProduct = () => {
-    let productData = {
-      product_name: product,
-      product_price: price,
-    };
+    if (!product || !price) {
+      alert("please fill the fields");
+    } else {
+      let productData = {
+        product_name: product,
+        product_price: price,
+      };
 
-    axios
-      .post(`${process.env.NEXT_PUBLIC_API_URL}/product/POSTProduct`, productData)
-      .then((responce) => {
-        alert(responce.data.message);
-        refresh();
-        close();
-      })
-      .catch((err) => {
-        alert(err);
-      });
+      axios
+        .post(
+          `${process.env.NEXT_PUBLIC_API_URL}/product/POSTProduct`,
+          productData
+        )
+        .then((responce) => {
+          alert(responce.data.message);
+          refresh();
+          close();
+        })
+        .catch((err) => {
+          alert(err);
+        });
+    }
   };
 
   const updateProduct = () => {
@@ -41,7 +48,7 @@ export default function ProductNew({ refresh, edit, close }) {
       product_price: price,
     };
 
-    console.log(productData)
+    console.log(productData);
 
     axios
       .put(`${process.env.NEXT_PUBLIC_API_URL}/product/PUTProduct`, productData)
@@ -99,10 +106,14 @@ export default function ProductNew({ refresh, edit, close }) {
         <Button color="error" onClick={handleClose}>
           Cancel
         </Button>
-        <Button color="success" onClick={edit.product_name ? updateProduct : saveProduct}>
+        <Button
+          color="success"
+          onClick={edit.product_name ? updateProduct : saveProduct}
+        >
           {edit.product_name ? `Update` : `Save`}
         </Button>
       </DialogActions>
     </Dialog>
   );
 }
+

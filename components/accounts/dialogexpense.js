@@ -35,7 +35,6 @@ export default function ExpenseNew({ close, refresh, edit }) {
   const datePart = moment().format("DD/MM/YYYY");
 
   const type = ["Salary", "Maintainence", "Bills", "Others"];
-  const empname = ["Aslam", "Lallu", "Adhi", "Abhi"];
   const handleExpenseTypeChange = (event, newValue) => {
     setExpenseType(event.target.value);
   };
@@ -109,7 +108,7 @@ export default function ExpenseNew({ close, refresh, edit }) {
 
   return (
     <Dialog
-      maxWidth="md"
+      maxWidth="sm"
       fullWidth
       open={true}
       onClose={handleClose3}

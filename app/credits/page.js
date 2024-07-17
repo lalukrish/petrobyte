@@ -33,14 +33,18 @@ export default function Page() {
   const [creditUsers, setCreditUsers] = useState([]);
   const [creditUserData, setCreditUsersData] = useState({});
   const [refreshCreditors, setRefreshCreditors] = useState(false);
+  const [search, setSearch] = React.useState("");
+
 
   useEffect(() => {
     axios
-      .get(`${process.env.NEXT_PUBLIC_API_URL}/creditcustomer/GETAllCC`)
+      .get(
+        `${process.env.NEXT_PUBLIC_API_URL}/creditcustomer/GETAllCC?name=${search}`
+      )
 
       .then((responce) => setCreditUsers(responce.data.message.CCs))
       .catch(() => alert(`Something went wrong, please try after some time`));
-  }, [refreshCreditors]);
+  }, [refreshCreditors, search]);
 
   const handelRefresh = () => {
     setRefreshCreditors(!refreshCreditors);
@@ -67,6 +71,12 @@ export default function Page() {
 
   const handleCloseMediumDialog = () => {
     setOpenMediumDialog(false);
+  };
+
+  const handleSearch = (value) => {
+    // Handle the search functionality here
+    console.log("Search clicked", value);
+    setSearch(value);
   };
 
   return (
@@ -121,7 +131,7 @@ export default function Page() {
                 </InputAdornment>
               ),
             }}
-            onChange={() => {
+            onChange={(event) => {
               handleSearch(event.target.value);
             }}
           />
