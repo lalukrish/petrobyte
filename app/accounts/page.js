@@ -55,22 +55,17 @@ export default function Page() {
   const [expenceaccount, setExpenceAccount] = React.useState([]);
   // const [refreshReport, setRefreshReport] = React.useState(false);
 
-
   const [refreshExpence, setRefreshExpence] = React.useState(false);
 
   const [refreshProduct, setRefreshProduct] = React.useState(false);
 
-  
-  
   useEffect(() => {
     axios
-      .get(`${process.env.NEXT_PUBLIC_API_URL}/accountReport/GETAccount?date=${search}`)
-      .then((response) => setReportAccounts(response.data.message));
+      .get(
+        `${process.env.NEXT_PUBLIC_API_URL}/accountReport/GETAccount?date=${search}`
+      )
+      .then((response) => setReportAccounts(response.data.message.account));
   }, [search]);
-
-
-
-
 
   useEffect(() => {
     axios
@@ -90,7 +85,7 @@ export default function Page() {
       .then((response) => {
         setProductAccounts(response?.data?.message?.fuelDetails);
       });
-  }, [refreshProduct,search]);
+  }, [refreshProduct, search]);
 
   useEffect(() => {
     axios
@@ -100,8 +95,8 @@ export default function Page() {
       .then((response) =>
         setExpenceAccount(response.data.message.expenceDetails)
       );
-  }, [refreshExpence,search]);
-  
+  }, [refreshExpence, search]);
+
   const handleRefeshExpence = () => {
     setEditExpence({});
     setRefreshExpence(!refreshExpence);
@@ -202,11 +197,6 @@ export default function Page() {
     setSearch(value);
   };
 
-
-
-
-
-
   return (
     <>
       <Box sx={{ display: "flex", gap: 2, paddingBottom: "20px" }}>
@@ -290,8 +280,7 @@ export default function Page() {
                     Date
                   </TableCell>
                   <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                    Fuel Sale 
-                    Amnt
+                    Fuel Sale Amnt
                   </TableCell>
                   <TableCell align="center" sx={{ fontWeight: "bold" }}>
                     Product Sale Amnt
@@ -299,7 +288,10 @@ export default function Page() {
                   <TableCell align="center" sx={{ fontWeight: "bold" }}>
                     Expense Amnt
                   </TableCell>
-                  <TableCell align="center" sx={{ fontWeight: "bold",background:"#fff9c4" }} >
+                  <TableCell
+                    align="center"
+                    sx={{ fontWeight: "bold", background: "#fff9c4" }}
+                  >
                     Net Amount
                   </TableCell>
                   <TableCell align="center" sx={{ fontWeight: "bold" }}>
@@ -320,26 +312,43 @@ export default function Page() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {reportAccounts.map ((reportAccount) =>(
-                <TableRow
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  <TableCell component="th" scope="row" align="center">
-                    {reportAccount.date}
-                  </TableCell>
-                  <TableCell align="center">{reportAccount.total_fuel_amount}</TableCell>
-                  <TableCell align="center">{reportAccount.total_product_amount}</TableCell>
-                  <TableCell align="center">{reportAccount.total_expence_amount}</TableCell>
-                  <TableCell align="center" sx={{color:"#29b6f6"}}>{(reportAccount.total_fuel_amount+reportAccount.total_product_amount)-reportAccount.total_expence_amount}</TableCell>
-                  <TableCell align="center">{reportAccount.total_cash_inhand}</TableCell>
-                  <TableCell align="center">{reportAccount.total_cash_bank}</TableCell>
-                  <TableCell align="center">{reportAccount.total_cash_other}</TableCell>
-                  <TableCell align="center" sx={{color:"#f44336"}}>{reportAccount.total_credit_amount}</TableCell>
-                  <TableCell align="center">{reportAccount.total_debit_amount}</TableCell>
-
-
-                  
-                </TableRow>
+                {reportAccounts?.map((reportAccount) => (
+                  <TableRow
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  >
+                    <TableCell component="th" scope="row" align="center">
+                      {reportAccount.date}
+                    </TableCell>
+                    <TableCell align="center">
+                      {reportAccount.total_fuel_amount}
+                    </TableCell>
+                    <TableCell align="center">
+                      {reportAccount.total_product_amount}
+                    </TableCell>
+                    <TableCell align="center">
+                      {reportAccount.total_expence_amount}
+                    </TableCell>
+                    <TableCell align="center" sx={{ color: "#29b6f6" }}>
+                      {reportAccount.total_fuel_amount +
+                        reportAccount.total_product_amount -
+                        reportAccount.total_expence_amount}
+                    </TableCell>
+                    <TableCell align="center">
+                      {reportAccount.total_cash_inhand}
+                    </TableCell>
+                    <TableCell align="center">
+                      {reportAccount.total_cash_bank}
+                    </TableCell>
+                    <TableCell align="center">
+                      {reportAccount.total_cash_other}
+                    </TableCell>
+                    <TableCell align="center" sx={{ color: "#f44336" }}>
+                      {reportAccount.total_credit_amount}
+                    </TableCell>
+                    <TableCell align="center">
+                      {reportAccount.total_debit_amount}
+                    </TableCell>
+                  </TableRow>
                 ))}
               </TableBody>
             </Table>
@@ -486,7 +495,7 @@ export default function Page() {
               marginBottom: "20px",
             }}
           >
-             <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={["DatePicker"]}>
                 <DatePicker
                   label="Search by date..."
@@ -525,7 +534,6 @@ export default function Page() {
               variant="outlined"
               onClick={handleClickOpenproduct}
               style={{
-                
                 color: "#0d47a1",
                 border: "1px solid #0d47a1",
               }}
@@ -569,10 +577,10 @@ export default function Page() {
                         {productAccount?.date}
                       </TableCell>
                       <TableCell align="center">
-                        {productAccount?.product_id?.product_name || "N/A"}
+                        {productAccount?.product_name || "N/A"}
                       </TableCell>
                       <TableCell align="center">
-                        {productAccount?.product_id?.product_price || "N/A"}
+                        {productAccount?.product_price || "N/A"}
                       </TableCell>
                       <TableCell align="center">
                         {productAccount?.quantity}
@@ -601,7 +609,12 @@ export default function Page() {
           </TableContainer>
         </>
       )}
-      {product ? <ProductsNew close={handleCloseproduct} refresh={() => setRefreshProduct(!refreshProduct)}/> : null}
+      {product ? (
+        <ProductsNew
+          close={handleCloseproduct}
+          refresh={() => setRefreshProduct(!refreshProduct)}
+        />
+      ) : null}
       {editProductOpen && (
         <EditProductAccount
           open={editProductOpen}
@@ -661,7 +674,6 @@ export default function Page() {
               variant="outlined"
               onClick={handleClickOpenexpense}
               style={{
-                
                 color: "#0d47a1",
                 border: "1px solid #0d47a1",
               }}
@@ -694,7 +706,7 @@ export default function Page() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {expenceaccount.map((expAcc) => (
+                {expenceaccount?.map((expAcc) => (
                   <TableRow
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >

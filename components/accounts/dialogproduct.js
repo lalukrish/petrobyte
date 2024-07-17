@@ -17,7 +17,7 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import axios from "axios";
 import moment from "moment";
 
-export default function ProductsNew({ close,refresh }) {
+export default function ProductsNew({ close, refresh }) {
   const todayDate = moment().format("DD/MM/YYYY");
 
   const handleClose2 = () => close();
@@ -26,9 +26,9 @@ export default function ProductsNew({ close,refresh }) {
   const [rows, setRows] = useState([
     {
       date: todayDate,
-      product_id: "",
-      quantity: 1,
-      //  price: "",
+      product_name: "",
+      product_price: "",
+      quantity: "1",
       total_amount: "",
     },
   ]);
@@ -51,9 +51,9 @@ export default function ProductsNew({ close,refresh }) {
       ...rows,
       {
         date: todayDate,
-        product_id: "",
-        quantity: 1,
-        //   price: "",
+        product_name: "",
+        product_price: "",
+        quantity: "1",
         total_amount: "",
       },
     ]);
@@ -65,19 +65,22 @@ export default function ProductsNew({ close,refresh }) {
   };
 
   const handleChange = (index, field, value) => {
+    console.log();
     const updatedRows = [...rows];
     if (field === "product_id") {
       const selectedProduct = products.find(
         (product) => product.product_id === value
       );
-      updatedRows[index].product_id = value;
-      updatedRows[index].price = selectedProduct.price;
+      console.log("selectedProduct", selectedProduct);
+      updatedRows[index].product_name = selectedProduct.product_name;
+      updatedRows[index].product_price = selectedProduct.price;
       updatedRows[index].total_amount =
         selectedProduct.price * updatedRows[index].quantity;
     } else {
       updatedRows[index][field] = value;
       if (field === "quantity") {
-        updatedRows[index].total_amount = updatedRows[index].price * value;
+        updatedRows[index].total_amount =
+          updatedRows[index].product_price * value;
       }
     }
     setRows(updatedRows);
@@ -85,12 +88,13 @@ export default function ProductsNew({ close,refresh }) {
 
   const handleSave = () => {
     const validRows = rows.filter(
-      (row) => row.product_id && row.quantity && row.total_amount
+      (row) => row.product_name && row.quantity && row.total_amount
     );
     if (validRows.length === 0) {
       alert("Please fill in at least one product completely.");
       return;
     }
+    console.log("validRows", validRows);
     axios
       .post(
         `${process.env.NEXT_PUBLIC_API_URL}/productAccounts/POSTProductAccount`,
@@ -101,13 +105,13 @@ export default function ProductsNew({ close,refresh }) {
         setRows([
           {
             date: todayDate,
-            product_id: "",
-            quantity: 1,
-            //   price: "",
+            product_name: "",
+            quantity: "1",
+            product_price: "",
             total_amount: "",
           },
         ]);
-        refresh()
+        refresh();
         close();
       })
       .catch((error) => {
@@ -154,7 +158,7 @@ export default function ProductsNew({ close,refresh }) {
             <TextField
               label="Price"
               variant="outlined"
-              value={row.price}
+              value={row.product_price}
               disabled
             />
             <TextField

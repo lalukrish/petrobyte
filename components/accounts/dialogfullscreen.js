@@ -32,8 +32,6 @@ export default function FullScreenDialog({ open, handleClose, content }) {
   const [cashEdit, setCashEdit] = React.useState(false); // State to manage Cash Edit Dialog
   const [cashEditDetails, setCashEditDetails] = React.useState({}); // State to manage Cash Edit Details
 
-  
-  
   useEffect(() => {
     axios
       .get(
@@ -55,7 +53,7 @@ export default function FullScreenDialog({ open, handleClose, content }) {
       .catch((response) => {
         console.log("error", response.data);
       });
-  });
+  }, []);
 
   const handlefullClose = () => {
     handleClose();
@@ -80,13 +78,30 @@ export default function FullScreenDialog({ open, handleClose, content }) {
   };
 
   const handleCashEditSave = (updatedData) => {
-    console.log("Updated Cash Details:", updatedData);
-    // Add logic to save updatedData
+    setCashDetails((prev) =>
+      prev.map((item) => (item._id === updatedData._id ? updatedData : item))
+    );
+    setCashEdit(false);
+  };
+
+  const handleFuelUpdate = (updatedData) => {
+    setfuelAccounts((prev) =>
+      prev.map((account) =>
+        account._id === updatedData._id ? updatedData : account
+      )
+    );
+    setEdit(false);
   };
 
   return (
     <Dialog open={open} onClose={handlefullClose} maxWidth="lg" fullWidth>
-      {edit && <FuelUpdate clse={handledialogeditclose} data={editdetails} />}
+      {edit && (
+        <FuelUpdate
+          clse={handledialogeditclose}
+          data={editdetails}
+          onUpdate={handleFuelUpdate}
+        />
+      )}
       {cashEdit && (
         <CashDetailsUpdate
           open={cashEdit}
@@ -150,9 +165,10 @@ export default function FullScreenDialog({ open, handleClose, content }) {
                   <TableCell align="center" sx={{ fontWeight: "bold" }}>
                     Sale Amount
                   </TableCell>
-                  <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                    
-                  </TableCell>
+                  <TableCell
+                    align="center"
+                    sx={{ fontWeight: "bold" }}
+                  ></TableCell>
                 </TableRow>
               </TableHead>
 
@@ -178,7 +194,9 @@ export default function FullScreenDialog({ open, handleClose, content }) {
                         <TableCell align="center">
                           {fuelAccount.fuel_qty}
                         </TableCell>
-                        <TableCell align="center">{fuelAccount.amount}</TableCell>
+                        <TableCell align="center">
+                          {fuelAccount.amount}
+                        </TableCell>
                         <TableCell align="center">
                           <EditIcon
                             onClick={() => handledialogeditopen(fuelAccount)}
@@ -215,9 +233,9 @@ export default function FullScreenDialog({ open, handleClose, content }) {
                 <TableCell align="center" sx={{ fontWeight: "bold" }}>
                   HP Card
                 </TableCell>
-                <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                {/* <TableCell align="center" sx={{ fontWeight: "bold" }}>
                   Total Sale Amount
-                </TableCell>
+                </TableCell> */}
                 <TableCell
                   align="center"
                   sx={{ fontWeight: "bold" }}
@@ -228,21 +246,19 @@ export default function FullScreenDialog({ open, handleClose, content }) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {cashdetails?.map((item)=>(
-
-              
-              <TableRow>
-                <TableCell align="center">{item?.date}</TableCell>
-                <TableCell align="center">{item?.cash_inhand}</TableCell>
-                <TableCell align="center">{item?.cash_bank}</TableCell>
-                <TableCell align="center">{item?.cash_other}</TableCell>
-                <TableCell align="center">{item?.total_amount}</TableCell>
-                <TableCell align="center" className="action-buttons">
-                  <Button onClick={() => handleCashEditOpen(item)}>
-                    <EditIcon sx={{ color: "#0d47a1" }} />
-                  </Button>
-                </TableCell>
-              </TableRow>
+              {cashdetails?.map((item) => (
+                <TableRow key={item._id}>
+                  <TableCell align="center">{item?.date}</TableCell>
+                  <TableCell align="center">{item?.cash_inhand}</TableCell>
+                  <TableCell align="center">{item?.cash_bank}</TableCell>
+                  <TableCell align="center">{item?.cash_other}</TableCell>
+                  {/* <TableCell align="center">{item?.total_amount}</TableCell> */}
+                  <TableCell align="center" className="action-buttons">
+                    <Button onClick={() => handleCashEditOpen(item)}>
+                      <EditIcon sx={{ color: "#0d47a1" }} />
+                    </Button>
+                  </TableCell>
+                </TableRow>
               ))}
             </TableBody>
           </Table>

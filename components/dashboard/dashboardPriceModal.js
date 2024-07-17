@@ -6,12 +6,16 @@ import {
   DialogTitle,
   TextField,
   Button,
+  Typography,
+  Box,
 } from "@mui/material";
 import axios from "axios";
 
 const DashboardPriceModal = ({ open, onClose, currentRate }) => {
-  console.log("c--rate",currentRate);
-  const [fuelPrice, setFuelPrice] = useState(currentRate?currentRate.fuel_price:"");
+  console.log("c--rate", currentRate);
+  const [fuelPrice, setFuelPrice] = useState(
+    currentRate ? currentRate.fuel_price : ""
+  );
 
   const handleUpdate = () => {
     axios
@@ -22,14 +26,30 @@ const DashboardPriceModal = ({ open, onClose, currentRate }) => {
       })
       .then((responce) => {
         onClose();
-        alert(responce.data.message)
+        alert(responce.data.message);
       })
       .catch(() => alert("Something went wrong"));
   };
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Update {currentRate?.fuel_name} Price</DialogTitle>
+      <DialogTitle>
+        <Box display="flex" alignItems="center">
+          <Typography variant="h6" component="span">
+            Update
+          </Typography>
+          <Typography
+            variant="h6"
+            component="span"
+            sx={{ fontWeight: 600, fontSize: 20, ml: 1 }}
+          >
+            {currentRate?.fuel_name}
+          </Typography>
+          <Typography variant="h6" component="span" sx={{ ml: 1 }}>
+            Price
+          </Typography>
+        </Box>
+      </DialogTitle>
       <DialogContent>
         <TextField
           autoFocus
@@ -42,7 +62,7 @@ const DashboardPriceModal = ({ open, onClose, currentRate }) => {
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={()=>onClose()} color="primary">
+        <Button onClick={() => onClose()} color="primary">
           Cancel
         </Button>
         <Button onClick={handleUpdate} color="primary">

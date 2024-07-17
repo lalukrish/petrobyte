@@ -47,7 +47,11 @@ const MediumDialog = ({ open, handleClose, data, refresh }) => {
       let idQuery = data._id.replace(/['"]/g, "");
       axios
         .get(
-          `${process.env.NEXT_PUBLIC_API_URL}/creditHistory/GETAllCreditHistory?id=${idQuery}&date=${search || ''}`
+          `${
+            process.env.NEXT_PUBLIC_API_URL
+          }/creditHistory/GETAllCreditHistory?id=${idQuery}&date=${
+            search || ""
+          }`
         )
         .then((response) => {
           setCreditHistory(response.data.message.CreditHistorys);

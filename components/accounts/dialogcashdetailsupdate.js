@@ -7,6 +7,8 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
+import axios from "axios";
+require("dotenv").config();
 
 export default function CashDetailsUpdate({ open, onClose, data, onSave }) {
   const [formValues, setFormValues] = React.useState(data || {});
@@ -20,8 +22,18 @@ export default function CashDetailsUpdate({ open, onClose, data, onSave }) {
   };
 
   const handleSave = () => {
-    onSave(formValues);
-    onClose();
+    axios
+      .put(
+        `${process.env.NEXT_PUBLIC_API_URL}/cashManagement/PUTCashDetails`,
+        formValues
+      )
+      .then((response) => {
+        onSave(formValues);
+        onClose();
+      })
+      .catch((error) => {
+        console.error("Error updating cash details:", error);
+      });
   };
 
   return (
@@ -41,51 +53,48 @@ export default function CashDetailsUpdate({ open, onClose, data, onSave }) {
       <DialogContent>
         <TextField
           margin="dense"
-          name="cash"
+          name="cash_inhand"
           label="Cash"
-          
           fullWidth
           variant="outlined"
-          value={formValues.cash}
+          value={formValues.cash_inhand}
           onChange={handleChange}
         />
         <TextField
           margin="dense"
-          name="bank"
+          name="cash_bank"
           label="Bank"
-          
           fullWidth
           variant="outlined"
-          value={formValues.bank}
+          value={formValues.cash_bank}
           onChange={handleChange}
         />
         <TextField
           margin="dense"
-          name="hpCard"
+          name="cash_other"
           label="HP Card"
-          
           fullWidth
           variant="outlined"
-          value={formValues.hpCard}
+          value={formValues.cash_other}
           onChange={handleChange}
         />
-        <TextField
+        {/* <TextField
           margin="dense"
-          name="totalSaleAmount"
+          name="total_amount"
           label="Total Sale Amount"
           disabled
           fullWidth
           variant="outlined"
-          value={formValues.totalSaleAmount}
+          value={formValues.total_amount}
           onChange={handleChange}
-        />
+        /> */}
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="error">
           Cancel
         </Button>
         <Button onClick={handleSave} color="success">
-          update
+          Update
         </Button>
       </DialogActions>
     </Dialog>

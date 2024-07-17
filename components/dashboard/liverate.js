@@ -116,7 +116,7 @@ const Liverate = () => {
                   mt: 2,
                 }}
               >
-                Previous Rate: {rates.diesel.previous_rate}
+                Previous Rate: {rates.diesel.fuel_previous_price}
               </Typography>
             </CardContent>
             <CardActions sx={{ display: "flex", justifyContent: "flex-end" }}>
@@ -184,7 +184,7 @@ const Liverate = () => {
                   mt: 2,
                 }}
               >
-                Previous Rate: {rates.petrol.previous_rate}
+                Previous Rate: {rates.petrol.fuel_previous_price}
               </Typography>
             </CardContent>
             <CardActions sx={{ display: "flex", justifyContent: "flex-end" }}>

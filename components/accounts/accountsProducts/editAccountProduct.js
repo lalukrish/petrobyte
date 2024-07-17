@@ -19,9 +19,9 @@ export default function EditProductAccount({
 
   const [formData, setFormData] = useState({
     id: productAccount?._id || "",
-    product_id: productAccount?.product_id?._id || "",
-    product_name: productAccount?.product_id?.product_name || "",
-    product_price: productAccount?.product_id?.product_price || 0,
+    product_id: productAccount?._id || "",
+    product_name: productAccount?.product_name || "",
+    product_price: productAccount?.product_price || 0,
     quantity: productAccount?.quantity || 0,
     total_amount: productAccount?.total_amount || 0,
   });
@@ -29,13 +29,13 @@ export default function EditProductAccount({
   useEffect(() => {
     setFormData({
       id: productAccount?._id || "",
-      product_id: productAccount?.product_id?._id || "",
-      product_name: productAccount?.product_id?.product_name || "",
-      product_price: productAccount?.product_id?.product_price || 0,
+      product_id: productAccount?._id || "",
+      product_name: productAccount?.product_name || "",
+      product_price: productAccount?.product_price || 0,
       quantity: productAccount?.quantity || 0,
       total_amount:
         (parseInt(productAccount?.quantity) || 0) *
-          (parseInt(productAccount?.product_id?.product_price) || 0) || 0,
+          (parseInt(productAccount?.product_price) || 0) || 0,
     });
   }, [productAccount]);
 
