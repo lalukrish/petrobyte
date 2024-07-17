@@ -75,88 +75,6 @@ const MediumDialog = ({ open, handleClose, data, refresh }) => {
     setSearch(null);
   };
 
-  const exportPDF = () => {
-    const personalInfo = {
-      name: data.cc_name,
-      contact: data.cc_contact_no,
-      email: data.cc_email,
-      address: data.cc_address,
-    };
-
-    const creditHistories = creditHistory.map((history) => ({
-      date: history.date,
-      name: history.cc_id?.cc_name,
-      vehicleNo: history.vehicle_no,
-      fuel: history.fuel_type?.fuel_name,
-      fuelQuantity: history.fuel_quantity,
-      amount: history.amount,
-      amountType: history.amount_type,
-      staffName: history.emp_id?.emp_name,
-    }));
-    //pdfcredit_history starts here....
-    const pdf = new jsPDF("p", "mm", "a4");
-
-    // Add header
-    pdf.setFontSize(18);
-    pdf.text("Credit History Report", 105, 15, { align: "center" });
-    pdf.setFontSize(12);
-    pdf.text("Generated on: " + new Date().toLocaleDateString(), 15, 25);
-
-    // Personal Information
-    pdf.setFontSize(14);
-    pdf.text("Personal Information", 15, 35);
-    pdf.setFontSize(12);
-    pdf.text(`Name: ${personalInfo.name}`, 15, 45);
-    pdf.text(`Contact: ${personalInfo.contact}`, 15, 55);
-    pdf.text(`Email: ${personalInfo.email}`, 15, 65);
-    pdf.text(`Address: ${personalInfo.address}`, 15, 75);
-
-    // Credit History
-    pdf.setFontSize(14);
-    pdf.text("Credit Information", 15, 85);
-
-    const tableHeaders = [
-      "Date",
-      "Name",
-      "Vehicle No.",
-      "Fuel",
-      "Fuel Quantity",
-      "Amount",
-      "Amount Type",
-      "Staff Name",
-    ];
-
-    const startY = 95;
-    const rowHeight = 10;
-    let currentY = startY;
-
-    // Draw table headers
-    pdf.setFontSize(12);
-    tableHeaders.forEach((header, i) => {
-      pdf.text(header, 15 + i * 25, currentY);
-    });
-
-    // Draw table rows
-    creditHistories.forEach((history, rowIndex) => {
-      currentY += rowHeight;
-      if (currentY > 285) {
-        // Add new page if it exceeds page height
-        pdf.addPage();
-        currentY = 10;
-      }
-      pdf.text(history.date, 15, currentY);
-      pdf.text(history.name, 40, currentY);
-      pdf.text(history.vehicleNo, 65, currentY);
-      pdf.text(history.fuel, 90, currentY);
-      pdf.text(history.fuelQuantity.toString(), 115, currentY);
-      pdf.text(history.amount.toString(), 140, currentY);
-      pdf.text(history.amountType, 165, currentY);
-      pdf.text(history.staffName, 190, currentY);
-    });
-
-    pdf.save("creditHistory.pdf");
-  };
-  //pdf credit history end here....
 
   //abhi extended pdf
   const generateBillPDF = async (history) => {
@@ -551,9 +469,7 @@ const getBase64FromURL = (url) => {
               Credit to be Paid:<b> {data.credit_amount}</b>
             </Typography>
             <Box>
-              <IconButton onClick={exportPDF} color="primary">
-                <PictureAsPdf />
-              </IconButton>
+              
               <Button onClick={handleClose} color="error">
                 Close
               </Button>
