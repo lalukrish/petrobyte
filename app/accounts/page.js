@@ -49,7 +49,7 @@ export default function Page() {
   const [editExpence, setEditExpence] = React.useState({});
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [dialogContent, setDialogContent] = React.useState({});
-  const [search, setSearch] = useState(null);
+  const [search, setSearch] = useState("");
   const [selectedTab, setSelectedTab] = React.useState(0);
   const [reportAccounts, setReportAccounts] = React.useState([]);
   const [accountoverview, setAccountoverview] = React.useState([]);
