@@ -113,7 +113,7 @@ export default function Page() {
   // };
 
   const handleClearSearch = () => {
-    setSearch(null);
+    setSearch("");
   };
 
   const handleEditExpence = (editData) => {
