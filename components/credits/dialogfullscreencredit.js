@@ -155,11 +155,19 @@ const MediumDialog = ({ open, handleClose, data, refresh }) => {
   //pdf credit history end here....
 
   //abhi extended pdf
-  const generateBillPDF = (history) => {
+  const generateBillPDF = async (history) => {
     const pdf = new jsPDF("p", "mm", "a4");
 
+    // Add a white section on top of everything with the same height as the sub-header section
+    const subHeaderHeight = 70; // Increased height for sub-header
+    pdf.setFillColor(255, 255, 255); // White background
+    pdf.rect(0, 0, 210, subHeaderHeight, "F"); // Full width, height enough to cover the top section
+
+    // Load the image from the public folder
+    const logoURL = "https://yt3.googleusercontent.com/wOiLIBWtEcFrN7PNo2msrcUrwPHzjMUd-HCq57Vjr8PngYJjMEr8twa6K79j0ern9dBLr9bS=s900-c-k-c0x00ffffff-no-rj";
+    const logoBase64 = await getBase64FromURL(logoURL);
+
     // Logo
-    const logoBase64 = "data:image/jpeg;base64, ..."; // Add your base64 logo data here
     pdf.addImage(logoBase64, "JPEG", 15, 10, 30, 30);
 
     // Header Background
@@ -186,90 +194,137 @@ const MediumDialog = ({ open, handleClose, data, refresh }) => {
     // Sub-Header
     pdf.setFontSize(14);
     pdf.setFont("helvetica", "normal");
-    pdf.text("Thanks for fueling up with us!", 105, 50, { align: "center" });
+    pdf.text("Thanks for fueling up with us!", 105, 55, { align: "center" });
 
     // Divider between sub-header and fields
-    pdf.line(15, 60, 195, 60); // Horizontal line
+    pdf.line(15, 70, 195, 70); // Horizontal line
 
     // Free row space before fields
-    pdf.text(" ", 15, 65);
+    pdf.text(" ", 15, 75);
 
     // Fields
     pdf.setFontSize(12);
     pdf.setTextColor(180, 180, 180); // Set color to off-white (light gray)
-    pdf.text("Date", 15, 70);
-    pdf.text("Name", 75, 70);
-    pdf.text("Address", 135, 70);
+    pdf.text("Date", 15, 80);
+    pdf.text("Name", 75, 80);
+    pdf.text("Address", 135, 80);
 
     // Field Values
     pdf.setTextColor(0, 0, 0); // Reset color to black for field values
     pdf.setFontSize(10);
-    pdf.text(String(history.date), 15, 75); // Ensure values are converted to strings
-    pdf.text(String(history.cc_id?.cc_name), 75, 75);
-    pdf.text(String(history.cc_id?.cc_address), 135, 75);
+    pdf.text(String(history.date), 15, 85); // Ensure values are converted to strings
+    pdf.text(String(history.cc_id?.cc_name), 75, 85);
+    pdf.text(String(history.cc_id?.cc_address), 135, 85);
 
     // Divider between fields and body
-    pdf.line(15, 85, 195, 85); // Horizontal line
+    pdf.line(15, 95, 195, 95); // Horizontal line
 
     // Free row space before body
-    pdf.text(" ", 15, 90);
+    pdf.text(" ", 15, 100);
 
     // Body Field Names
     pdf.setFontSize(12);
     pdf.setTextColor(180, 180, 180); // Set color to off-white (light gray)
-    pdf.text("Bill No.", 15, 95);
-    pdf.text("Vehicle No.", 75, 95);
-    pdf.text("Fuel", 135, 95);
-    pdf.text("Fuel Quantity", 15, 115);
-    pdf.text("Amount", 75, 115);
-    pdf.text("Amount Type", 135, 115);
+    pdf.text("Ref No.", 15, 105);
+    pdf.text("Vehicle No.", 75, 105);
+    pdf.text("Fuel", 135, 105);
+    pdf.text("Fuel Quantity", 15, 125);
+    pdf.text("Amount", 75, 125);
+    pdf.text("Amount Type", 135, 125);
 
     // Body Field Values
     pdf.setTextColor(0, 0, 0); // Reset color to black for field values
     pdf.setFontSize(10);
-    pdf.text("7288273783181", 15, 100); // Ensure values are converted to strings
-    pdf.text(String(history.vehicle_no), 75, 100);
-    pdf.text(String(history.fuel_type?.fuel_name), 135, 100);
-    pdf.text(String(history.fuel_quantity), 15, 120);
-    pdf.text(String(history.amount), 75, 120);
-    pdf.text(String(history.amount_type), 135, 120);
+    pdf.text("7288273783181", 15, 110); // Ensure values are converted to strings
+    pdf.text(String(history.vehicle_no), 75, 110);
+    pdf.text(String(history.fuel_type?.fuel_name), 135, 110);
+    pdf.text(String(history.fuel_quantity), 15, 130);
+    pdf.text(String(history.amount), 75, 130);
+    pdf.text(String(history.amount_type), 135, 130);
 
-    // Staff name at the right bottom of the body section
-    pdf.text(`Staff Name: ${String(history.emp_id?.emp_name)}`, 135, 140);
+    // Increased space after amount type
+    // pdf.text(" ", 15, 135);
+    // pdf.text(" ", 15, 140);
+    // pdf.text(" ", 15, 145);
+
+    // Staff name with the same color as the amount type
+    pdf.setTextColor(180, 180, 180); // Set color to off-white (light gray)
+    pdf.text("Staff Name", 135, 150);
+
+    // Staff name value in the next line
+    pdf.setTextColor(0, 0, 0); // Reset color to black for field values
+    pdf.text(String(history.emp_id?.emp_name), 135, 155);
 
     // Divider between body and footer
-    pdf.line(15, 150, 195, 150); // Horizontal line
+    pdf.line(15, 160, 195, 160); // Horizontal line
 
     // Free row space before footer
-    pdf.text(" ", 15, 155);
+    pdf.text(" ", 15, 165);
 
     // Footer Fields
     pdf.setFontSize(12);
     pdf.setTextColor(180, 180, 180); // Set color to off-white (light gray)
-    pdf.text("Fuel Station:", 15, 165);
-    pdf.text("Tel:", 75, 165);
-    pdf.text("Mail:", 135, 165);
+    pdf.text("Fuel Station:", 15, 175);
+    pdf.text("Tel:", 75, 175);
+    pdf.text("Mail:", 135, 175);
 
     // Footer Values
     pdf.setTextColor(0, 0, 0); // Reset color to black for field values
     pdf.setFontSize(12);
-    pdf.text("Swami's Oils", 40, 165);
-    pdf.text("0485 2777809", 83, 165);
-    pdf.text("info@swamisoils.com", 145, 165);
+    pdf.text("Swami's Oils", 40, 175);
+    pdf.text("0485 2777809", 83, 175);
+    pdf.text("info@swamisoils.com", 145, 175);
 
-    // Divider after first footer with a gap
-    pdf.line(15, 175, 195, 175); // Horizontal line
+    // Divider after footer with a gap
+    pdf.line(15, 185, 195, 185); // Horizontal line
 
-    // Free row space before second footer
-    pdf.text(" ", 15, 180);
+    // Free row space before powered by section
+    pdf.text(" ", 15, 190);
 
-    // Second Footer
-    pdf.setFontSize(14);
-    pdf.text("Footer 1", 15, 190);
-    pdf.text("Footer 2", 15, 200);
+    // Add "powered by" text and logo
+    const poweredByLogoURL = "/Petro.png"; // Add your powered by logo URL here
+    const poweredByLogoBase64 = await getBase64FromURL(poweredByLogoURL);
+    pdf.setFontSize(12);
+    pdf.setTextColor(180, 180, 180); // Set color to off-white (light gray)
+    const poweredByText = "Powered by";
+    const poweredByTextWidth = pdf.getTextWidth(poweredByText);
+    const logoWidth = 30; // Width of the logo
+    const spaceWidth = pdf.getTextWidth(" "); // Width of a single space
+    const totalWidth = poweredByTextWidth + logoWidth + spaceWidth;
+    const startX = (pdf.internal.pageSize.getWidth() - totalWidth) / 2;
+
+    pdf.text(poweredByText, startX, 291); // Move the text one space unit down
+    pdf.addImage(poweredByLogoBase64, "JPEG", startX + poweredByTextWidth + spaceWidth, 285, logoWidth, 10); // Add space and adjust the image
 
     pdf.save("bill.pdf");
-  };
+};
+
+// Function to convert image URL to base64
+const getBase64FromURL = (url) => {
+    return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.onload = function() {
+            const reader = new FileReader();
+            reader.onloadend = function() {
+                resolve(reader.result);
+            };
+            reader.readAsDataURL(xhr.response);
+        };
+        xhr.open("GET", url);
+        xhr.responseType = "blob";
+        xhr.send();
+    });
+};
+
+
+
+
+
+
+
+
+
+
 
   //extended pdf ends here
 
