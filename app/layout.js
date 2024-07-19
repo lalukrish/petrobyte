@@ -4,6 +4,8 @@ import ResponsiveDrawer from "@/components/sidebar";
 import SidebarLayout from "@/components/sidebarLayout";
 import { Box } from "@mui/material";
 import PetrobyteContextProvider from "@/context/context";
+import LoginPage from "./signin/page";
+
 
 const inter = Inter({ subsets: ["latin"] });
 
