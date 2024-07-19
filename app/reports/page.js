@@ -21,6 +21,8 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import dayjs from "dayjs";
 import axios from "axios";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
 export default function ReportsTable() {
   const [showTable, setShowTable] = React.useState(false);
@@ -28,17 +30,14 @@ export default function ReportsTable() {
   const [fromdate, setFromdate] = React.useState("");
   const [todate, setTodate] = React.useState("");
 
-
-
   const handleGetData = () => {
     axios
       .get(
         `${process.env.NEXT_PUBLIC_API_URL}/accountReport/GETAccountPrint?fromDate=${fromdate}&toDate=${todate}`
       )
-
-      .then((responce) => {
+      .then((response) => {
         setShowTable(true);
-        setReport(responce.data.message);
+        setReport(response.data.message);
       })
       .catch(() => alert(`Something went wrong, please try after some time`));
   };
@@ -47,6 +46,24 @@ export default function ReportsTable() {
     setShowTable(false);
     setFromdate(null);
     setTodate(null);
+  };
+
+  const handleGeneratePdf = () => {
+    const input = document.getElementById("reportContent");
+    html2canvas(input, { scale: 2 }).then((canvas) => {
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("p", "mm", "a4");
+      const imgProps = pdf.getImageProperties(imgData);
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+      const date = new Date().toLocaleDateString();
+
+      pdf.text("Reports & Summary", 10, 10);
+      pdf.setFontSize(8);
+      pdf.text(`Generated on: ${date}`, pdf.internal.pageSize.getWidth() - 35, 10);
+      pdf.addImage(imgData, "PNG", 0, 20, pdfWidth, pdfHeight);
+      pdf.save("report.pdf");
+    });
   };
 
   return (
@@ -130,19 +147,10 @@ export default function ReportsTable() {
                 }}
               />
             </DemoContainer>
-            <Button color="error"
-              variant="contained"
-              
-              onClick={handleClear}
-            >
+            <Button color="error" variant="contained" onClick={handleClear}>
               Clear
             </Button>
-            <Button
-              variant="contained"
-              color="success"
-              
-              onClick={handleGetData}
-            >
+            <Button variant="contained" color="success" onClick={handleGetData}>
               Get Data
             </Button>
           </Box>
@@ -158,101 +166,119 @@ export default function ReportsTable() {
             marginBottom="20px"
             marginRight="20px "
           >
-            <IconButton>
+            <IconButton onClick={handleGeneratePdf}>
               <PrintIcon sx={{ color: "#0d47a1" }} />
             </IconButton>
           </Box>
 
-          <TableContainer component={Paper} sx={{ marginBottom: "20px" }}>
-            <Table
-              sx={{ minWidth: 650, background: "#e0f2f1" }}
-              aria-label="summary table"
+          <div id="reportContent" style={{ padding: "10px" }}>
+            <TableContainer
+              component={Paper}
+              sx={{ marginBottom: "20px", padding: "10px" }}
             >
-              <TableBody>
-                <TableRow>
-                  <TableCell sx={{ fontWeight: "bold" }}>From Date:</TableCell>
-                  <TableCell>{fromdate}</TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }}>To Date:</TableCell>
-                  <TableCell>{todate}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell sx={{ fontWeight: "bold" }}>
-                    Total Fuel Amount:
-                  </TableCell>
-                  <TableCell>{report?.fuelAmountToReport}</TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }}>
-                    Total Product Amount:
-                  </TableCell>
-                  <TableCell>{report?.productAmountToReport}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell sx={{ fontWeight: "bold" }}>
-                    Total Expenditure:
-                  </TableCell>
-                  <TableCell>{report?.expenceAmountToReport}</TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }}>
-                    Total Net Amount:
-                  </TableCell>
-                  <TableCell sx={{color:"#4fc3f7"}} >{(report?.fuelAmountToReport+report?.productAmountToReport)-report?.expenceAmountToReport}</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </TableContainer>
+              <Table
+                sx={{ minWidth: 650, background: "#e0f2f1" }}
+                aria-label="summary table"
+              >
+                <TableBody>
+                  <TableRow>
+                    <TableCell sx={{ fontWeight: "bold" }}>From Date:</TableCell>
+                    <TableCell>{fromdate}</TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>To Date:</TableCell>
+                    <TableCell>{todate}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell sx={{ fontWeight: "bold" }}>
+                      Total Fuel Amount:
+                    </TableCell>
+                    <TableCell>{report?.fuelAmountToReport}</TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>
+                      Total Product Amount:
+                    </TableCell>
+                    <TableCell>{report?.productAmountToReport}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell sx={{ fontWeight: "bold" }}>
+                      Total Expenditure:
+                    </TableCell>
+                    <TableCell>{report?.expenceAmountToReport}</TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>
+                      Total Net Amount:
+                    </TableCell>
+                    <TableCell sx={{ color: "#4fc3f7" }}>
+                      {(report?.fuelAmountToReport + report?.productAmountToReport) -
+                        report?.expenceAmountToReport}
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </TableContainer>
 
-          <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-              <TableHead sx={{ background: "#e3f2fd", fontStyle: "bold" }}>
-                <TableRow>
-                  <TableCell
-                    sx={{ fontWeight: "bold", borderBottom: "2px solid #ddd" }}
-                  >
-                    Date
-                  </TableCell>
-                  <TableCell
-                    sx={{ fontWeight: "bold", borderBottom: "2px solid #ddd" }}
-                  >
-                    Fuel Sale Amount
-                  </TableCell>
-                  <TableCell
-                    sx={{ fontWeight: "bold", borderBottom: "2px solid #ddd" }}
-                  >
-                    Product Sale Amount
-                  </TableCell>
-                  <TableCell
-                    sx={{ fontWeight: "bold", borderBottom: "2px solid #ddd" }}
-                  >
-                    Expense Amount
-                  </TableCell>
-                  <TableCell
-                    sx={{ fontWeight: "bold", borderBottom: "2px solid #ddd" }}
-                  >
-                    Net Amount
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {report?.account.map((item)=>(
-
-                
-                <TableRow
-                  key={""}
-                  sx={{
-                    "&:last-child td, &:last-child th": { border: 0 },
-                    "&:not(:last-child) td": { borderBottom: "1px solid #ddd" },
-                  }}
-                >
-                  <TableCell component="th" scope="row">
-                    {item.date}
-                  </TableCell>
-                  <TableCell align="center">{item.total_fuel_amount}</TableCell>
-                  <TableCell align="center">{item.total_product_amount}</TableCell>
-                  <TableCell align="center">{item.total_expence_amount}</TableCell>
-                  <TableCell align="center" sx={{color:"#4fc3f7"}}>{(item.total_fuel_amount+item.total_product_amount)-item.total_expence_amount}</TableCell>
-                </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+            <TableContainer component={Paper} sx={{ padding: "10px" }}>
+              <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                <TableHead sx={{ background: "#e3f2fd", fontStyle: "bold" }}>
+                  <TableRow>
+                    <TableCell
+                      sx={{ fontWeight: "bold", borderBottom: "2px solid #ddd" }}
+                    >
+                      Date
+                    </TableCell>
+                    <TableCell
+                      sx={{ fontWeight: "bold", borderBottom: "2px solid #ddd" }}
+                    >
+                      Fuel Sale Amount
+                    </TableCell>
+                    <TableCell
+                      sx={{ fontWeight: "bold", borderBottom: "2px solid #ddd" }}
+                    >
+                      Product Sale Amount
+                    </TableCell>
+                    <TableCell
+                      sx={{ fontWeight: "bold", borderBottom: "2px solid #ddd" }}
+                    >
+                      Expense Amount
+                    </TableCell>
+                    <TableCell
+                      sx={{ fontWeight: "bold", borderBottom: "2px solid #ddd" }}
+                    >
+                      Net Amount
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {report?.account.map((item, index) => (
+                    <TableRow
+                      key={index}
+                      sx={{
+                        "&:last-child td, &:last-child th": {
+                          borderBottom: "2px solid #ddd",
+                        },
+                        "&:not(:last-child) td": { borderBottom: "1px solid #ddd" },
+                      }}
+                    >
+                      <TableCell component="th" scope="row">
+                        {item.date}
+                      </TableCell>
+                      <TableCell align="center">
+                        {item.total_fuel_amount}
+                      </TableCell>
+                      <TableCell align="center">
+                        {item.total_product_amount}
+                      </TableCell>
+                      <TableCell align="center">
+                        {item.total_expence_amount}
+                      </TableCell>
+                      <TableCell align="center" sx={{ color: "#4fc3f7" }}>
+                        {item.total_fuel_amount +
+                          item.total_product_amount -
+                          item.total_expence_amount}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </div>
         </Box>
       )}
     </Box>
