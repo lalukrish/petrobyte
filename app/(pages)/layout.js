@@ -1,9 +1,10 @@
 import { Inter } from "next/font/google";
-import "./globals.css";
+import "../globals.css";
 import ResponsiveDrawer from "@/components/sidebar";
-import SidebarLayout from "@/components/sidebarLayout";
+// import SidebarLayout from "@/components/sidebarLayout";
 import { Box } from "@mui/material";
 import PetrobyteContextProvider from "@/context/context";
+import SidebarLayout from "@/components/sidebarLayout";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,7 +16,16 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <SidebarLayout />
+
+        <Box sx={{ marginLeft: 32 }}>
+          {/* <PetrobyteContextProvider> */}
+          {children}
+          {/* </PetrobyteContextProvider> */}
+        </Box>
+        {/* </SidebarLayout> */}
+      </body>
     </html>
   );
 }
