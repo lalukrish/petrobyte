@@ -87,7 +87,7 @@ export default function Page() {
         }/productAccounts/GETAllProductAccount?page=${1}&date=${search || ""}`
       )
       .then((response) => {
-        setProductAccounts(response?.data?.message?.fuelDetails);
+        setProductAccounts(response?.data?.message?.productAccount);
       });
   }, [refreshProduct, search]);
 
