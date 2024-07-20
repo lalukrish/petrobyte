@@ -6,14 +6,24 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { Box, Button, Pagination, IconButton, Collapse, InputAdornment, TextField } from "@mui/material";
+import {
+  Box,
+  Button,
+  Pagination,
+  IconButton,
+  Collapse,
+  InputAdornment,
+  TextField,
+  Snackbar,
+  Alert,
+} from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import axios from "axios";
 import DispencerNew from "./dialogdispencer";
-import SearchIcon from '@mui/icons-material/Search';
+import SearchIcon from "@mui/icons-material/Search";
 
 require("dotenv").config();
 
@@ -25,6 +35,20 @@ export default function DispencerTable() {
   const [currentPage, setCurrentPage] = React.useState(1);
   const [totalPages, setTotalPages] = React.useState(1);
   const [openRow, setOpenRow] = React.useState(null); // To track which row is open
+
+  const [alertOpen, setAlertOpen] = React.useState(false);
+  const [alertMessage, setAlertMessage] = React.useState("");
+  const [alertSeverity, setAlertSeverity] = React.useState("success");
+
+  const handleShowAlert = (severity, message) => {
+    setAlertSeverity(severity);
+    setAlertMessage(message);
+    setAlertOpen(true);
+  };
+
+  const handleAlertClose = () => {
+    setAlertOpen(false);
+  };
 
   const fetchAllDispencer = () => {
     axios
@@ -61,10 +85,13 @@ export default function DispencerTable() {
         `${process.env.NEXT_PUBLIC_API_URL}/dispencer/DELETEDispencer?name=${dispencer.dispencer_name}`
       )
       .then((resp) => {
-        alert(resp.data.message);
+        handleShowAlert("success", resp.data.message);
         setRefreshDispencer(!refreshDispencer);
       })
-      .catch((resp) => alert(resp.data.message));
+      .catch((resp) => {
+        //alert(resp.data.message);
+        handleShowAlert("error", error.response.data.message);
+      });
   };
 
   const handleDeleteSubDispencer = (dispencer, subDispencer) => {
@@ -72,16 +99,21 @@ export default function DispencerTable() {
     id = id.replace(/"/g, "");
     let name = dispencer.dispencer_name;
     name = name.replace(/"/g, "");
-    
+
     axios
       .delete(
         `${process.env.NEXT_PUBLIC_API_URL}/dispencer/DELETESubDispencer?name=${name}&id=${id}`
       )
       .then((resp) => {
-        alert(resp.data.message);
+        handleShowAlert("success", resp.data.message);
+
         setRefreshDispencer(!refreshDispencer);
       })
-      .catch((resp) => alert(resp.data.message));
+      .catch((resp) => {
+        handleShowAlert("error", error.response.data.message);
+
+        //   alert(resp.data.message)
+      });
   };
 
   const handleRowClick = (dispencerId) => {
@@ -151,6 +183,7 @@ export default function DispencerTable() {
           close={handleClose}
           refreshDispencer={handleRefresh}
           edit={editDispencer} // Pass the edit object
+          handleShowAlert={handleShowAlert} // Pass handleShowAlert function
         />
       )}
       <TableContainer component={Paper}>
@@ -270,6 +303,20 @@ export default function DispencerTable() {
         onChange={(event, value) => setCurrentPage(value)}
         sx={{ mt: 2, display: "flex", justifyContent: "center" }}
       />
+      <Snackbar
+        open={alertOpen}
+        autoHideDuration={6000}
+        onClose={handleAlertClose}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }} // Positioning the alert
+      >
+        <Alert
+          onClose={handleAlertClose}
+          severity={alertSeverity}
+          sx={{ width: "100%" }} // Adjust width as needed
+        >
+          {alertMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }
