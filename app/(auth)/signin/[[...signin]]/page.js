@@ -1,4 +1,5 @@
 // src/LoginPage.js
+"use client";
 import React from "react";
 import {
   Container,
@@ -6,12 +7,26 @@ import {
   TextField,
   Button,
   Typography,
-  Avatar,
   Grid,
 } from "@mui/material";
 import Image from "next/image";
+import axios from "axios";
 
 const LoginPage = () => {
+  const signin = () => {
+    let body = {
+      email: "test@gmail.com",
+      password: "test@123",
+    };
+    axios
+      .post(`${process.env.NEXT_PUBLIC_API_URL}/auth/signin`, { body })
+      .then((response) => {
+        alert(response.data.message);
+        console.log(response.data.message.token);
+      })
+      .catch(() => alert(`Something Went Wrong at individual`));
+  };
+
   return (
     <Grid>
       <Container component="main" maxWidth="xs">
@@ -27,31 +42,31 @@ const LoginPage = () => {
           <Typography component="h1" variant="h5" fontSize="bold">
             Sign in
           </Typography>
-          <Box component="form" noValidate sx={{ mt: 1 }}>
+          <Box sx={{ mt: 1 }}>
             <TextField
               margin="dense"
-              required
+              // required
               fullWidth
               id="email"
               label="Email Address"
               name="email"
-              autoComplete="email"
+              // autoComplete="email"
               autoFocus
             />
             <TextField
               margin="normal"
-              required
+              // required
               fullWidth
               name="password"
               label="Password"
               type="password"
               id="password"
-              autoComplete="current-password"
+              // autoComplete="current-password"
             />
             <Button
-              type="submit"
               fullWidth
               variant="contained"
+              onClick={signin}
               sx={{ mt: 3, mb: 2 }}
             >
               Sign In
