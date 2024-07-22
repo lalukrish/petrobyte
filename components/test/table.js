@@ -75,15 +75,16 @@ export default function TestTable() {
     setOpen(true);
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (data) => {
     try {
       await axios.put(
-        `${process.env.NEXT_PUBLIC_API_URL}/test/DELETETest?id=${id}`
+        `${process.env.NEXT_PUBLIC_API_URL}/test/DELETETest`,data
       );
       fetchTestData();
     } catch (error) {
       console.error("There was an error deleting the data!", error);
     }
+
   };
 
   return (
@@ -193,7 +194,7 @@ export default function TestTable() {
                   {/* <Button onClick={() => handleClickOpenEdit(test)}>
                     <EditIcon sx={{ color: "#0d47a1" }} />
                   </Button> */}
-                  <Button onClick={() => handleDelete(test._id)}>
+                  <Button onClick={() => handleDelete(test)}>
                     <DeleteIcon sx={{ color: "#d32f2f" }} />
                   </Button>
                 </TableCell>
