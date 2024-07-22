@@ -76,15 +76,15 @@ export default function TestTable() {
   };
 
   const handleDelete = async (data) => {
-    try {
-      await axios.put(
-        `${process.env.NEXT_PUBLIC_API_URL}/test/DELETETest`,data
-      );
-      fetchTestData();
-    } catch (error) {
-      console.error("There was an error deleting the data!", error);
-    }
-
+    // try {
+    //   await axios.put(
+    //     `${process.env.NEXT_PUBLIC_API_URL}/test/DELETETest`,data
+    //   );
+    //   fetchTestData();
+    // } catch (error) {
+    //   console.error("There was an error deleting the data!", error);
+    // }
+    console.log(data)
   };
 
   return (
