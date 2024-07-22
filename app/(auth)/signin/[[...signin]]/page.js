@@ -13,18 +13,23 @@ import Image from "next/image";
 import axios from "axios";
 
 const LoginPage = () => {
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
   const signin = () => {
     let body = {
-      email: "test@gmail.com",
-      password: "test@123",
+      email: email,
+      password: password,
     };
     axios
-      .post(`${process.env.NEXT_PUBLIC_API_URL}/auth/signin`, { body })
+      .post(`${process.env.NEXT_PUBLIC_API_URL}/auth/signin`, body)
       .then((response) => {
         alert(response.data.message);
         console.log(response.data.message.token);
       })
-      .catch(() => alert(`Something Went Wrong at individual`));
+      .catch((response) => {
+        alert(response);
+        console.log(response.data);
+      });
   };
 
   return (
@@ -45,23 +50,25 @@ const LoginPage = () => {
           <Box sx={{ mt: 1 }}>
             <TextField
               margin="dense"
-              // required
+              required
               fullWidth
               id="email"
               label="Email Address"
               name="email"
-              // autoComplete="email"
+              autoComplete="email"
+              onChange={(event) => setEmail(event.target.value)}
               autoFocus
             />
             <TextField
               margin="normal"
-              // required
+              required
               fullWidth
               name="password"
               label="Password"
               type="password"
               id="password"
-              // autoComplete="current-password"
+              onChange={(event) => setPassword(event.target.value)}
+              autoComplete="current-password"
             />
             <Button
               fullWidth
