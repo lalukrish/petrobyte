@@ -1,4 +1,5 @@
 // src/LoginPage.js
+"use client";
 import React from "react";
 import {
   Container,
@@ -6,12 +7,31 @@ import {
   TextField,
   Button,
   Typography,
-  Avatar,
   Grid,
 } from "@mui/material";
 import Image from "next/image";
+import axios from "axios";
 
 const LoginPage = () => {
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const signin = () => {
+    let body = {
+      email: email,
+      password: password,
+    };
+    axios
+      .post(`${process.env.NEXT_PUBLIC_API_URL}/auth/signin`, body)
+      .then((response) => {
+        alert(response.data.message);
+        console.log(response.data.message.token);
+      })
+      .catch((response) => {
+        alert(response);
+        console.log(response.data);
+      });
+  };
+
   return (
     <Grid>
       <Container component="main" maxWidth="xs">
@@ -27,7 +47,7 @@ const LoginPage = () => {
           <Typography component="h1" variant="h5" fontSize="bold">
             Sign in
           </Typography>
-          <Box component="form" noValidate sx={{ mt: 1 }}>
+          <Box sx={{ mt: 1 }}>
             <TextField
               margin="dense"
               required
@@ -36,6 +56,7 @@ const LoginPage = () => {
               label="Email Address"
               name="email"
               autoComplete="email"
+              onChange={(event) => setEmail(event.target.value)}
               autoFocus
             />
             <TextField
@@ -46,12 +67,13 @@ const LoginPage = () => {
               label="Password"
               type="password"
               id="password"
+              onChange={(event) => setPassword(event.target.value)}
               autoComplete="current-password"
             />
             <Button
-              type="submit"
               fullWidth
               variant="contained"
+              onClick={signin}
               sx={{ mt: 3, mb: 2 }}
             >
               Sign In

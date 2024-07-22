@@ -77,7 +77,7 @@ export default function TestTable() {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(
+      await axios.put(
         `${process.env.NEXT_PUBLIC_API_URL}/test/DELETETest?id=${id}`
       );
       fetchTestData();

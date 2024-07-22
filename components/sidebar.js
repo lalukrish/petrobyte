@@ -149,7 +149,7 @@ export default function ResponsiveDrawer() {
           <Box>
             <BlinkingAlert />
           </Box>
-          <Box sx={{ alignItems: "end" }}>
+          <Box sx={{ alignItems: "end" ,}}>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -160,7 +160,7 @@ export default function ResponsiveDrawer() {
             >
               <AccountCircle />
             </IconButton>
-            <Menu
+            <Menu sx={{marginTop:"35px"}}
               id="menu-appbar"
               anchorEl={anchorEl}
               anchorOrigin={{ vertical: "top", horizontal: "right" }}
@@ -169,9 +169,7 @@ export default function ResponsiveDrawer() {
               open={Boolean(anchorEl)}
               onClose={handleClose}
             >
-              <MenuItem onClick={handleClose}>
-                <b>Profile</b>
-              </MenuItem>
+              
               <MenuItem onClick={handleClose}>
                 <b>Log out</b>
               </MenuItem>
