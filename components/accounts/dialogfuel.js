@@ -15,31 +15,69 @@ import {
   InputLabel,
   IconButton,
   Divider,
+  Alert,
+  AlertTitle,
 } from "@mui/material";
 import { Add, Remove } from "@mui/icons-material";
 import { useTheme } from "@mui/material/styles";
 import axios from "axios";
 import moment from "moment";
+import * as Yup from "yup";
+import { useFormik } from "formik";
 require("dotenv").config();
 
-export default function FuelNew({ close, editTest }) {
+const validationSchema = Yup.object().shape({
+  cash: Yup.number().required("Cash is required"),
+  bank: Yup.number().required("Bank is required"),
+  hpCard: Yup.number().required("HP Card is required"),
+  totalSaleAmount: Yup.number().required("Total Sale Amount is required"),
+});
+
+export default function FuelNew({ close, editTest, setAlert }) {
   const [allEmployee, setAllEmployee] = useState([]);
   const [dispencers, setDispencers] = useState([]);
   const [selectedDispencers, setSelectedDispencers] = useState([
     { name: "", subRows: [] },
   ]);
+  // const [alert, setAlert] = useState({
+  //   open: false,
+  //   message: "",
+  //   severity: "",
+  // });
   const theme = useTheme();
   const handleClose = () => close();
   const date = moment().format("DD/MM/YYYY");
   const [fuelData, setFuelData] = useState({});
-  const [cash, setCash] = useState("");
-  const [bank, setBank] = useState("");
-  const [hpCard, setHpCard] = useState("");
-  const [totalSaleAmount, setTotalSaleAmount] = useState("");
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "",
+  });
+
+  const formik = useFormik({
+    initialValues: {
+      cash: "",
+      bank: "",
+      hpCard: "",
+      totalSaleAmount: "",
+    },
+    validationSchema: validationSchema,
+    onSubmit: (values) => {
+      handleSave(values);
+    },
+  });
 
   useEffect(() => {
     fetchDispensers();
   }, []);
+
+  useEffect(() => {
+    const totalSaleAmount = Object.values(fuelData).reduce(
+      (acc, curr) => acc + (curr.total || 0),
+      0
+    );
+    formik.setFieldValue("totalSaleAmount", totalSaleAmount);
+  }, [fuelData]);
 
   const fetchDispensers = async () => {
     try {
@@ -60,7 +98,6 @@ export default function FuelNew({ close, editTest }) {
 
       const subRows = response.data.message;
 
-      // Initialize fuel data with live readings and fuel prices
       const initialFuelData = subRows.reduce((acc, row) => {
         acc[row.sub_dispencer_id._id] = {
           start: row.live_reading,
@@ -81,12 +118,12 @@ export default function FuelNew({ close, editTest }) {
     }
   };
 
-  const handleSave = () => {
+  const handleSave = (formValues) => {
     const fuelDetails = selectedDispencers.flatMap((dispencer) =>
       (dispencer.subRows || []).map((type) => ({
         date: date,
         dispencer_name: dispencer.name,
-        sub_dispencer_id: type.sub_dispencer_id._id,
+        sub_dispencer_id: type?.sub_dispencer_id?._id,
         fuel_start_reading: fuelData[type.sub_dispencer_id._id]?.start || "",
         fuel_end_reading: fuelData[type.sub_dispencer_id._id]?.end || "",
         fuel_qty: fuelData[type.sub_dispencer_id._id]?.qty || "",
@@ -94,25 +131,34 @@ export default function FuelNew({ close, editTest }) {
         fuel_price_selected: type.sub_dispencer_id.fuel_id?.fuel_price,
       }))
     );
-    console.log("fuelDetails", fuelDetails);
+
     axios
       .post(
         `${process.env.NEXT_PUBLIC_API_URL}/fuelAccounts/POSTFuelAccount`,
         fuelDetails
       )
       .then((response) => {
-        alert(response.data.message);
+        setAlert({
+          open: true,
+          message: response.data.message,
+          severity: "success",
+        });
       })
       .catch((error) => {
+        setAlert({
+          open: true,
+          message: "Error posting fuel details",
+          severity: "error",
+        });
         console.error("Error posting fuel details:", error);
       });
 
     const cashDetails = {
       date: date,
-      total_amount: totalSaleAmount,
-      cash_inhand: cash,
-      cash_bank: bank,
-      cash_other: hpCard,
+      total_amount: formValues.totalSaleAmount,
+      cash_inhand: formValues.cash,
+      cash_bank: formValues.bank,
+      cash_other: formValues.hpCard,
     };
 
     axios
@@ -121,9 +167,18 @@ export default function FuelNew({ close, editTest }) {
         cashDetails
       )
       .then((response) => {
-        alert(response.data.message);
+        setAlert({
+          open: true,
+          message: response.data.message,
+          severity: "success",
+        });
       })
       .catch((error) => {
+        setAlert({
+          open: true,
+          message: "Error posting cash details",
+          severity: "error",
+        });
         console.error("Error posting cash details:", error);
       });
   };
@@ -190,6 +245,19 @@ export default function FuelNew({ close, editTest }) {
       <DialogTitle id="responsive-dialog-title">Add Fuel Details</DialogTitle>
       <DialogContent>
         <Stack spacing={2} sx={{ width: "100%", padding: "5px" }}>
+          {/* {alert.open && (
+            <Alert
+              severity={alert.severity}
+              onClose={() =>
+                setAlert({ open: false, message: "", severity: "" })
+              }
+            >
+              <AlertTitle>
+                {alert.severity === "success" ? "Success" : "Error"}
+              </AlertTitle>
+              {alert.message}
+            </Alert>
+          )} */}
           {selectedDispencers.map((dispencer, index) => (
             <Box
               key={index}
@@ -256,7 +324,7 @@ export default function FuelNew({ close, editTest }) {
                     variant="outlined"
                     onChange={(e) =>
                       handleFuelDataChange(
-                        type.sub_dispencer_id._id,
+                        type.sub_dispencer_id?._id,
                         "end",
                         e.target.value
                       )
@@ -283,47 +351,66 @@ export default function FuelNew({ close, editTest }) {
               />
             </Box>
           ))}
-          <Box sx={{ display: "flex", gap: 2 }}>
+          <form onSubmit={formik.handleSubmit}>
+            <Box sx={{ display: "flex", gap: 2 }}>
+              <TextField
+                label="Cash"
+                fullWidth
+                variant="outlined"
+                value={formik.values.cash}
+                onChange={formik.handleChange}
+                name="cash"
+                error={formik.touched.cash && Boolean(formik.errors.cash)}
+                helperText={formik.touched.cash && formik.errors.cash}
+              />
+              <TextField
+                label="Bank"
+                fullWidth
+                variant="outlined"
+                value={formik.values.bank}
+                onChange={formik.handleChange}
+                name="bank"
+                error={formik.touched.bank && Boolean(formik.errors.bank)}
+                helperText={formik.touched.bank && formik.errors.bank}
+              />
+              <TextField
+                label="HP Card"
+                fullWidth
+                variant="outlined"
+                value={formik.values.hpCard}
+                onChange={formik.handleChange}
+                name="hpCard"
+                error={formik.touched.hpCard && Boolean(formik.errors.hpCard)}
+                helperText={formik.touched.hpCard && formik.errors.hpCard}
+              />
+            </Box>
             <TextField
-              label="Cash"
+              label="Total Sale Amount"
               fullWidth
               variant="outlined"
-              value={cash}
-              onChange={(e) => setCash(e.target.value)}
+              value={formik.values.totalSaleAmount}
+              onChange={formik.handleChange}
+              name="totalSaleAmount"
+              error={
+                formik.touched.totalSaleAmount &&
+                Boolean(formik.errors.totalSaleAmount)
+              }
+              helperText={
+                formik.touched.totalSaleAmount && formik.errors.totalSaleAmount
+              }
+              sx={{ mt: 2 }}
             />
-            <TextField
-              label="Bank"
-              fullWidth
-              variant="outlined"
-              value={bank}
-              onChange={(e) => setBank(e.target.value)}
-            />
-            <TextField
-              label="HP Card"
-              fullWidth
-              variant="outlined"
-              value={hpCard}
-              onChange={(e) => setHpCard(e.target.value)}
-            />
-          </Box>
-          <TextField
-            label="Total Sale Amount"
-            fullWidth
-            variant="outlined"
-            value={totalSaleAmount}
-            onChange={(e) => setTotalSaleAmount(e.target.value)}
-            sx={{ mt: 2 }}
-          />
+            <DialogActions>
+              <Button color="error" onClick={handleClose}>
+                Cancel
+              </Button>
+              <Button color="success" type="submit">
+                Save
+              </Button>
+            </DialogActions>
+          </form>
         </Stack>
       </DialogContent>
-      <DialogActions>
-        <Button color="error" onClick={handleClose}>
-          Cancel
-        </Button>
-        <Button color="success" onClick={handleSave}>
-          Save
-        </Button>
-      </DialogActions>
     </Dialog>
   );
 }

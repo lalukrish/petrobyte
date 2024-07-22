@@ -9,27 +9,51 @@ import {
   Typography,
   Box,
 } from "@mui/material";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 import axios from "axios";
 
 const DashboardPriceModal = ({ open, onClose, currentRate }) => {
-  console.log("c--rate", currentRate);
-  const [fuelPrice, setFuelPrice] = useState(
-    currentRate ? currentRate.fuel_price : ""
-  );
+  const validationSchema = Yup.object({
+    fuel_price: Yup.number()
+      .required("Fuel price is required")
+      .min(0, "Fuel price must be greater than or equal to 0"),
+  });
 
-  const handleUpdate = () => {
+  const formik = useFormik({
+    initialValues: {
+      id: currentRate ? currentRate._id : "",
+      fuel_price: currentRate ? currentRate.fuel_price : "",
+    },
+    validationSchema: validationSchema,
+    onSubmit: (values) => {
+      handleUpdate(values);
+    },
+  });
+
+  const handleUpdate = (values) => {
     axios
       .put(`${process.env.NEXT_PUBLIC_API_URL}/fuelPrice/PUTFuel`, {
-        _id: currentRate._id,
-        fuel_name: currentRate.fuel_name,
-        fuelPrice: fuelPrice,
+        _id: values.id,
+        // fuel_name: currentRate.fuel_name,
+        fuel_price: values.fuel_price,
+        fuel_previous_price: currentRate.fuel_price,
       })
-      .then((responce) => {
+      .then((response) => {
         onClose();
-        alert(responce.data.message);
+        alert(response.data.message);
       })
       .catch(() => alert("Something went wrong"));
   };
+
+  useEffect(() => {
+    if (currentRate) {
+      formik.setValues({
+        id: currentRate._id,
+        fuel_price: currentRate.fuel_price,
+      });
+    }
+  }, [currentRate]);
 
   return (
     <Dialog open={open} onClose={onClose}>
@@ -51,24 +75,45 @@ const DashboardPriceModal = ({ open, onClose, currentRate }) => {
         </Box>
       </DialogTitle>
       <DialogContent>
-        <TextField
-          autoFocus
-          margin="dense"
-          label="Fuel Price"
-          type="number"
-          fullWidth
-          value={fuelPrice}
-          onChange={(e) => setFuelPrice(e.target.value)}
-        />
+        <form onSubmit={formik.handleSubmit}>
+          {/* <TextField
+            margin="dense"
+            label="ID"
+            fullWidth
+            value={formik.values.id}
+            disabled
+          /> */}
+          <TextField
+            margin="dense"
+            label="Fuel Price"
+            type="number"
+            fullWidth
+            value={formik.values.fuel_price}
+            onChange={formik.handleChange}
+            name="fuel_price"
+            error={
+              formik.touched.fuel_price && Boolean(formik.errors.fuel_price)
+            }
+            helperText={formik.touched.fuel_price && formik.errors.fuel_price}
+          />
+          {/* <TextField
+            margin="dense"
+            label="Previous Fuel Price"
+            type="number"
+            fullWidth
+            value={currentRate ? currentRate.fuel_price : ""}
+            disabled
+          /> */}
+          <DialogActions>
+            <Button onClick={onClose} color="primary">
+              Cancel
+            </Button>
+            <Button type="submit" color="primary">
+              Update
+            </Button>
+          </DialogActions>
+        </form>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={() => onClose()} color="primary">
-          Cancel
-        </Button>
-        <Button onClick={handleUpdate} color="primary">
-          Update
-        </Button>
-      </DialogActions>
     </Dialog>
   );
 };

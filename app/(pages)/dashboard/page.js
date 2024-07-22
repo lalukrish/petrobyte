@@ -62,21 +62,9 @@ const Page = () => {
         <Typography
           variant="h6"
           sx={{ fontWeight: "bold", fontSize: "30px", mb: 4 }}
-        >
-          {/* Sales Reports */}
-        </Typography>
+        ></Typography>
         <SalesCharts />
       </Box>
-
-      {/* <Box>
-        <Typography
-          variant="h6"
-          sx={{ fontWeight: "bold", fontSize: "40px", mb: 4 }}
-        >
-          Dispensers
-        </Typography>
-        <Grid container spacing={6}></Grid>
-      </Box> */}
     </Box>
   );
 };
