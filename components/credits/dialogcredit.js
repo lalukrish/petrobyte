@@ -18,6 +18,7 @@ import axios from "axios";
 import moment from "moment";
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+import 'moment/locale/en-gb';
 require("dotenv").config();
 
 export default function CreditNew({ close, refresh, data, currentAmount }) {
@@ -37,7 +38,7 @@ export default function CreditNew({ close, refresh, data, currentAmount }) {
   const [fuelList, setFuelList] = React.useState([]);
   const [employeeList, setEmployeeList] = React.useState([]);
   const [rates, setRates] = React.useState({});
-  const [selectedDate, setSelectedDate] = React.useState(moment());
+  const [selectedDate, setSelectedDate] = React.useState(moment().format("DD/MM/YYYY"));
 
   const fetchFuels = () => {
     axios
@@ -108,7 +109,7 @@ export default function CreditNew({ close, refresh, data, currentAmount }) {
 
   const handelSave = async () => {
     let creditData = {
-      date: moment(selectedDate).format("DD/MM/YYYY"),
+      date: moment(selectedDate, "DD/MM/YYYY").format("DD/MM/YYYY"),
       cc_id: ccName._id,
       vehicle_no: vehicleNo,
       fuel_type: fuel ? fuel : null,
@@ -174,7 +175,7 @@ export default function CreditNew({ close, refresh, data, currentAmount }) {
   const handleUpdate = async () => {
     let updateData = {
       id: data._id,
-      date: moment(selectedDate).format("DD/MM/YYYY"),
+      date: moment(selectedDate, "DD/MM/YYYY").format("DD/MM/YYYY"),
       cc_id: ccName._id,
       vehicle_no: vehicleNo,
       fuel_type: fuel ? fuel : null,
@@ -260,10 +261,10 @@ export default function CreditNew({ close, refresh, data, currentAmount }) {
       </DialogTitle>
       <DialogContent>
         <Stack spacing={2} sx={{ width: "400px", padding: "5px" }}>
-          <LocalizationProvider dateAdapter={AdapterMoment}>
+          <LocalizationProvider dateAdapter={AdapterMoment} locale="en-gb">
             <DatePicker
               label="Date"
-              value={selectedDate}
+              value={moment(selectedDate, "DD/MM/YYYY")}
               onChange={(newValue) => setSelectedDate(newValue)}
               renderInput={(params) => <TextField {...params} />}
               inputFormat="DD/MM/YYYY"
