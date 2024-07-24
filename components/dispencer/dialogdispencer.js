@@ -52,7 +52,7 @@ export default function DispencerNew({
   const [alertOpen, setAlertOpen] = React.useState(false);
   const [alertMessage, setAlertMessage] = React.useState("");
   const [alertSeverity, setAlertSeverity] = React.useState("success");
-  console.log("object", alertMessage);
+
   // Fetch subdispencer data on mount
   React.useEffect(() => {
     axios
@@ -102,11 +102,6 @@ export default function DispencerNew({
         })
         .catch((err) => {
           handleShowAlert("error", "some error occured!");
-
-          // console.error("Error saving dispenser:", err);
-          // setAlertMessage("Failed to save dispenser."); // Example error message
-          // setAlertSeverity("error");
-          // setAlertOpen(true);
           close();
         });
     },
@@ -118,9 +113,13 @@ export default function DispencerNew({
     }
     setAlertOpen(false);
   };
-  React.useEffect(() => {
-    console.log("alertMessage:", alertMessage);
-  }, [alertMessage]);
+
+  const getAvailableSubDispensers = (selectedDispensers, allDispensers, currentId) => {
+    const selectedIds = selectedDispensers.map((field) => field.sub_dispencer_id);
+    return allDispensers.filter(
+      (sub) => !selectedIds.includes(sub._id) || sub._id === currentId
+    );
+  };
 
   return (
     <>
@@ -189,7 +188,7 @@ export default function DispencerNew({
                               onBlur={formik.handleBlur}
                               label="Sub Name"
                             >
-                              {subDispencer.map((sub) => (
+                              {getAvailableSubDispensers(formik.values.fields, subDispencer, field.sub_dispencer_id).map((sub) => (
                                 <MenuItem key={sub._id} value={sub._id}>
                                   {sub.sub_dispencer}
                                 </MenuItem>
