@@ -16,12 +16,12 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import moment from "moment";
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
-import 'moment/locale/en-gb';
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
+import "moment/locale/en-gb";
 require("dotenv").config();
 
-export default function CreditNew({ close, refresh, data, currentAmount }) {
+export default function CreditNew({ fullscreenclose,close, refresh, data, currentAmount }) {
   console.log("currentAmount", currentAmount);
   const [ccName, setCcName] = React.useState(data ? data.cc_id?._id : "");
   const [vehicleNo, setVehicleNo] = React.useState(data ? data.vehicle_no : "");
@@ -38,7 +38,9 @@ export default function CreditNew({ close, refresh, data, currentAmount }) {
   const [fuelList, setFuelList] = React.useState([]);
   const [employeeList, setEmployeeList] = React.useState([]);
   const [rates, setRates] = React.useState({});
-  const [selectedDate, setSelectedDate] = React.useState(moment().format("DD/MM/YYYY"));
+  const [selectedDate, setSelectedDate] = React.useState(
+    moment().format("DD/MM/YYYY")
+  );
 
   const fetchFuels = () => {
     axios
@@ -216,7 +218,12 @@ export default function CreditNew({ close, refresh, data, currentAmount }) {
           `${process.env.NEXT_PUBLIC_API_URL}/creditcustomer/updateCreditAmount`,
           putCreditData
         )
-        .then((response) => alert(response.data.message))
+        .then((response) => {
+          alert(response.data.message);
+          refresh();
+          close();
+          fullscreenclose()
+        })
         .catch(() => alert(`Something went wrong, at update amount in credit`));
     }
 
@@ -242,11 +249,15 @@ export default function CreditNew({ close, refresh, data, currentAmount }) {
           `${process.env.NEXT_PUBLIC_API_URL}/creditcustomer/updateCreditAmount`,
           putCreditData
         )
-        .then((response) => alert(response.data.message))
+        .then((response) => {
+          alert(response.data.message);
+          refresh();
+          close();
+          fullscreenclose()
+        })
+
         .catch(() => alert(`Something went wrong, at update amount in debit`));
     }
-    refresh();
-    close();
   };
 
   return (
