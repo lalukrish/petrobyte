@@ -16,6 +16,10 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import moment from "moment";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
+
+moment.locale('en-gb'); // Set locale globally to en-gb to ensure DD/MM/YYYY format
 
 export default function TestNew({ close, onDataUpdated, editTest }) {
   const [dispencer, setDispencer] = React.useState(
@@ -29,7 +33,7 @@ export default function TestNew({ close, onDataUpdated, editTest }) {
   const [subDispencers, setSubDispencers] = React.useState([]);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
-  const datePart = moment().format("DD/MM/YYYY");
+  const [selectedDate, setSelectedDate] = React.useState(moment().format("DD/MM/YYYY"));
 
   React.useEffect(() => {
     const fetchDispensers = async () => {
@@ -87,7 +91,7 @@ export default function TestNew({ close, onDataUpdated, editTest }) {
 
   const handleSave = () => {
     const testData = {
-      date: datePart,
+      date: selectedDate,
       dispencer_name: dispencer,
       sub_dispencer_id: subDispencer,
       fuel_quantity: qty,
@@ -129,6 +133,16 @@ export default function TestNew({ close, onDataUpdated, editTest }) {
       </DialogTitle>
       <DialogContent>
         <Stack spacing={2} sx={{ width: "400px", padding: "5px" }}>
+          <LocalizationProvider dateAdapter={AdapterMoment} locale="en-gb">
+            <DatePicker
+              label="Date"
+              value={moment(selectedDate, "DD/MM/YYYY")}
+              onChange={(newValue) => setSelectedDate(moment(newValue).format("DD/MM/YYYY"))}
+              renderInput={(params) => <TextField {...params} />}
+              inputFormat="DD/MM/YYYY"
+              disableFuture
+            />
+          </LocalizationProvider>
           <FormControl fullWidth>
             <InputLabel id="dispencer-label">Dispencer</InputLabel>
             <Select
