@@ -15,43 +15,48 @@ import {
   InputLabel,
   IconButton,
   Divider,
-  Alert,
-  AlertTitle,
 } from "@mui/material";
 import { Add, Remove } from "@mui/icons-material";
-import { useTheme } from "@mui/material/styles";
 import axios from "axios";
 import moment from "moment";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 require("dotenv").config();
 
-const validationSchema = Yup.object().shape({
-  cash: Yup.number().required("Cash is required"),
-  bank: Yup.number().required("Bank is required"),
-  hpCard: Yup.number().required("HP Card is required"),
-  totalSaleAmount: Yup.number().required("Total Sale Amount is required"),
-});
-
-export default function FuelNew({ close, editTest, setAlert }) {
-  const [allEmployee, setAllEmployee] = useState([]);
+export default function FuelNew({ close, setAlert }) {
   const [dispencers, setDispencers] = useState([]);
   const [selectedDispencers, setSelectedDispencers] = useState([
     { name: "", subRows: [] },
   ]);
-  // const [alert, setAlert] = useState({
-  //   open: false,
-  //   message: "",
-  //   severity: "",
-  // });
-  const theme = useTheme();
-  const handleClose = () => close();
-  const date = moment().format("DD/MM/YYYY");
   const [fuelData, setFuelData] = useState({});
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: "",
-    severity: "",
+  const date = moment().format("DD/MM/YYYY");
+
+  // Validation Schema
+  const validationSchema = Yup.object().shape({
+    cash: Yup.number().required("Cash is required"),
+    bank: Yup.number().required("Bank is required"),
+    hpCard: Yup.number().required("HP Card is required"),
+    totalSaleAmount: Yup.number().required("Total Sale Amount is required"),
+    fuelData: Yup.object().shape(
+      selectedDispencers.reduce((acc, dispencer) => {
+        dispencer.subRows.forEach((type) => {
+          acc[type.sub_dispencer_id._id] = Yup.object().shape({
+            //   start: Yup.number().required("Start Metering is required"),
+            end: Yup.number()
+              .required("End Metering is required")
+              .test(
+                "is-greater-than-start",
+                "End Metering must be greater than Start Metering",
+                function (value) {
+                  const { start } = this.parent;
+                  return value > start;
+                }
+              ),
+          });
+        });
+        return acc;
+      }, {})
+    ),
   });
 
   const formik = useFormik({
@@ -60,8 +65,16 @@ export default function FuelNew({ close, editTest, setAlert }) {
       bank: "",
       hpCard: "",
       totalSaleAmount: "",
+      fuelData: selectedDispencers.reduce((acc, dispencer) => {
+        dispencer.subRows.forEach((type) => {
+          acc[type.sub_dispencer_id._id] = { start: "", end: "" };
+        });
+        return acc;
+      }, {}),
     },
     validationSchema: validationSchema,
+    validateOnChange: true,
+    validateOnBlur: true,
     onSubmit: (values) => {
       handleSave(values);
     },
@@ -97,10 +110,10 @@ export default function FuelNew({ close, editTest, setAlert }) {
       );
 
       const subRows = response.data.message;
-
       const initialFuelData = subRows.reduce((acc, row) => {
         acc[row.sub_dispencer_id._id] = {
           start: row.live_reading,
+          end: row.live_reading,
           fuelPrice: row.sub_dispencer_id.fuel_id.fuel_price,
         };
         return acc;
@@ -110,6 +123,17 @@ export default function FuelNew({ close, editTest, setAlert }) {
         ...prev,
         ...initialFuelData,
       }));
+
+      formik.setFieldValue(
+        "fuelData",
+        subRows.reduce((acc, row) => {
+          acc[row.sub_dispencer_id._id] = {
+            start: row.live_reading,
+            end: row.live_reading,
+          };
+          return acc;
+        }, {})
+      );
 
       return subRows;
     } catch (error) {
@@ -201,6 +225,11 @@ export default function FuelNew({ close, editTest, setAlert }) {
 
         updatedData[type].qty = qty;
         updatedData[type].total = qty * fuelPrice;
+
+        // Trigger Formik field update
+        formik.setFieldValue(`fuelData.${type}.end`, value);
+        formik.setFieldValue(`fuelData.${type}.qty`, qty);
+        formik.setFieldValue(`fuelData.${type}.total`, qty * fuelPrice);
       }
 
       return updatedData;
@@ -234,183 +263,204 @@ export default function FuelNew({ close, editTest, setAlert }) {
     );
   };
 
+  // Handle Close Function
+  const handleClose = () => {
+    close(); // Call the close function passed as a prop
+  };
+
   return (
     <Dialog
       maxWidth="md"
       fullWidth
       open={true}
       onClose={handleClose}
-      aria-labelledby="responsive-dialog-title"
+      PaperProps={{
+        sx: {
+          minHeight: "80vh",
+          maxHeight: "80vh",
+        },
+      }}
     >
-      <DialogTitle id="responsive-dialog-title">Add Fuel Details</DialogTitle>
-      <DialogContent>
-        <Stack spacing={2} sx={{ width: "100%", padding: "5px" }}>
-          {/* {alert.open && (
-            <Alert
-              severity={alert.severity}
-              onClose={() =>
-                setAlert({ open: false, message: "", severity: "" })
-              }
-            >
-              <AlertTitle>
-                {alert.severity === "success" ? "Success" : "Error"}
-              </AlertTitle>
-              {alert.message}
-            </Alert>
-          )} */}
-          {selectedDispencers.map((dispencer, index) => (
-            <Box
-              key={index}
-              sx={{ display: "flex", flexDirection: "column", gap: 2 }}
-            >
-              <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                <FormControl fullWidth>
-                  <InputLabel id={`dispencer-label-${index}`}>
-                    Dispencer
-                  </InputLabel>
-                  <Select
-                    labelId={`dispencer-label-${index}`}
-                    id={`dispencer-select-${index}`}
-                    value={dispencer.name}
-                    label="Dispencer"
-                    onChange={(event) =>
-                      handleDispencerChange(index, event.target.value)
-                    }
-                  >
-                    {getAvailableDispensers(index).map((disp) => (
-                      <MenuItem key={disp._id} value={disp.dispencer_name}>
-                        {disp.dispencer_name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-                {index === selectedDispencers.length - 1 && (
-                  <IconButton onClick={handleAddDispencer} color="primary">
-                    <Add />
-                  </IconButton>
-                )}
-                {selectedDispencers.length > 1 && (
-                  <IconButton
-                    onClick={() => handleRemoveDispencer(index)}
-                    color="error"
-                  >
+      <form onSubmit={formik.handleSubmit}>
+        <DialogTitle>Fuel Entry</DialogTitle>
+        <Divider />
+        <DialogContent>
+          <Typography variant="h6">Fuel Data</Typography>
+          <Stack spacing={2}>
+            {selectedDispencers.map((dispencer, index) => (
+              <Box key={index}>
+                <Stack direction="row" spacing={2} alignItems="center">
+                  <FormControl sx={{ flex: 1 }}>
+                    <TextField
+                      type="date"
+                      label="Date"
+                      value={date}
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                    />
+                    <InputLabel>Dispenser</InputLabel>
+                    <Select
+                      value={dispencer.name}
+                      onChange={(e) =>
+                        handleDispencerChange(index, e.target.value)
+                      }
+                      required
+                    >
+                      {getAvailableDispensers(index).map((disp) => (
+                        <MenuItem key={disp._id} value={disp.dispencer_name}>
+                          {disp.dispencer_name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                  <IconButton onClick={() => handleRemoveDispencer(index)}>
                     <Remove />
                   </IconButton>
-                )}
+                </Stack>
+                <Stack spacing={1} mt={2}>
+                  {dispencer.subRows.map((type, typeIndex) => (
+                    <Stack
+                      direction="row"
+                      spacing={2}
+                      alignItems="center"
+                      key={typeIndex}
+                    >
+                      <Typography>
+                        {type.sub_dispencer_id.sub_dispencer}
+                      </Typography>
+                      {/* <TextField
+                        label="Fuel Type"
+                        value={type?.sub_dispencer_id?.fuel_id?.fuel_type}
+                        disabled
+                      /> */}
+                      <TextField
+                        label="Start"
+                        type="number"
+                        value={fuelData[type.sub_dispencer_id._id]?.start || ""}
+                        onChange={(e) =>
+                          handleFuelDataChange(
+                            type.sub_dispencer_id._id,
+                            "start",
+                            e.target.value
+                          )
+                        }
+                        error={Boolean(
+                          formik.touched?.fuelData?.[type.sub_dispencer_id._id]
+                            ?.start &&
+                            formik.errors?.fuelData?.[type.sub_dispencer_id._id]
+                              ?.start
+                        )}
+                        helperText={
+                          formik.touched?.fuelData?.[type.sub_dispencer_id._id]
+                            ?.start &&
+                          formik.errors?.fuelData?.[type.sub_dispencer_id._id]
+                            ?.start
+                        }
+                      />
+                      <TextField
+                        label="End"
+                        type="number"
+                        value={fuelData[type.sub_dispencer_id._id]?.end || ""}
+                        onChange={(e) =>
+                          handleFuelDataChange(
+                            type.sub_dispencer_id._id,
+                            "end",
+                            e.target.value
+                          )
+                        }
+                        error={Boolean(
+                          formik.touched?.fuelData?.[type.sub_dispencer_id._id]
+                            ?.end &&
+                            formik.errors?.fuelData?.[type.sub_dispencer_id._id]
+                              ?.end
+                        )}
+                        helperText={
+                          formik.touched?.fuelData?.[type.sub_dispencer_id._id]
+                            ?.end &&
+                          formik.errors?.fuelData?.[type.sub_dispencer_id._id]
+                            ?.end
+                        }
+                      />
+                      <TextField
+                        label="Qty"
+                        type="number"
+                        value={fuelData[type.sub_dispencer_id._id]?.qty || ""}
+                        disabled
+                      />
+                      <TextField
+                        label="Amount"
+                        type="number"
+                        value={fuelData[type.sub_dispencer_id._id]?.total || ""}
+                        disabled
+                      />
+                    </Stack>
+                  ))}
+                </Stack>
               </Box>
-              {dispencer.subRows.map((type) => (
-                <Box
-                  key={type._id}
-                  sx={{ display: "flex", alignItems: "center", gap: 2, mt: 2 }}
-                >
-                  <Typography>{type.sub_dispencer_id.sub_dispencer}</Typography>
-                  <TextField
-                    label="Start Metering"
-                    fullWidth
-                    value={type.live_reading}
-                    variant="outlined"
-                    disabled
-                    onChange={(e) =>
-                      handleFuelDataChange(
-                        type.sub_dispencer_id._id,
-                        "start",
-                        e.target.value
-                      )
-                    }
-                  />
-                  <TextField
-                    label="End Metering"
-                    fullWidth
-                    variant="outlined"
-                    onChange={(e) =>
-                      handleFuelDataChange(
-                        type.sub_dispencer_id?._id,
-                        "end",
-                        e.target.value
-                      )
-                    }
-                  />
-                  <TextField
-                    label="Fuel Qty"
-                    fullWidth
-                    variant="outlined"
-                    disabled
-                    value={fuelData[type.sub_dispencer_id._id]?.qty || ""}
-                  />
-                  <TextField
-                    label="Sale Amount"
-                    fullWidth
-                    variant="outlined"
-                    disabled
-                    value={fuelData[type.sub_dispencer_id._id]?.total || ""}
-                  />
-                </Box>
-              ))}
-              <Divider
-                sx={{ my: 1, borderWidth: "1px", borderColor: "primary.main" }}
-              />
-            </Box>
-          ))}
-          <form onSubmit={formik.handleSubmit}>
-            <Box sx={{ display: "flex", gap: 2 }}>
-              <TextField
-                label="Cash"
-                fullWidth
-                variant="outlined"
-                value={formik.values.cash}
-                onChange={formik.handleChange}
-                name="cash"
-                error={formik.touched.cash && Boolean(formik.errors.cash)}
-                helperText={formik.touched.cash && formik.errors.cash}
-              />
-              <TextField
-                label="Bank"
-                fullWidth
-                variant="outlined"
-                value={formik.values.bank}
-                onChange={formik.handleChange}
-                name="bank"
-                error={formik.touched.bank && Boolean(formik.errors.bank)}
-                helperText={formik.touched.bank && formik.errors.bank}
-              />
-              <TextField
-                label="HP Card"
-                fullWidth
-                variant="outlined"
-                value={formik.values.hpCard}
-                onChange={formik.handleChange}
-                name="hpCard"
-                error={formik.touched.hpCard && Boolean(formik.errors.hpCard)}
-                helperText={formik.touched.hpCard && formik.errors.hpCard}
-              />
-            </Box>
+            ))}
+            <Button
+              variant="outlined"
+              onClick={handleAddDispencer}
+              startIcon={<Add />}
+            >
+              Add Dispenser
+            </Button>
+          </Stack>
+          <Divider sx={{ my: 2 }} />
+          <Typography variant="h6">Cash Management</Typography>
+          <Stack spacing={2}>
+            <TextField
+              label="Cash in Hand"
+              type="number"
+              value={formik.values.cash}
+              onChange={formik.handleChange}
+              name="cash"
+              error={Boolean(formik.touched.cash && formik.errors.cash)}
+              helperText={formik.touched.cash && formik.errors.cash}
+            />
+            <TextField
+              label="Bank"
+              type="number"
+              value={formik.values.bank}
+              onChange={formik.handleChange}
+              name="bank"
+              error={Boolean(formik.touched.bank && formik.errors.bank)}
+              helperText={formik.touched.bank && formik.errors.bank}
+            />
+            <TextField
+              label="HP Card"
+              type="number"
+              value={formik.values.hpCard}
+              onChange={formik.handleChange}
+              name="hpCard"
+              error={Boolean(formik.touched.hpCard && formik.errors.hpCard)}
+              helperText={formik.touched.hpCard && formik.errors.hpCard}
+            />
             <TextField
               label="Total Sale Amount"
-              fullWidth
-              variant="outlined"
+              type="number"
               value={formik.values.totalSaleAmount}
-              onChange={formik.handleChange}
+              disabled
               name="totalSaleAmount"
-              error={
-                formik.touched.totalSaleAmount &&
-                Boolean(formik.errors.totalSaleAmount)
-              }
+              error={Boolean(
+                formik.touched.totalSaleAmount && formik.errors.totalSaleAmount
+              )}
               helperText={
                 formik.touched.totalSaleAmount && formik.errors.totalSaleAmount
               }
-              sx={{ mt: 2 }}
             />
-            <DialogActions>
-              <Button color="error" onClick={handleClose}>
-                Cancel
-              </Button>
-              <Button color="success" type="submit">
-                Save
-              </Button>
-            </DialogActions>
-          </form>
-        </Stack>
-      </DialogContent>
+          </Stack>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="secondary">
+            Cancel
+          </Button>
+          <Button type="submit" color="primary" variant="contained">
+            Save
+          </Button>
+        </DialogActions>
+      </form>
     </Dialog>
   );
 }

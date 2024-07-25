@@ -6,178 +6,178 @@ import {
   DialogActions,
   Button,
   TextField,
-  Stack,
-  Grid,
-  Box,
-  Typography,
-  Select,
   FormControl,
   InputLabel,
+  Select,
   MenuItem,
+  Stack,
+  Box,
 } from "@mui/material";
-//import Textarea from "@mui/joy/Textarea";
-
-import { TextareaAutosize as BaseTextareaAutosize } from "@mui/base/TextareaAutosize";
-import { styled } from "@mui/system";
+import { useFormik } from "formik";
 import axios from "axios";
+import * as Yup from "yup";
 import moment from "moment";
-require("dotenv").config();
-// import dayjs from "dayjs";
+
+const expenseSchema = Yup.object().shape({
+  expence_type: Yup.string().required("Expense Type is required"),
+  expence_amount: Yup.number().required("Amount is required").positive(),
+  expence_comment: Yup.string().required("Comments are required"),
+});
 
 export default function ExpenseNew({ close, refresh, edit }) {
-  console.log(edit);
-  const [expenseType, setExpenseType] = useState(edit ? edit.expence_type : "");
   const [allEmployee, setAllEmployee] = useState([]);
-  const [employee, setEmployee] = useState(edit.emp_id ? edit.emp_id._id : "");
-  const [amount, setAmount] = useState(edit ? edit.expence_amount : "");
-  const [comment, setComment] = useState(edit ? edit.expence_comment : "");
-  const handleClose3 = () => close();
   const datePart = moment().format("DD/MM/YYYY");
 
-  const type = ["Salary", "Maintainence", "Bills", "Others"];
-  const handleExpenseTypeChange = (event, newValue) => {
-    setExpenseType(event.target.value);
-  };
+  const formik = useFormik({
+    initialValues: {
+      expence_type: edit ? edit.expence_type : "",
+      emp_id: edit.emp_id ? edit.emp_id._id : "",
+      expence_amount: edit ? edit.expence_amount : "",
+      expence_comment: edit ? edit.expence_comment : "",
+    },
+    validationSchema: expenseSchema,
+    onSubmit: async (values) => {
+      const expenseData = {
+        date: datePart,
+        ...values,
+      };
+
+      try {
+        if (edit._id) {
+          await axios.put(
+            `${process.env.NEXT_PUBLIC_API_URL}/expenceaccount/PUTExpenceAccount`,
+            { _id: edit?._id, ...expenseData }
+          );
+        } else {
+          await axios.post(
+            `${process.env.NEXT_PUBLIC_API_URL}/expenceaccount/POSTExpenceAccount`,
+            expenseData
+          );
+        }
+        refresh();
+        close();
+      } catch (error) {
+        console.error("Error saving expense:", error);
+      }
+    },
+  });
 
   const fetchEmployee = () => {
     axios
       .get(`${process.env.NEXT_PUBLIC_API_URL}/employee/GETAllEmployee`)
-      .then((responce) => setAllEmployee(responce.data.message.employees));
+      .then((response) => setAllEmployee(response.data.message.employees));
   };
 
   useEffect(() => {
     fetchEmployee();
   }, []);
 
-  const handleSave = () => {
-    let expenseData = {
-      date: datePart,
-      expence_type: expenseType,
-      emp_id: employee ? employee : null,
-      expence_amount: amount,
-      expence_comment: comment,
-    };
-
-    console.log(expenseData);
-
-    axios
-      .post(
-        `${process.env.NEXT_PUBLIC_API_URL}/expenceaccount/POSTExpenceAccount`,
-        expenseData
-      )
-      .then((responce) => {
-        alert(responce.data.message);
-        refresh();
-        close();
-      })
-      .catch((err) => {
-        alert("error");
-        refresh();
-        close();
-      });
-  };
-
-  const handleUpdate = () => {
-    let expenseData = {
-      _id: edit?._id,
-      date: datePart,
-      expence_type: expenseType,
-      emp_id: employee ? employee : null,
-      expence_amount: amount,
-      expence_comment: comment,
-    };
-
-    console.log(expenseData);
-
-    axios
-      .put(
-        `${process.env.NEXT_PUBLIC_API_URL}/expenceaccount/PUTExpenceAccount`,
-        expenseData
-      )
-      .then((responce) => {
-        alert(responce.data.message);
-        refresh();
-        close();
-      })
-      .catch((err) => {
-        alert("error");
-        refresh();
-        close();
-      });
-  };
-
   return (
     <Dialog
       maxWidth="sm"
       fullWidth
       open={true}
-      onClose={handleClose3}
+      onClose={close}
       aria-labelledby="responsive-dialog-title"
     >
       <DialogTitle id="responsive-dialog-title">Expense Details</DialogTitle>
-      <DialogContent sx={{ padding: "5px", margin: "5px" }}>
-        <Stack spacing={2} sx={{ width: "100%", padding: "5px" }}>
-          <FormControl fullWidth>
-            <InputLabel id="expense-type-label">Expense Type</InputLabel>
-            <Select
-              labelId="expense-type-label"
-              id="expense-type-select"
-              value={expenseType}
-              onChange={handleExpenseTypeChange}
-              label="Expense Type"
-            >
-              {type.map((option, index) => (
-                <MenuItem key={index} value={option}>
-                  {option}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          {expenseType === "Salary" && (
+      <DialogContent sx={{ padding: "5px", margin: "5px", gap: "2" }}>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+          <form onSubmit={formik.handleSubmit}>
             <FormControl fullWidth>
-              <InputLabel id="employee-label">Employee</InputLabel>
+              <InputLabel id="expense-type-label">Expense Type</InputLabel>
               <Select
-                labelId="employee-label"
-                id="employee-select"
-                label="Employee"
-                value={employee}
-                onChange={(event) => setEmployee(event.target.value)}
+                labelId="expense-type-label"
+                id="expense-type-select"
+                name="expence_type"
+                value={formik.values.expence_type}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                label="Expense Type"
+                error={
+                  formik.touched.expence_type &&
+                  Boolean(formik.errors.expence_type)
+                }
               >
-                {allEmployee.map((option, index) => (
-                  <MenuItem key={index} value={option._id}>
-                    {option.emp_name}
-                  </MenuItem>
-                ))}
+                {["Salary", "Maintainence", "Bills", "Others"].map(
+                  (option, index) => (
+                    <MenuItem key={index} value={option}>
+                      {option}
+                    </MenuItem>
+                  )
+                )}
               </Select>
+              {formik.touched.expence_type && formik.errors.expence_type && (
+                <div style={{ color: "red", marginTop: "5px" }}>
+                  {formik.errors.expence_type}
+                </div>
+              )}
             </FormControl>
-          )}
-          <TextField
-            id="amount"
-            label="Amount"
-            fullWidth
-            variant="outlined"
-            value={amount}
-            onChange={(event) => setAmount(event.target.value)}
-          />
-
-          <TextField
-            id="comment"
-            label="Comments"
-            fullWidth
-            variant="outlined"
-            value={comment}
-            onChange={(event) => setComment(event.target.value)}
-          />
-        </Stack>
+            {formik.values.expence_type === "Salary" && (
+              <FormControl fullWidth>
+                <InputLabel id="employee-label">Employee</InputLabel>
+                <Select
+                  labelId="employee-label"
+                  id="employee-select"
+                  name="emp_id"
+                  value={formik.values.emp_id}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  label="Employee"
+                >
+                  {allEmployee.map((option, index) => (
+                    <MenuItem key={index} value={option._id}>
+                      {option.emp_name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            )}
+            <TextField
+              id="amount"
+              name="expence_amount"
+              label="Amount"
+              fullWidth
+              variant="outlined"
+              value={formik.values.expence_amount}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={
+                formik.touched.expence_amount &&
+                Boolean(formik.errors.expence_amount)
+              }
+              helperText={
+                formik.touched.expence_amount && formik.errors.expence_amount
+              }
+            />
+            <TextField
+              id="comment"
+              name="expence_comment"
+              label="Comments"
+              fullWidth
+              variant="outlined"
+              value={formik.values.expence_comment}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={
+                formik.touched.expence_comment &&
+                Boolean(formik.errors.expence_comment)
+              }
+              helperText={
+                formik.touched.expence_comment && formik.errors.expence_comment
+              }
+            />
+            <DialogActions>
+              <Button color="error" onClick={close}>
+                Cancel
+              </Button>
+              <Button color="success" type="submit">
+                Save
+              </Button>
+            </DialogActions>
+          </form>
+        </Box>
       </DialogContent>
-      <DialogActions>
-        <Button color="error" onClick={handleClose3}>
-          Cancel
-        </Button>
-        <Button color="success" onClick={edit._id ? handleUpdate : handleSave}>
-          Save
-        </Button>
-      </DialogActions>
     </Dialog>
   );
 }

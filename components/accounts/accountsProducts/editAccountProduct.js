@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -7,7 +7,17 @@ import {
   Button,
   TextField,
 } from "@mui/material";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 import axios from "axios";
+
+// Validation schema
+const validationSchema = Yup.object({
+  product_name: Yup.string().required("Product name is required."),
+  quantity: Yup.number()
+    .required("Quantity is required.")
+    .min(1, "Quantity must be at least 1"),
+});
 
 export default function EditProductAccount({
   open,
@@ -15,19 +25,34 @@ export default function EditProductAccount({
   productAccount,
   refresh,
 }) {
-  console.log("productAccount", productAccount);
-
-  const [formData, setFormData] = useState({
-    id: productAccount?._id || "",
-    product_id: productAccount?._id || "",
-    product_name: productAccount?.product_name || "",
-    product_price: productAccount?.product_price || 0,
-    quantity: productAccount?.quantity || 0,
-    total_amount: productAccount?.total_amount || 0,
+  const formik = useFormik({
+    initialValues: {
+      id: productAccount?._id || "",
+      product_id: productAccount?._id || "",
+      product_name: productAccount?.product_name || "",
+      product_price: productAccount?.product_price || 0,
+      quantity: productAccount?.quantity || 0,
+      total_amount:
+        (parseInt(productAccount?.quantity) || 0) *
+          (parseInt(productAccount?.product_price) || 0) || 0,
+    },
+    validationSchema: validationSchema,
+    onSubmit: async (values) => {
+      try {
+        await axios.put(
+          `${process.env.NEXT_PUBLIC_API_URL}/productAccounts/PUTProductAccount`,
+          values
+        );
+        refresh();
+        onClose();
+      } catch (error) {
+        console.error("Error updating product account:", error);
+      }
+    },
   });
 
   useEffect(() => {
-    setFormData({
+    formik.setValues({
       id: productAccount?._id || "",
       product_id: productAccount?._id || "",
       product_name: productAccount?.product_name || "",
@@ -39,83 +64,63 @@ export default function EditProductAccount({
     });
   }, [productAccount]);
 
-  console.log("formData", formData);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    const updatedFormData = {
-      ...formData,
-      [name]: value,
-    };
-
-    // Recalculate the total amount if quantity changes
-    if (name === "quantity") {
-      updatedFormData.total_amount = parseInt(value) * formData.product_price;
-    }
-
-    setFormData(updatedFormData);
-  };
-
-  const handleSubmit = async () => {
-    try {
-      await axios.put(
-        `${process.env.NEXT_PUBLIC_API_URL}/productAccounts/PUTProductAccount`,
-        formData
-      );
-      refresh();
-      onClose();
-    } catch (error) {
-      console.error("Error updating product account:", error);
-    }
-  };
-
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>Edit Product Account</DialogTitle>
-      <DialogContent>
-        <TextField
-          margin="dense"
-          label="Product Name"
-          name="product_name"
-          value={formData.product_name}
-          onChange={handleChange}
-          fullWidth
-          // disabled
-        />
-        <TextField
-          margin="dense"
-          label="Product Price"
-          name="product_price"
-          value={formData.product_price}
-          onChange={handleChange}
-          fullWidth
-          disabled
-        />
-        <TextField
-          margin="dense"
-          label="Quantity"
-          name="quantity"
-          type="number"
-          value={formData.quantity}
-          onChange={handleChange}
-          fullWidth
-        />
-        <TextField
-          margin="dense"
-          label="Total Amount"
-          name="total_amount"
-          value={formData.total_amount}
-          onChange={handleChange}
-          fullWidth
-          disabled
-        />
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={handleSubmit} color="primary">
-          Save
-        </Button>
-      </DialogActions>
+      <form onSubmit={formik.handleSubmit}>
+        <DialogContent>
+          <TextField
+            margin="dense"
+            label="Product Name"
+            name="product_name"
+            value={formik.values.product_name}
+            onChange={formik.handleChange}
+            fullWidth
+            error={
+              formik.touched.product_name && Boolean(formik.errors.product_name)
+            }
+            helperText={
+              formik.touched.product_name && formik.errors.product_name
+            }
+          />
+          <TextField
+            margin="dense"
+            label="Product Price"
+            name="product_price"
+            value={formik.values.product_price}
+            onChange={formik.handleChange}
+            fullWidth
+            disabled
+          />
+          <TextField
+            margin="dense"
+            label="Quantity"
+            name="quantity"
+            type="number"
+            value={formik.values.quantity}
+            onChange={formik.handleChange}
+            fullWidth
+            error={formik.touched.quantity && Boolean(formik.errors.quantity)}
+            helperText={formik.touched.quantity && formik.errors.quantity}
+            inputProps={{ min: 1 }}
+          />
+          <TextField
+            margin="dense"
+            label="Total Amount"
+            name="total_amount"
+            value={formik.values.total_amount}
+            onChange={formik.handleChange}
+            fullWidth
+            disabled
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={onClose}>Cancel</Button>
+          <Button type="submit" color="primary">
+            Save
+          </Button>
+        </DialogActions>
+      </form>
     </Dialog>
   );
 }

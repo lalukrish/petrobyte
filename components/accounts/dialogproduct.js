@@ -11,11 +11,14 @@ import {
   Stack,
   InputLabel,
   FormControl,
+  FormHelperText,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import axios from "axios";
 import moment from "moment";
+import { Formik, Field, FieldArray, Form } from "formik";
+import * as Yup from "yup";
 
 export default function ProductsNew({ close, refresh }) {
   const todayDate = moment().format("DD/MM/YYYY");
@@ -23,15 +26,6 @@ export default function ProductsNew({ close, refresh }) {
   const handleClose2 = () => close();
 
   const [products, setProducts] = useState([]);
-  const [rows, setRows] = useState([
-    {
-      date: todayDate,
-      product_name: "",
-      product_price: "",
-      quantity: "1",
-      total_amount: "",
-    },
-  ]);
 
   useEffect(() => {
     axios
@@ -46,78 +40,57 @@ export default function ProductsNew({ close, refresh }) {
       });
   }, []);
 
-  const handleAddClick = () => {
-    setRows([
-      ...rows,
+  const validationSchema = Yup.object({
+    rows: Yup.array().of(
+      Yup.object().shape({
+        date: Yup.string().required("Date is required"),
+        product_id: Yup.string().required("Product is required"),
+        product_name: Yup.string().required("Product name is required"),
+        product_price: Yup.number().required("Product price is required"),
+        quantity: Yup.number()
+          .min(1, "Quantity must be at least 1")
+          .required("Quantity is required"),
+        total_amount: Yup.number().required("Total amount is required"),
+      })
+    ),
+  });
+
+  const initialValues = {
+    rows: [
       {
         date: todayDate,
+        product_id: "",
         product_name: "",
         product_price: "",
         quantity: "1",
         total_amount: "",
       },
-    ]);
+    ],
   };
 
-  const handleRemoveClick = (index) => {
-    if (rows.length === 1) return;
-    setRows(rows.filter((_, i) => i !== index));
-  };
-
-  const handleChange = (index, field, value) => {
-    console.log();
-    const updatedRows = [...rows];
-    if (field === "product_id") {
-      const selectedProduct = products.find(
-        (product) => product.product_id === value
-      );
-      console.log("selectedProduct", selectedProduct);
-      updatedRows[index].product_name = selectedProduct.product_name;
-      updatedRows[index].product_price = selectedProduct.price;
-      updatedRows[index].total_amount =
-        selectedProduct.price * updatedRows[index].quantity;
-    } else {
-      updatedRows[index][field] = value;
-      if (field === "quantity") {
-        updatedRows[index].total_amount =
-          updatedRows[index].product_price * value;
-      }
-    }
-    setRows(updatedRows);
-  };
-
-  const handleSave = () => {
-    const validRows = rows.filter(
-      (row) => row.product_name && row.quantity && row.total_amount
+  const handleProductChange = (formik, index, value) => {
+    const selectedProduct = products.find(
+      (product) => product.product_id === value
     );
-    if (validRows.length === 0) {
-      alert("Please fill in at least one product completely.");
-      return;
-    }
-    console.log("validRows", validRows);
-    axios
-      .post(
-        `${process.env.NEXT_PUBLIC_API_URL}/productAccounts/POSTProductAccount`,
-        validRows
-      )
-      .then((response) => {
-        alert(response.data.message);
-        setRows([
-          {
-            date: todayDate,
-            product_name: "",
-            quantity: "1",
-            product_price: "",
-            total_amount: "",
-          },
-        ]);
-        refresh();
-        close();
-      })
-      .catch((error) => {
-        alert("There was an error saving the products.");
-        console.error(error);
-      });
+
+    formik.setFieldValue(`rows.${index}.product_id`, value);
+    formik.setFieldValue(
+      `rows.${index}.product_name`,
+      selectedProduct.product_name
+    );
+    formik.setFieldValue(`rows.${index}.product_price`, selectedProduct.price);
+    formik.setFieldValue(
+      `rows.${index}.total_amount`,
+      selectedProduct.price * formik.values.rows[index].quantity
+    );
+  };
+
+  const handleQuantityChange = (formik, index, value) => {
+    formik.setFieldValue(`rows.${index}.quantity`, value);
+    formik.setFieldValue(
+      `rows.${index}.total_amount`,
+      formik.values.rows[index].product_price * value
+    );
   };
 
   return (
@@ -129,83 +102,168 @@ export default function ProductsNew({ close, refresh }) {
       aria-labelledby="responsive-dialog-title"
     >
       <DialogTitle id="responsive-dialog-title">Products Details</DialogTitle>
-      <DialogContent sx={{ height: 600 }}>
-        {rows.map((row, index) => (
-          <Stack
-            key={index}
-            spacing={2}
-            direction="row"
-            sx={{ padding: "10px" }}
-          >
-            <FormControl fullWidth>
-              <InputLabel id={`select-label-${index}`}>Products</InputLabel>
-              <Select
-                labelId={`select-label-${index}`}
-                id={`select-${index}`}
-                value={row.product_id}
-                label="Products"
-                onChange={(event) =>
-                  handleChange(index, "product_id", event.target.value)
-                }
-              >
-                {products.map((product) => (
-                  <MenuItem key={product.product_id} value={product.product_id}>
-                    {product.product_name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <TextField
-              label="Price"
-              variant="outlined"
-              value={row.product_price}
-              disabled
-            />
-            <TextField
-              id={`outlined-number-${index}`}
-              label="Qty"
-              type="number"
-              value={row.quantity}
-              onChange={(event) =>
-                handleChange(index, "quantity", event.target.value)
-              }
-              InputLabelProps={{
-                shrink: true,
-              }}
-              inputProps={{
-                min: 1,
-              }}
-            />
-            <TextField
-              id={`total-${index}`}
-              label="Total"
-              fullWidth
-              variant="outlined"
-              value={row.total_amount}
-              disabled
-            />
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={(values, { resetForm }) => {
+          const validRows = values.rows.filter(
+            (row) => row.product_name && row.quantity && row.total_amount
+          );
+          if (validRows.length === 0) {
+            alert("Please fill in at least one product completely.");
+            return;
+          }
+          console.log("validRows", validRows);
+          axios
+            .post(
+              `${process.env.NEXT_PUBLIC_API_URL}/productAccounts/POSTProductAccount`,
+              validRows
+            )
+            .then((response) => {
+              alert(response.data.message);
+              resetForm();
+              refresh();
+              close();
+            })
+            .catch((error) => {
+              alert("There was an error saving the products.");
+              console.error(error);
+            });
+        }}
+      >
+        {(formik) => (
+          <Form>
+            <DialogContent sx={{ height: 600 }}>
+              <FieldArray
+                name="rows"
+                render={({ push, remove }) => (
+                  <>
+                    {formik.values.rows.map((row, index) => (
+                      <Stack
+                        key={index}
+                        spacing={2}
+                        direction="row"
+                        sx={{ padding: "10px" }}
+                      >
+                        <FormControl
+                          fullWidth
+                          error={
+                            formik.touched.rows?.[index]?.product_id &&
+                            Boolean(formik.errors.rows?.[index]?.product_id)
+                          }
+                        >
+                          <InputLabel id={`select-label-${index}`}>
+                            Products
+                          </InputLabel>
+                          <Select
+                            labelId={`select-label-${index}`}
+                            id={`select-${index}`}
+                            value={row.product_id}
+                            label="Products"
+                            onChange={(event) =>
+                              handleProductChange(
+                                formik,
+                                index,
+                                event.target.value
+                              )
+                            }
+                          >
+                            {products.map((product) => (
+                              <MenuItem
+                                key={product.product_id}
+                                value={product.product_id}
+                              >
+                                {product.product_name}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                          {formik.touched.rows?.[index]?.product_id &&
+                            formik.errors.rows?.[index]?.product_id && (
+                              <FormHelperText>
+                                {formik.errors.rows?.[index]?.product_id}
+                              </FormHelperText>
+                            )}
+                        </FormControl>
+                        <TextField
+                          label="Price"
+                          variant="outlined"
+                          value={row.product_price}
+                          disabled
+                        />
+                        <TextField
+                          id={`outlined-number-${index}`}
+                          label="Qty"
+                          type="number"
+                          value={row.quantity}
+                          onChange={(event) =>
+                            handleQuantityChange(
+                              formik,
+                              index,
+                              event.target.value
+                            )
+                          }
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          inputProps={{
+                            min: 1,
+                          }}
+                          error={
+                            formik.touched.rows?.[index]?.quantity &&
+                            Boolean(formik.errors.rows?.[index]?.quantity)
+                          }
+                          helperText={
+                            formik.touched.rows?.[index]?.quantity &&
+                            formik.errors.rows?.[index]?.quantity
+                          }
+                        />
+                        <TextField
+                          id={`total-${index}`}
+                          label="Total"
+                          fullWidth
+                          variant="outlined"
+                          value={row.total_amount}
+                          disabled
+                        />
 
-            {rows.length > 1 && (
-              <Button onClick={() => handleRemoveClick(index)}>
-                <RemoveIcon color="error" />
+                        {formik.values.rows.length > 1 && (
+                          <Button onClick={() => remove(index)}>
+                            <RemoveIcon color="error" />
+                          </Button>
+                        )}
+                        {index === formik.values.rows.length - 1 && (
+                          <Button
+                            onClick={() =>
+                              push({
+                                date: todayDate,
+                                product_id: "",
+                                product_name: "",
+                                product_price: "",
+                                quantity: "1",
+                                total_amount: "",
+                              })
+                            }
+                          >
+                            <AddIcon color="success" />
+                          </Button>
+                        )}
+                      </Stack>
+                    ))}
+                  </>
+                )}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button color="error" onClick={handleClose2}>
+                Cancel
               </Button>
-            )}
-            {index === rows.length - 1 && (
-              <Button onClick={handleAddClick}>
-                <AddIcon color="success" />
+              <Button color="success" type="submit">
+                Save
               </Button>
-            )}
-          </Stack>
-        ))}
-      </DialogContent>
-      <DialogActions>
-        <Button color="error" onClick={handleClose2}>
-          Cancel
-        </Button>
-        <Button color="success" onClick={handleSave}>
-          Save
-        </Button>
-      </DialogActions>
+            </DialogActions>
+          </Form>
+        )}
+      </Formik>
     </Dialog>
   );
 }
