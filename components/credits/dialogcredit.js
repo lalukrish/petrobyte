@@ -136,7 +136,7 @@ export default function CreditNew({ fullscreenclose,close, refresh, data, curren
 
       let putCreditData = {
         id: ccName,
-        credit_amount: parseFloat(totalUpdatedAmount),
+        credit_amount: parseFloat(totalUpdatedAmount).toFixed(2),
       };
 
       axios
@@ -157,7 +157,7 @@ export default function CreditNew({ fullscreenclose,close, refresh, data, curren
 
       let putCreditData = {
         id: ccName,
-        credit_amount: parseFloat(totalUpdatedAmount),
+        credit_amount: parseFloat(totalUpdatedAmount).toFixed(2),
       };
 
       axios
@@ -210,7 +210,7 @@ export default function CreditNew({ fullscreenclose,close, refresh, data, curren
 
       let putCreditData = {
         id: data.cc_id._id,
-        credit_amount: parseFloat(totalUpdatedAmount),
+        credit_amount: parseFloat(totalUpdatedAmount).toFixed(2),
       };
 
       axios
@@ -241,7 +241,7 @@ export default function CreditNew({ fullscreenclose,close, refresh, data, curren
 
       let putCreditData = {
         id: data.cc_id._id,
-        credit_amount: parseFloat(totalUpdatedAmount),
+        credit_amount: parseFloat(totalUpdatedAmount).toFixed(2),
       };
 
       axios

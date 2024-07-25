@@ -79,10 +79,10 @@ export default function DispencerNew({
     onSubmit: (values) => {
       const dispencerData = values.fields.map((field) => ({
         ...(edit && { id: edit._id }),
-        dispencer_name: values.dispencer,
+        dispencer_name: values.dispencer.toUpperCase(),
         sub_dispencer_id: field.sub_dispencer_id,
         live_reading: field.live_reading,
-      }));
+      }));  
 
       const request = edit
         ? axios.put(
@@ -96,12 +96,12 @@ export default function DispencerNew({
 
       request
         .then((response) => {
-          handleShowAlert("success", "Dispencer saved successfully!");
+          handleShowAlert("success", response.data.message);
           refreshDispencer();
           close();
         })
         .catch((err) => {
-          handleShowAlert("error", "some error occured!");
+          handleShowAlert("error","Dispenser is alread exists..!");
           close();
         });
     },
