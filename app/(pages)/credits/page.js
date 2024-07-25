@@ -35,7 +35,6 @@ export default function Page() {
   const [refreshCreditors, setRefreshCreditors] = useState(false);
   const [search, setSearch] = React.useState("");
 
-
   useEffect(() => {
     axios
       .get(

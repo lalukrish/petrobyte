@@ -16,9 +16,12 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import moment from "moment";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
+import "moment/locale/en-gb";
 require("dotenv").config();
 
-export default function CreditNew({ close, refresh, data, currentAmount }) {
+export default function CreditNew({ fullscreenclose,close, refresh, data, currentAmount }) {
   console.log("currentAmount", currentAmount);
   const [ccName, setCcName] = React.useState(data ? data.cc_id?._id : "");
   const [vehicleNo, setVehicleNo] = React.useState(data ? data.vehicle_no : "");
@@ -35,6 +38,9 @@ export default function CreditNew({ close, refresh, data, currentAmount }) {
   const [fuelList, setFuelList] = React.useState([]);
   const [employeeList, setEmployeeList] = React.useState([]);
   const [rates, setRates] = React.useState({});
+  const [selectedDate, setSelectedDate] = React.useState(
+    moment().format("DD/MM/YYYY")
+  );
 
   const fetchFuels = () => {
     axios
@@ -96,8 +102,6 @@ export default function CreditNew({ close, refresh, data, currentAmount }) {
     }
   }, [amountType]);
 
-  const datePart = moment().format("DD/MM/YYYY");
-
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
@@ -107,7 +111,7 @@ export default function CreditNew({ close, refresh, data, currentAmount }) {
 
   const handelSave = async () => {
     let creditData = {
-      date: datePart,
+      date: moment(selectedDate, "DD/MM/YYYY").format("DD/MM/YYYY"),
       cc_id: ccName._id,
       vehicle_no: vehicleNo,
       fuel_type: fuel ? fuel : null,
@@ -173,7 +177,7 @@ export default function CreditNew({ close, refresh, data, currentAmount }) {
   const handleUpdate = async () => {
     let updateData = {
       id: data._id,
-      date: datePart,
+      date: moment(selectedDate, "DD/MM/YYYY").format("DD/MM/YYYY"),
       cc_id: ccName._id,
       vehicle_no: vehicleNo,
       fuel_type: fuel ? fuel : null,
@@ -214,7 +218,12 @@ export default function CreditNew({ close, refresh, data, currentAmount }) {
           `${process.env.NEXT_PUBLIC_API_URL}/creditcustomer/updateCreditAmount`,
           putCreditData
         )
-        .then((response) => alert(response.data.message))
+        .then((response) => {
+          alert(response.data.message);
+          refresh();
+          close();
+          fullscreenclose()
+        })
         .catch(() => alert(`Something went wrong, at update amount in credit`));
     }
 
@@ -240,11 +249,15 @@ export default function CreditNew({ close, refresh, data, currentAmount }) {
           `${process.env.NEXT_PUBLIC_API_URL}/creditcustomer/updateCreditAmount`,
           putCreditData
         )
-        .then((response) => alert(response.data.message))
+        .then((response) => {
+          alert(response.data.message);
+          refresh();
+          close();
+          fullscreenclose()
+        })
+
         .catch(() => alert(`Something went wrong, at update amount in debit`));
     }
-    refresh();
-    close();
   };
 
   return (
@@ -259,6 +272,16 @@ export default function CreditNew({ close, refresh, data, currentAmount }) {
       </DialogTitle>
       <DialogContent>
         <Stack spacing={2} sx={{ width: "400px", padding: "5px" }}>
+          <LocalizationProvider dateAdapter={AdapterMoment} locale="en-gb">
+            <DatePicker
+              label="Date"
+              value={moment(selectedDate, "DD/MM/YYYY")}
+              onChange={(newValue) => setSelectedDate(newValue)}
+              renderInput={(params) => <TextField {...params} />}
+              inputFormat="DD/MM/YYYY"
+              disableFuture
+            />
+          </LocalizationProvider>
           <FormControl fullWidth>
             <InputLabel id="demo-simple-select-label">Name</InputLabel>
             <Select

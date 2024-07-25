@@ -84,7 +84,7 @@ export default function TestTable() {
     } catch (error) {
       console.error("There was an error deleting the data!", error);
     }
-
+    console.log(data)
   };
 
   return (
