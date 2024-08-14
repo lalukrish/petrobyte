@@ -82,14 +82,15 @@ const MediumDialog = ({ open, handleClose, data, refresh }) => {
       )
       .then((response) => {
         alert(response.data.message);
-        refresh()
-        handleClose()
+        refresh();
+        handleClose();
       })
       .catch(() => alert(`Something Went Wrong at individual`));
   };
 
   //abhi extended pdf
   const generateBillPDF = async (history) => {
+    console.log("object", history);
     const pdf = new jsPDF("p", "mm", "a4");
 
     // Load the image from the public folder
@@ -121,17 +122,21 @@ const MediumDialog = ({ open, handleClose, data, refresh }) => {
     pdf.setFontSize(10);
     pdf.text("Invoice To:", 10, headerHeight + 20);
     pdf.setFont("helvetica", "normal"); // Set text back to normal
-    pdf.text(`Name: ${history.cc_id?.cc_name}`, 10, headerHeight + 25);
-    pdf.text(`Address: ${history.cc_id?.cc_address}`, 10, headerHeight + 30);
-    pdf.text(`Contact: ${history.cc_id?.cc_contact_no}`, 10, headerHeight + 35);
-    pdf.text(`Email: ${history.cc_id?.cc_email}`, 10, headerHeight + 40);
+    pdf.text(`Name: ${history?.cc_id?.cc_name}`, 10, headerHeight + 25);
+    pdf.text(`Address: ${history?.cc_id?.cc_address}`, 10, headerHeight + 30);
+    pdf.text(
+      `Contact: ${history?.cc_id?.cc_contact_no}`,
+      10,
+      headerHeight + 35
+    );
+    pdf.text(`Email: ${history?.cc_id?.cc_email}`, 10, headerHeight + 40);
 
     // Add invoice details
     pdf.setFont("helvetica", "bold"); // Set text to bold
     pdf.text("Invoice Details:", 10, headerHeight + 50);
     pdf.setFont("helvetica", "normal"); // Set text back to normal
-    pdf.text(`Date: ${history.date}`, 10, headerHeight + 55);
-    pdf.text(`Vehicle No: ${history.vehicle_no}`, 10, headerHeight + 60);
+    pdf.text(`Date: ${history?.date}`, 10, headerHeight + 55);
+    pdf.text(`Vehicle No: ${history?.vehicle_no}`, 10, headerHeight + 60);
     pdf.text(`Ref No: 7288273783181`, 10, headerHeight + 65);
 
     // Add a table for the transaction details
@@ -148,10 +153,10 @@ const MediumDialog = ({ open, handleClose, data, refresh }) => {
     pdf.line(10, headerHeight + 77, 200, headerHeight + 77);
 
     pdf.setFont("helvetica", "normal"); // Set text back to normal
-    pdf.text(history.fuel_type?.fuel_name, 15, headerHeight + 85);
-    pdf.text(String(history.fuel_quantity), 65, headerHeight + 85);
-    pdf.text(String(history.amount), 115, headerHeight + 85);
-    pdf.text(String(history.amount_type), 165, headerHeight + 85);
+    pdf.text(history?.fuel_type?.fuel_name, 15, headerHeight + 85);
+    pdf.text(String(history?.fuel_quantity), 65, headerHeight + 85);
+    pdf.text(String(history?.amount), 115, headerHeight + 85);
+    pdf.text(String(history?.amount_type), 165, headerHeight + 85);
 
     pdf.line(10, headerHeight + 90, 200, headerHeight + 90);
 
@@ -449,16 +454,16 @@ const MediumDialog = ({ open, handleClose, data, refresh }) => {
       {isEditOpen && (
         <CreditorsDetailsNew
           close={handleEditClose}
-          refresh={()=>refresh()} // You might want to adjust this based on your refresh logic
+          refresh={() => refresh()} // You might want to adjust this based on your refresh logic
           data={data}
         />
       )}
 
       {editCreditHistory && (
         <CreditNew
-          fullscreenclose={()=>handleClose()}
+          fullscreenclose={() => handleClose()}
           close={handleEditCreditHistoryClose}
-          refresh={()=>refresh()} // You might want to adjust this based on your refresh logic
+          refresh={() => refresh()} // You might want to adjust this based on your refresh logic
           data={creditData}
           currentAmount={data?.credit_amount}
         />

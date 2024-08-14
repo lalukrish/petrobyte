@@ -15,12 +15,20 @@ import {
   InputLabel,
   IconButton,
   Divider,
+  Grid,
+  InputAdornment,
 } from "@mui/material";
 import { Add, Remove } from "@mui/icons-material";
 import axios from "axios";
 import moment from "moment";
 import * as Yup from "yup";
 import { useFormik } from "formik";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
+import dayjs from "dayjs";
+
 require("dotenv").config();
 
 export default function FuelNew({ close, setAlert }) {
@@ -29,7 +37,8 @@ export default function FuelNew({ close, setAlert }) {
     { name: "", subRows: [] },
   ]);
   const [fuelData, setFuelData] = useState({});
-  const date = moment().format("DD/MM/YYYY");
+  const [date, setDate] = useState();
+  // const date = moment().format("DD/MM/YYYY");
 
   // Validation Schema
   const validationSchema = Yup.object().shape({
@@ -37,26 +46,26 @@ export default function FuelNew({ close, setAlert }) {
     bank: Yup.number().required("Bank is required"),
     hpCard: Yup.number().required("HP Card is required"),
     totalSaleAmount: Yup.number().required("Total Sale Amount is required"),
-    fuelData: Yup.object().shape(
-      selectedDispencers.reduce((acc, dispencer) => {
-        dispencer.subRows.forEach((type) => {
-          acc[type.sub_dispencer_id._id] = Yup.object().shape({
-            //   start: Yup.number().required("Start Metering is required"),
-            end: Yup.number()
-              .required("End Metering is required")
-              .test(
-                "is-greater-than-start",
-                "End Metering must be greater than Start Metering",
-                function (value) {
-                  const { start } = this.parent;
-                  return value > start;
-                }
-              ),
-          });
-        });
-        return acc;
-      }, {})
-    ),
+    // fuelData: Yup.object().shape(
+    //   selectedDispencers.reduce((acc, dispencer) => {
+    //     dispencer.subRows.forEach((type) => {
+    //       acc[type.sub_dispencer_id._id] = Yup.object().shape({
+    //         //   start: Yup.number().required("Start Metering is required"),
+    //         end: Yup.number()
+    //           .required("End Metering is required")
+    //           .test(
+    //             "is-greater-than-start",
+    //             "End Metering must be greater than Start Metering",
+    //             function (value) {
+    //               const { start } = this.parent;
+    //               return value > start;
+    //             }
+    //           ),
+    //       });
+    //     });
+    //     return acc;
+    //   }, {})
+    // ),
   });
 
   const formik = useFormik({
@@ -286,19 +295,49 @@ export default function FuelNew({ close, setAlert }) {
         <Divider />
         <DialogContent>
           <Typography variant="h6">Fuel Data</Typography>
-          <Stack spacing={2}>
+          <Grid>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DemoContainer components={["DatePicker"]}>
+                <DatePicker
+                  label="Date"
+                  value={date ? dayjs(date, "DD/MM/YYYY") : null}
+                  sx={{
+                    width: "100%",
+                    ".MuiOutlinedInput-root": {
+                      "& fieldset": {
+                        borderColor: "#0d47a1",
+                      },
+                      "&:hover fieldset": {
+                        borderColor: "#0d47a1",
+                      },
+                      "&.Mui-focused fieldset": {
+                        borderColor: "#0d47a1",
+                      },
+                    },
+                    ".MuiInputAdornment-root .MuiSvgIcon-root": {
+                      color: "#0d47a1",
+                    },
+                  }}
+                  format="DD/MM/YYYY"
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <CalendarTodayIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                  onChange={(date) => {
+                    setDate(dayjs(date).format("DD/MM/YYYY"));
+                  }}
+                />
+              </DemoContainer>
+            </LocalizationProvider>
+          </Grid>
+          <Stack spacing={2} sx={{ mt: 2 }}>
             {selectedDispencers.map((dispencer, index) => (
               <Box key={index}>
                 <Stack direction="row" spacing={2} alignItems="center">
                   <FormControl sx={{ flex: 1 }}>
-                    <TextField
-                      type="date"
-                      label="Date"
-                      value={date}
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                    />
                     <InputLabel>Dispenser</InputLabel>
                     <Select
                       value={dispencer.name}

@@ -12,6 +12,7 @@ import {
   MenuItem,
   Stack,
   Box,
+  Grid,
 } from "@mui/material";
 import { useFormik } from "formik";
 import axios from "axios";
@@ -81,92 +82,108 @@ export default function ExpenseNew({ close, refresh, edit }) {
       aria-labelledby="responsive-dialog-title"
     >
       <DialogTitle id="responsive-dialog-title">Expense Details</DialogTitle>
-      <DialogContent sx={{ padding: "5px", margin: "5px", gap: "2" }}>
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+      <DialogContent sx={{ padding: "5px", margin: "5px", gap: 2 }}>
+        <Box sx={{ flexDirection: "column" }}>
           <form onSubmit={formik.handleSubmit}>
-            <FormControl fullWidth>
-              <InputLabel id="expense-type-label">Expense Type</InputLabel>
-              <Select
-                labelId="expense-type-label"
-                id="expense-type-select"
-                name="expence_type"
-                value={formik.values.expence_type}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                label="Expense Type"
-                error={
-                  formik.touched.expence_type &&
-                  Boolean(formik.errors.expence_type)
-                }
-              >
-                {["Salary", "Maintainence", "Bills", "Others"].map(
-                  (option, index) => (
-                    <MenuItem key={index} value={option}>
-                      {option}
-                    </MenuItem>
-                  )
-                )}
-              </Select>
-              {formik.touched.expence_type && formik.errors.expence_type && (
-                <div style={{ color: "red", marginTop: "5px" }}>
-                  {formik.errors.expence_type}
-                </div>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <FormControl fullWidth>
+                  <InputLabel id="expense-type-label">Expense Type</InputLabel>
+                  <Select
+                    labelId="expense-type-label"
+                    id="expense-type-select"
+                    name="expence_type"
+                    value={formik.values.expence_type}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    label="Expense Type"
+                    error={
+                      formik.touched.expence_type &&
+                      Boolean(formik.errors.expence_type)
+                    }
+                  >
+                    {["Salary", "Maintainence", "Bills", "Others"].map(
+                      (option, index) => (
+                        <MenuItem key={index} value={option}>
+                          {option}
+                        </MenuItem>
+                      )
+                    )}
+                  </Select>
+                  {formik.touched.expence_type &&
+                    formik.errors.expence_type && (
+                      <div style={{ color: "red", marginTop: "5px" }}>
+                        {formik.errors.expence_type}
+                      </div>
+                    )}
+                </FormControl>
+              </Grid>
+
+              {formik.values.expence_type === "Salary" && (
+                <Grid item xs={12}>
+                  <FormControl fullWidth>
+                    <InputLabel id="employee-label">Employee</InputLabel>
+                    <Select
+                      labelId="employee-label"
+                      id="employee-select"
+                      name="emp_id"
+                      value={formik.values.emp_id}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      label="Employee"
+                    >
+                      {allEmployee.map((option, index) => (
+                        <MenuItem key={index} value={option._id}>
+                          {option.emp_name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
               )}
-            </FormControl>
-            {formik.values.expence_type === "Salary" && (
-              <FormControl fullWidth>
-                <InputLabel id="employee-label">Employee</InputLabel>
-                <Select
-                  labelId="employee-label"
-                  id="employee-select"
-                  name="emp_id"
-                  value={formik.values.emp_id}
+
+              <Grid item xs={12}>
+                <TextField
+                  id="amount"
+                  name="expence_amount"
+                  label="Amount"
+                  fullWidth
+                  variant="outlined"
+                  value={formik.values.expence_amount}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  label="Employee"
-                >
-                  {allEmployee.map((option, index) => (
-                    <MenuItem key={index} value={option._id}>
-                      {option.emp_name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            )}
-            <TextField
-              id="amount"
-              name="expence_amount"
-              label="Amount"
-              fullWidth
-              variant="outlined"
-              value={formik.values.expence_amount}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={
-                formik.touched.expence_amount &&
-                Boolean(formik.errors.expence_amount)
-              }
-              helperText={
-                formik.touched.expence_amount && formik.errors.expence_amount
-              }
-            />
-            <TextField
-              id="comment"
-              name="expence_comment"
-              label="Comments"
-              fullWidth
-              variant="outlined"
-              value={formik.values.expence_comment}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={
-                formik.touched.expence_comment &&
-                Boolean(formik.errors.expence_comment)
-              }
-              helperText={
-                formik.touched.expence_comment && formik.errors.expence_comment
-              }
-            />
+                  error={
+                    formik.touched.expence_amount &&
+                    Boolean(formik.errors.expence_amount)
+                  }
+                  helperText={
+                    formik.touched.expence_amount &&
+                    formik.errors.expence_amount
+                  }
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <TextField
+                  id="comment"
+                  name="expence_comment"
+                  label="Comments"
+                  fullWidth
+                  variant="outlined"
+                  value={formik.values.expence_comment}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  error={
+                    formik.touched.expence_comment &&
+                    Boolean(formik.errors.expence_comment)
+                  }
+                  helperText={
+                    formik.touched.expence_comment &&
+                    formik.errors.expence_comment
+                  }
+                />
+              </Grid>
+            </Grid>
             <DialogActions>
               <Button color="error" onClick={close}>
                 Cancel
