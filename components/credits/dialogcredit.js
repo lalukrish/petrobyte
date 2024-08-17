@@ -7,6 +7,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import {
+  Box,
   FormControl,
   InputLabel,
   MenuItem,
@@ -261,17 +262,18 @@ export default function CreditNew({ fullscreenclose,close, refresh, data, curren
   };
 
   return (
-    <Dialog
-      fullScreen={fullScreen}
-      open={true}
-      onClose={handleClose}
-      aria-labelledby="responsive-dialog-title"
+    <Box
+      // fullScreen={fullScreen}
+      // open={true}
+      // onClose={handleClose}
+      // aria-labelledby="responsive-dialog-title"
+    
     >
-      <DialogTitle id="responsive-dialog-title">
+      {/* <DialogTitle id="responsive-dialog-title">
         {data ? `Edit Credit` : `New Credit`}
-      </DialogTitle>
-      <DialogContent>
-        <Stack spacing={2} sx={{ width: "400px", padding: "5px" }}>
+      </DialogTitle> */}
+      {/* <DialogContent> */}
+        <Stack spacing={2} sx={{ width: "400px" }}>
           <LocalizationProvider dateAdapter={AdapterMoment} locale="en-gb">
             <DatePicker
               label="Date"
@@ -370,15 +372,15 @@ export default function CreditNew({ fullscreenclose,close, refresh, data, curren
             </Select>
           </FormControl>
         </Stack>
-      </DialogContent>
-      <DialogActions>
+      {/* </DialogContent> */}
+      {/* <DialogActions> */}
         <Button color="error" onClick={handleClose}>
           Cancel
         </Button>
         <Button color="success" onClick={data ? handleUpdate : handelSave}>
           {data ? `Save Changes` : `Save`}
         </Button>
-      </DialogActions>
-    </Dialog>
+      {/* </DialogActions> */}
+    </Box>
   );
 }

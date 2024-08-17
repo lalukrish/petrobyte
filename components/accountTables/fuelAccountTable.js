@@ -34,6 +34,7 @@ import dayjs from "dayjs";
 
 import axios from "axios";
 import FullScreenDialog from "../accounts/dialogfullscreen";
+import FuelNewEmployeeClose from "../accounts/dialogfuelemployeeclose";
 const FuelAccountTable = () => {
   const [search, setSearch] = useState("");
   const [fuel, setFuel] = React.useState(false);
@@ -214,7 +215,7 @@ const FuelAccountTable = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      {fuel ? <FuelNew close={handleClosefuel} setAlert={setAlert} /> : null}
+      {fuel ? <FuelNewEmployeeClose close={handleClosefuel} setAlert={setAlert} /> : null}
     </>
   );
 };
