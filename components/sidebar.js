@@ -73,6 +73,11 @@ export default function ResponsiveDrawer() {
       icon: <SpaceDashboardIcon sx={{ color: "#0d47a1" }} />,
     },
     {
+      name: "Closing",
+      link: "/closing",
+      icon: <AccountBalanceWalletIcon sx={{ color: "#0d47a1" }} />,
+    },
+    {
       name: "Accounts",
       link: "/accounts",
       icon: <AccountBalanceWalletIcon sx={{ color: "#0d47a1" }} />,
@@ -149,7 +154,7 @@ export default function ResponsiveDrawer() {
           <Box>
             <BlinkingAlert />
           </Box>
-          <Box sx={{ alignItems: "end" ,}}>
+          <Box sx={{ alignItems: "end" }}>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -160,7 +165,8 @@ export default function ResponsiveDrawer() {
             >
               <AccountCircle />
             </IconButton>
-            <Menu sx={{marginTop:"35px"}}
+            <Menu
+              sx={{ marginTop: "35px" }}
               id="menu-appbar"
               anchorEl={anchorEl}
               anchorOrigin={{ vertical: "top", horizontal: "right" }}
@@ -169,7 +175,6 @@ export default function ResponsiveDrawer() {
               open={Boolean(anchorEl)}
               onClose={handleClose}
             >
-              
               <MenuItem onClick={handleClose}>
                 <b>Log out</b>
               </MenuItem>
@@ -218,7 +223,7 @@ export default function ResponsiveDrawer() {
         component="main"
         sx={{
           flexGrow: 1,
-          p: 3,
+          // p: 3,
           width: { sm: `calc(100% - ${drawerWidth}px)` },
         }}
       >

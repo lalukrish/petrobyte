@@ -35,6 +35,7 @@ import dayjs from "dayjs";
 
 import axios from "axios";
 import FullScreenDialog from "../accounts/dialogfullscreen";
+import FuelNewEmployeeClose from "../accounts/dialogfuelemployeeclose";
 const FuelAccountTable = () => {
   const [search, setSearch] = useState("");
   const [fuel, setFuel] = React.useState(false);
@@ -234,26 +235,8 @@ const FuelAccountTable = () => {
         </Table>
       </TableContainer>
       {fuel ? (
-        <FuelNew
-          close={handleClosefuel}
-          setAlert={setAlert}
-          refresh={handleRefeshExpence}
-        />
+        <FuelNewEmployeeClose close={handleClosefuel} setAlert={setAlert} />
       ) : null}
-      <Snackbar
-        open={alertOpen}
-        autoHideDuration={6000}
-        onClose={handleAlertClose}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }} // Positioning the alert
-      >
-        <Alert
-          onClose={handleAlertClose}
-          severity={alertSeverity}
-          sx={{ width: "100%" }} // Adjust width as needed
-        >
-          {alert.message}
-        </Alert>
-      </Snackbar>
     </>
   );
 };

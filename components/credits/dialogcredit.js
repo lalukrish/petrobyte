@@ -7,7 +7,9 @@ import DialogTitle from "@mui/material/DialogTitle";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import {
+  Box,
   FormControl,
+  Grid,
   InputLabel,
   MenuItem,
   Select,
@@ -21,7 +23,13 @@ import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import "moment/locale/en-gb";
 require("dotenv").config();
 
-export default function CreditNew({ fullscreenclose,close, refresh, data, currentAmount }) {
+export default function CreditNew({
+  fullscreenclose,
+  close,
+  refresh,
+  data,
+  currentAmount,
+}) {
   console.log("currentAmount", currentAmount);
   const [ccName, setCcName] = React.useState(data ? data.cc_id?._id : "");
   const [vehicleNo, setVehicleNo] = React.useState(data ? data.vehicle_no : "");
@@ -222,7 +230,7 @@ export default function CreditNew({ fullscreenclose,close, refresh, data, curren
           alert(response.data.message);
           refresh();
           close();
-          fullscreenclose()
+          fullscreenclose();
         })
         .catch(() => alert(`Something went wrong, at update amount in credit`));
     }
@@ -253,7 +261,7 @@ export default function CreditNew({ fullscreenclose,close, refresh, data, curren
           alert(response.data.message);
           refresh();
           close();
-          fullscreenclose()
+          fullscreenclose();
         })
 
         .catch(() => alert(`Something went wrong, at update amount in debit`));
@@ -261,124 +269,131 @@ export default function CreditNew({ fullscreenclose,close, refresh, data, curren
   };
 
   return (
-    <Dialog
-      fullScreen={fullScreen}
-      open={true}
-      onClose={handleClose}
-      aria-labelledby="responsive-dialog-title"
-    >
-      <DialogTitle id="responsive-dialog-title">
-        {data ? `Edit Credit` : `New Credit`}
-      </DialogTitle>
-      <DialogContent>
-        <Stack spacing={2} sx={{ width: "400px", padding: "5px" }}>
-          <LocalizationProvider dateAdapter={AdapterMoment} locale="en-gb">
-            <DatePicker
-              label="Date"
-              value={moment(selectedDate, "DD/MM/YYYY")}
-              onChange={(newValue) => setSelectedDate(newValue)}
-              renderInput={(params) => <TextField {...params} />}
-              inputFormat="DD/MM/YYYY"
-              disableFuture
-            />
-          </LocalizationProvider>
-          <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Name</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={ccName._id}
-              label="Name"
-              onChange={(event) => setCcName(event.target.value)}
-            >
-              {ccLists.map((cc) => (
-                <MenuItem key={cc._id} value={cc}>
-                  {cc.cc_name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Amount Type</InputLabel>
-            <Select
-              //disabled={!!data}
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={amountType}
-              label="Amount Type"
-              onChange={(event) => setAmountType(event.target.value)}
-            >
-              <MenuItem value="Credit">Credit</MenuItem>
-              <MenuItem value="Debit">Debit</MenuItem>
-            </Select>
-          </FormControl>
-          <TextField
-            disabled={amountType === "Debit"}
-            autoFocus
-            id="outlined-basic"
-            label="Vehicle Number"
-            variant="outlined"
-            value={vehicleNo}
-            onChange={(e) => setVehicleNo(e.target.value)}
+    <Box>
+      <Stack spacing={2} sx={{ width: "500px" }}>
+        <LocalizationProvider dateAdapter={AdapterMoment} locale="en-gb">
+          <DatePicker
+            label="Date"
+            value={moment(selectedDate, "DD/MM/YYYY")}
+            onChange={(newValue) => setSelectedDate(newValue)}
+            renderInput={(params) => <TextField {...params} />}
+            inputFormat="DD/MM/YYYY"
+            disableFuture
           />
-          <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Fuel</InputLabel>
-            <Select
+        </LocalizationProvider>
+
+        <FormControl fullWidth>
+          <InputLabel id="demo-simple-select-label">Name</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={ccName._id}
+            label="Name"
+            onChange={(event) => setCcName(event.target.value)}
+          >
+            {ccLists.map((cc) => (
+              <MenuItem key={cc._id} value={cc}>
+                {cc.cc_name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <Grid container spacing={2}>
+          <Grid item xs={6}>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Amount Type</InputLabel>
+              <Select
+                //disabled={!!data}
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={amountType}
+                label="Amount Type"
+                onChange={(event) => setAmountType(event.target.value)}
+              >
+                <MenuItem value="Credit">Credit</MenuItem>
+                <MenuItem value="Debit">Debit</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
               disabled={amountType === "Debit"}
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={fuel}
-              label="Fuel"
-              onChange={(event) => setFuel(event.target.value)}
-            >
-              {fuelList.map((fuel) => (
-                <MenuItem key={fuel._id} value={fuel._id}>
-                  {fuel.fuel_name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <TextField
-            disabled={amountType === "Debit"}
-            id="outlined-basic"
-            label="Fuel Quantity"
-            variant="outlined"
-            value={fuelQuantity}
-            onChange={(e) => setFuelQuantity(e.target.value)}
-          />
-          <TextField
-            id="outlined-basic"
-            label="Amount"
-            variant="outlined"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-          />
-          <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Employee</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={staff}
-              label="Employee"
-              onChange={(event) => setStaff(event.target.value)}
-            >
-              {employeeList.map((employee) => (
-                <MenuItem key={employee._id} value={employee._id}>
-                  {employee.emp_name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Stack>
-      </DialogContent>
-      <DialogActions>
-        <Button color="error" onClick={handleClose}>
-          Cancel
-        </Button>
-        <Button color="success" onClick={data ? handleUpdate : handelSave}>
-          {data ? `Save Changes` : `Save`}
-        </Button>
-      </DialogActions>
-    </Dialog>
+              autoFocus
+              id="outlined-basic"
+              label="Vehicle Number"
+              variant="outlined"
+              value={vehicleNo}
+              onChange={(e) => setVehicleNo(e.target.value)}
+            />
+          </Grid>
+        </Grid>
+        <Grid container spacing={2}>
+          <Grid item xs={4}>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Fuel</InputLabel>
+              <Select
+                disabled={amountType === "Debit"}
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={fuel}
+                label="Fuel"
+                onChange={(event) => setFuel(event.target.value)}
+              >
+                {fuelList.map((fuel) => (
+                  <MenuItem key={fuel._id} value={fuel._id}>
+                    {fuel.fuel_name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={4}>
+            <TextField
+              disabled={amountType === "Debit"}
+              id="outlined-basic"
+              label="Fuel Quantity"
+              variant="outlined"
+              value={fuelQuantity}
+              onChange={(e) => setFuelQuantity(e.target.value)}
+            />
+          </Grid>
+          <Grid item xs={4}>
+            <TextField
+              id="outlined-basic"
+              label="Amount"
+              variant="outlined"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+            />
+          </Grid>
+        </Grid>
+        <FormControl fullWidth>
+          <InputLabel id="demo-simple-select-label">Employee</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={staff}
+            label="Employee"
+            onChange={(event) => setStaff(event.target.value)}
+          >
+            {employeeList.map((employee) => (
+              <MenuItem key={employee._id} value={employee._id}>
+                {employee.emp_name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Stack>
+      {/* </DialogContent> */}
+      {/* <DialogActions> */}
+      <Button color="error" onClick={handleClose}>
+        Cancel
+      </Button>
+      <Button color="success" onClick={data ? handleUpdate : handelSave}>
+        {data ? `Save Changes` : `Save`}
+      </Button>
+      {/* </DialogActions> */}
+    </Box>
   );
 }
