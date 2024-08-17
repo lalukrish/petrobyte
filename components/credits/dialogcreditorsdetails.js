@@ -8,121 +8,151 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import { Stack, TextField } from "@mui/material";
 import axios from "axios";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 export default function CreditorsDetailsNew({ close, refresh, data }) {
-  const [name, setName] = React.useState(data?.cc_name || "");
-  const [address, setAddress] = React.useState(data?.cc_address || "");
-  const [contact, setContact] = React.useState(data?.cc_contact_no || "");
-  const [email, setEmail] = React.useState(data?.cc_email || "");
-  const [creditAmount, setCreditAmount] = React.useState(data?.credit_amount || "");
-
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
-  const handleClose = () => {
-    close();
-  };
+  const validationSchema = Yup.object({
+    cc_name: Yup.string().required("Name is required"),
+    cc_address: Yup.string().required("Address is required"),
+    cc_contact_no: Yup.string()
+      .required("Contact is required")
+      .matches(/^[0-9]{10}$/, "Contact must be exactly 10 digits"),
+    cc_email: Yup.string().email("Invalid email address"),
+    // .required("Email is required"),
+    // credit_amount: Yup.number()
+    //   .required("Credit amount is required")
+    //   .min(0, "Credit amount must be positive"),
+  });
 
-  const handleSave = () => {
-    const newCreditor = {
-      cc_name: name,
-      cc_contact_no: contact,
-      cc_address: address,
-      cc_email: email,
-      credit_amount: creditAmount ? creditAmount : 0,
-      cc_status: "",
-    };
+  const formik = useFormik({
+    initialValues: {
+      cc_name: data?.cc_name || "",
+      cc_address: data?.cc_address || "",
+      cc_contact_no: data?.cc_contact_no || "",
+      cc_email: data?.cc_email || "",
+      // credit_amount: data?.credit_amount || "",
+    },
+    validationSchema: validationSchema,
+    onSubmit: (values) => {
+      const newCreditor = {
+        ...values,
+        cc_status: "",
+      };
 
-    const updateCreditor = {
-      id:data?._id,
-      cc_name: name,
-      cc_contact_no: contact,
-      cc_address: address,
-      cc_email: email,
-      credit_amount: data?.credit_amount,
-      cc_status: "",
-    };
+      const request = data?._id
+        ? axios.put(`${process.env.NEXT_PUBLIC_API_URL}/creditcustomer/PUTCC`, {
+            ...newCreditor,
+            id: data?._id,
+          })
+        : axios.post(
+            `${process.env.NEXT_PUBLIC_API_URL}/creditcustomer/POSTCC`,
+            newCreditor
+          );
 
-    const request = data?._id
-      ? axios.put(`${process.env.NEXT_PUBLIC_API_URL}/creditcustomer/PUTCC`, updateCreditor)
-      : axios.post(`${process.env.NEXT_PUBLIC_API_URL}/creditcustomer/POSTCC`, newCreditor);
-
-    request
-      .then((response) => {
-        alert(response.data.message);
-        refresh();
-        close();
-      })
-      .catch(() => {
-        alert(`Something went wrong`);
-        close();
-      });
-  };
+      request
+        .then((response) => {
+          alert(response.data.message);
+          refresh();
+          close();
+        })
+        .catch(() => {
+          alert(`Something went wrong`);
+          close();
+        });
+    },
+  });
 
   return (
     <Dialog
       fullScreen={fullScreen}
       open={true}
-      onClose={handleClose}
+      onClose={formik.handleReset}
       aria-labelledby="responsive-dialog-title"
     >
       <DialogTitle id="responsive-dialog-title">
         {data ? "Edit Creditor's Details" : "New Creditor's Details"}
       </DialogTitle>
-      <DialogContent>
-        <Stack spacing={2} sx={{ width: "400px", padding: "5px" }}>
-          <TextField
-            autoFocus
-            id="outlined-basic"
-            label="Name"
-            variant="outlined"
-            value={name}
-            onChange={(event) => {
-              setName(event.target.value);
-            }}
-          />
-          <TextField
-            id="outlined-basic"
-            label="Address"
-            variant="outlined"
-            value={address}
-            onChange={(event) => {
-              setAddress(event.target.value);
-            }}
-          />
-          <TextField
-            id="outlined-basic"
-            label="Contact"
-            variant="outlined"
-            value={contact}
-            onChange={(event) => {
-              setContact(event.target.value);
-            }}
-          />
-          <TextField
-            id="outlined-basic"
-            label="Email"
-            variant="outlined"
-            value={email}
-            onChange={(event) => {
-              setEmail(event.target.value);
-            }}
-          />
-          {/* <TextField
-            id="outlined-basic"
-            label="Amount"
-            variant="outlined"
-            value={creditAmount}
-            onChange={(event) => {
-              setCreditAmount(event.target.value);
-            }}
-          /> */}
-        </Stack>
-      </DialogContent>
-      <DialogActions>
-        <Button color="error" onClick={handleClose}>Cancel</Button>
-        <Button color="success" onClick={handleSave}>Save</Button>
-      </DialogActions>
+      <form onSubmit={formik.handleSubmit}>
+        <DialogContent>
+          <Stack spacing={2} sx={{ width: "400px", padding: "5px" }}>
+            <TextField
+              autoFocus
+              id="cc_name"
+              name="cc_name"
+              label="Name"
+              variant="outlined"
+              value={formik.values.cc_name}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched.cc_name && Boolean(formik.errors.cc_name)}
+              helperText={formik.touched.cc_name && formik.errors.cc_name}
+            />
+            <TextField
+              id="cc_address"
+              name="cc_address"
+              label="Address"
+              variant="outlined"
+              value={formik.values.cc_address}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={
+                formik.touched.cc_address && Boolean(formik.errors.cc_address)
+              }
+              helperText={formik.touched.cc_address && formik.errors.cc_address}
+            />
+            <TextField
+              id="cc_contact_no"
+              name="cc_contact_no"
+              label="Contact"
+              variant="outlined"
+              value={formik.values.cc_contact_no}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={
+                formik.touched.cc_contact_no &&
+                Boolean(formik.errors.cc_contact_no)
+              }
+              helperText={
+                formik.touched.cc_contact_no && formik.errors.cc_contact_no
+              }
+            />
+            <TextField
+              id="cc_email"
+              name="cc_email"
+              label="Email"
+              variant="outlined"
+              value={formik.values.cc_email}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched.cc_email && Boolean(formik.errors.cc_email)}
+              helperText={formik.touched.cc_email && formik.errors.cc_email}
+            />
+            {/* <TextField
+              id="credit_amount"
+              name="credit_amount"
+              label="Credit Amount"
+              variant="outlined"
+              value={formik.values.credit_amount}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched.credit_amount && Boolean(formik.errors.credit_amount)}
+              helperText={formik.touched.credit_amount && formik.errors.credit_amount}
+            /> */}
+          </Stack>
+        </DialogContent>
+        <DialogActions>
+          <Button color="error" onClick={(formik.handleReset, close)}>
+            Cancel
+          </Button>
+          <Button type="submit" color="success">
+            Save
+          </Button>
+        </DialogActions>
+      </form>
     </Dialog>
   );
 }

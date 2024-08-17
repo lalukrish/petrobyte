@@ -35,10 +35,10 @@ const Liverate = () => {
       .get(`${process.env.NEXT_PUBLIC_API_URL}/fuelPrice/GETAllFuel`)
       .then((response) => {
         const updatedRates = response.data.message.reduce((acc, rate) => {
-          if (rate.fuel_name === "Diesel") {
-            acc.diesel = rate;
-          } else if (rate.fuel_name === "Petrol") {
+          if (rate.fuel_name === "Petrol") {
             acc.petrol = rate;
+          } else if (rate.fuel_name === "Diesel") {
+            acc.diesel = rate;
           }
           return acc;
         }, {});
@@ -77,74 +77,6 @@ const Liverate = () => {
               },
               //   m: 2, // Adds margin around the card
             }}
-            onClick={() => handleClickOpen(rates.diesel)}
-          >
-            <CardContent>
-              <Typography
-                variant="h5"
-                component="div"
-                sx={{
-                  fontWeight: "bold",
-                  mb: 1,
-                  display: "flex",
-                  justifyContent: "center",
-                }}
-              >
-                {rates.diesel.fuel_name}
-              </Typography>
-              <Typography
-                variant="h2"
-                component="div"
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  mt: 1,
-                  color: "green",
-                }}
-              >
-                <span style={{ fontSize: "20px", fontWeight: "bold" }}>
-                  {rates.diesel.fuel_price} Rs/Lts
-                </span>
-              </Typography>
-              <Typography
-                variant="body2"
-                component="div"
-                sx={{
-                  display: "flex",
-                  justifyContent: "flex-start",
-                  color: "gray",
-                  mt: 2,
-                }}
-              >
-                Previous Rate: {rates.diesel.fuel_previous_price}
-              </Typography>
-            </CardContent>
-            <CardActions sx={{ display: "flex", justifyContent: "flex-end" }}>
-              <Button onClick={() => handleClickOpen(rates.diesel)}>
-                <EditIcon />
-              </Button>
-            </CardActions>
-          </Card>
-        </Grid>
-
-        <Grid item xs={12} md={4}>
-          <Card
-            sx={{
-              width: "240px",
-              height: "120px",
-              backgroundColor: "white",
-              boxShadow: 10,
-              color: "black",
-              borderRadius: 2,
-              display: "flex",
-              flexDirection: "column",
-              gap: 2,
-              transition: "transform 0.3s",
-              "&:hover": {
-                transform: "scale(1.1)",
-              },
-              marginLeft: 12, // Adds margin around the card
-            }}
             onClick={() => handleClickOpen(rates.petrol)}
           >
             <CardContent>
@@ -158,6 +90,7 @@ const Liverate = () => {
                   justifyContent: "center",
                 }}
               >
+                {" "}
                 {rates.petrol.fuel_name}
               </Typography>
               <Typography
@@ -184,11 +117,83 @@ const Liverate = () => {
                   mt: 2,
                 }}
               >
+                {" "}
                 Previous Rate: {rates.petrol.fuel_previous_price}
               </Typography>
             </CardContent>
             <CardActions sx={{ display: "flex", justifyContent: "flex-end" }}>
               <Button onClick={() => handleClickOpen(rates.petrol)}>
+                <EditIcon />
+              </Button>
+            </CardActions>
+          </Card>
+        </Grid>
+
+        <Grid item xs={12} md={4}>
+          <Card
+            sx={{
+              width: "240px",
+              height: "120px",
+              backgroundColor: "white",
+              boxShadow: 10,
+              color: "black",
+              borderRadius: 2,
+              display: "flex",
+              flexDirection: "column",
+              gap: 2,
+              transition: "transform 0.3s",
+              "&:hover": {
+                transform: "scale(1.1)",
+              },
+              marginLeft: 12, // Adds margin around the card
+            }}
+            onClick={() => handleClickOpen(rates.diesel)}
+          >
+            <CardContent>
+              <Typography
+                variant="h5"
+                component="div"
+                sx={{
+                  fontWeight: "bold",
+                  mb: 1,
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                {" "}
+                {rates.diesel.fuel_name}
+              </Typography>
+
+              <Typography
+                variant="h2"
+                component="div"
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  mt: 1,
+                  color: "green",
+                }}
+              >
+                <span style={{ fontSize: "20px", fontWeight: "bold" }}>
+                  {rates.diesel.fuel_price} Rs/Lts
+                </span>
+              </Typography>
+              <Typography
+                variant="body2"
+                component="div"
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-start",
+                  color: "gray",
+                  mt: 2,
+                }}
+              >
+                {" "}
+                Previous Rate: {rates.diesel.fuel_previous_price}
+              </Typography>
+            </CardContent>
+            <CardActions sx={{ display: "flex", justifyContent: "flex-end" }}>
+              <Button onClick={() => handleClickOpen(rates.diesel)}>
                 <EditIcon />
               </Button>
             </CardActions>

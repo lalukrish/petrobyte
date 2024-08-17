@@ -17,6 +17,7 @@ import {
   TextField,
   Alert,
   AlertTitle,
+  Snackbar,
 } from "@mui/material";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import EditIcon from "@mui/icons-material/Edit";
@@ -39,8 +40,20 @@ const FuelAccountTable = () => {
   const [fuel, setFuel] = React.useState(false);
   const [dialogContent, setDialogContent] = React.useState({});
   const [dialogOpen, setDialogOpen] = React.useState(false);
+  const [refreshExpence, setRefreshExpence] = React.useState(false);
 
   const [accountoverview, setAccountoverview] = useState([]);
+  const [alertOpen, setAlertOpen] = React.useState(false);
+  const [alertSeverity, setAlertSeverity] = React.useState("success");
+  //const handleShowAlert = (severity, message) => {
+  //   setAlertSeverity(severity);
+  //   setAlertMessage(message);
+  //   setAlertOpen(true);
+  // };
+  const handleRefeshExpence = () => {
+    // setEditExpence({});
+    setRefreshExpence(!refreshExpence);
+  };
 
   const handleClickOpenfuel = () => {
     setFuel(true);
@@ -61,8 +74,11 @@ const FuelAccountTable = () => {
           process.env.NEXT_PUBLIC_API_URL
         }/fuelAccounts/GETFuelAccountOverview?date=${search || ""}`
       )
-      .then((response) => setAccountoverview(response.data.message));
-  }, [search]);
+      .then((response) => {
+        setAccountoverview(response.data.message);
+        handleRefeshExpence();
+      });
+  }, [refreshExpence, search]);
 
   const handleClearSearch = () => {
     setSearch("");
@@ -86,9 +102,12 @@ const FuelAccountTable = () => {
     });
     setDialogOpen(true);
   };
+  const handleAlertClose = () => {
+    setAlertOpen(false);
+  };
   return (
     <>
-      {alert.open && (
+      {/* {alert.open && (
         <Alert
           severity={alert.severity}
           onClose={() => setAlert({ open: false, message: "", severity: "" })}
@@ -98,7 +117,7 @@ const FuelAccountTable = () => {
           </AlertTitle>
           {alert.message}
         </Alert>
-      )}
+      )} */}
       {dialogOpen ? (
         <FullScreenDialog
           content={dialogContent}
@@ -205,16 +224,36 @@ const FuelAccountTable = () => {
                   >
                     <OpenInFullIcon sx={{ color: "#0d47a1" }} />
                   </Button>
-                  <Button>
+                  {/* <Button>
                     <CheckBoxIcon sx={{ color: "#0d47a1" }} />
-                  </Button>
+                  </Button> */}
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
-      {fuel ? <FuelNew close={handleClosefuel} setAlert={setAlert} /> : null}
+      {fuel ? (
+        <FuelNew
+          close={handleClosefuel}
+          setAlert={setAlert}
+          refresh={handleRefeshExpence}
+        />
+      ) : null}
+      <Snackbar
+        open={alertOpen}
+        autoHideDuration={6000}
+        onClose={handleAlertClose}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }} // Positioning the alert
+      >
+        <Alert
+          onClose={handleAlertClose}
+          severity={alertSeverity}
+          sx={{ width: "100%" }} // Adjust width as needed
+        >
+          {alert.message}
+        </Alert>
+      </Snackbar>
     </>
   );
 };

@@ -32,7 +32,7 @@ export default function ExpenseNew({ close, refresh, edit }) {
   const formik = useFormik({
     initialValues: {
       expence_type: edit ? edit.expence_type : "",
-      emp_id: edit.emp_id ? edit.emp_id._id : "",
+      emp_id: edit.emp_id ? edit.emp_id._id : null,
       expence_amount: edit ? edit.expence_amount : "",
       expence_comment: edit ? edit.expence_comment : "",
     },

@@ -31,7 +31,7 @@ import dayjs from "dayjs";
 
 require("dotenv").config();
 
-export default function FuelNew({ close, setAlert }) {
+export default function FuelNew({ close, setAlert, refresh }) {
   const [dispencers, setDispencers] = useState([]);
   const [selectedDispencers, setSelectedDispencers] = useState([
     { name: "", subRows: [] },
@@ -150,6 +150,10 @@ export default function FuelNew({ close, setAlert }) {
       return [];
     }
   };
+  // Handle Close Function
+  const handleClose = () => {
+    close(); // Call the close function passed as a prop
+  };
 
   const handleSave = (formValues) => {
     const fuelDetails = selectedDispencers.flatMap((dispencer) =>
@@ -170,14 +174,19 @@ export default function FuelNew({ close, setAlert }) {
         `${process.env.NEXT_PUBLIC_API_URL}/fuelAccounts/POSTFuelAccount`,
         fuelDetails
       )
+
       .then((response) => {
         setAlert({
           open: true,
           message: response.data.message,
           severity: "success",
         });
+        handleClose();
+        refresh();
       })
       .catch((error) => {
+        handleClose();
+
         setAlert({
           open: true,
           message: "Error posting fuel details",
@@ -272,11 +281,6 @@ export default function FuelNew({ close, setAlert }) {
     );
   };
 
-  // Handle Close Function
-  const handleClose = () => {
-    close(); // Call the close function passed as a prop
-  };
-
   return (
     <Dialog
       maxWidth="md"
@@ -285,8 +289,8 @@ export default function FuelNew({ close, setAlert }) {
       onClose={handleClose}
       PaperProps={{
         sx: {
-          minHeight: "80vh",
-          maxHeight: "80vh",
+          minHeight: "90vh",
+          maxHeight: "90vh",
         },
       }}
     >
@@ -492,10 +496,15 @@ export default function FuelNew({ close, setAlert }) {
           </Stack>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="secondary">
+          <Button color="secondary" onClick={handleClose}>
             Cancel
           </Button>
-          <Button type="submit" color="primary" variant="contained">
+          <Button
+            type="submit"
+            color="primary"
+            variant="contained"
+            //       onClick={handleClose}
+          >
             Save
           </Button>
         </DialogActions>

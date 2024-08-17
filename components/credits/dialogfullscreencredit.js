@@ -95,7 +95,7 @@ const MediumDialog = ({ open, handleClose, data, refresh }) => {
 
     // Load the image from the public folder
     const logoURL =
-      "https://yt3.googleusercontent.com/wOiLIBWtEcFrN7PNo2msrcUrwPHzjMUd-HCq57Vjr8PngYJjMEr8twa6K79j0ern9dBLr9bS=s900-c-k-c0x00ffffff-no-rj";
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRivGsWqf-ns6X3NwP6_ur8_Ud8eX2dEwUtSg&s";
     const logoBase64 = await getBase64FromURL(logoURL);
 
     // Increase header height to show the image correctly
@@ -107,7 +107,7 @@ const MediumDialog = ({ open, handleClose, data, refresh }) => {
     pdf.addImage(logoBase64, "JPEG", 10, 10, logoWidth, logoHeight - 7);
     pdf.setFont("helvetica", "bold"); // Set header text to bold
     pdf.setFontSize(12);
-    pdf.text("Indian Oil Ltd.", 70, 15);
+    pdf.text("HP", 70, 15);
     pdf.text("Swami's Oils", 70, 20);
     pdf.text("Thoppumppady, Ernakulam", 70, 25);
     pdf.text("Tel: 0485 2777809", 70, 30);

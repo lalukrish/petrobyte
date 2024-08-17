@@ -32,7 +32,7 @@ const validationSchema = Yup.object({
         sub_dispencer_id: Yup.string().required("Sub dispencer is required"),
         live_reading: Yup.number()
           .required("Live reading is required")
-          .positive("Live reading must be a positive number"),
+         // .positive("Live reading must be a positive number"),
       })
     )
     .min(1, "At least one sub dispencer is required")
